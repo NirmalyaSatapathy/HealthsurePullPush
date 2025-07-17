@@ -1,0 +1,12 @@
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/arch=x86_64
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/name=Local
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.local,Local/os=win32
+LaunchTargetManager/org.eclipse.launchbar.core.launchTargetType.wst.server,WildFly\ 9.x/name=WildFly 9.x
+configDescList=org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:,org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:HealthSureEjb,org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:HealthSureClient,org.eclipse.launchbar.core.descriptorType.default\:WildFly 9.x,org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:/ProviderDashboard.jsf
+eclipse.preferences.version=1
+org.eclipse.launchbar.core.descriptorType.default\:WildFly\ 9.x/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.local\:Local
+org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:/ProviderDashboard.jsf/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.wst.server\:WildFly 9.x
+org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:HealthSureClient/activeLaunchMode=run
+org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:HealthSureClient/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.wst.server\:WildFly 9.x
+org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:HealthSureEjb/activeLaunchMode=run
+org.jboss.tools.wtp.server.launchbar.ModuleDescriptorType\:HealthSureEjb/activeLaunchTarget=org.eclipse.launchbar.core.launchTargetType.wst.server\:WildFly 9.x

@@ -1,0 +1,7 @@
+INDEX VERSION 1.4+C:\Niramalya\.metadata\.plugins\org.eclipse.wst.jsdt.core\indexes
+3169710563.index
+99808124.index
+384895987.index
+302963359.index
+3694319882.index
+3900967199.index
