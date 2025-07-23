@@ -14,12 +14,42 @@ VALUES
 ('H002', 'Jane', 'Smith', '2345678901', 'janesmith', 'FEMALE', '1985-08-20', '456 Oak Ave, Town', 'hashed_pass2', 'jane@email.com', 'ACTIVE'),
 ('H003', 'Robert', 'Johnson', '3456789012', 'robertj', 'MALE', '1975-03-10', '789 Pine Rd, Village', 'hashed_pass3', 'robert@email.com', 'ACTIVE'),
 ('H004', 'Sarah', 'Williams', '4567890123', 'sarahw', 'FEMALE', '1990-11-25', '321 Elm St, City', 'hashed_pass4', 'sarah@email.com', 'ACTIVE'),
-('H005', 'Michael', 'Brown', '5678901234', 'michaelb', 'MALE', '1988-07-30', '654 Maple Dr, Town', 'hashed_pass5', 'michael@email.com', 'ACTIVE'),
-('H006', 'Emily', 'Davis', '6789012345', 'emilyd', 'FEMALE', '1995-02-14', '987 Cedar Ln, Village', 'hashed_pass6', 'emily@email.com', 'ACTIVE'),
-('H007', 'David', 'Miller', '7890123456', 'davidm', 'MALE', '1982-09-05', '159 Birch Blvd, City', 'hashed_pass7', 'david@email.com', 'ACTIVE'),
-('H008', 'Jessica', 'Wilson', '8901234567', 'jessicaw', 'FEMALE', '1978-12-18', '753 Spruce Way, Town', 'hashed_pass8', 'jessica@email.com', 'ACTIVE'),
-('H009', 'Daniel', 'Taylor', '9012345678', 'danielt', 'MALE', '1992-06-22', '246 Willow Ct, Village', 'hashed_pass9', 'daniel@email.com', 'ACTIVE'),
-('H010', 'Amanda', 'Anderson', '0123456789', 'amandaa', 'FEMALE', '1987-04-08', '369 Aspen Pl, City', 'hashed_pass10', 'amanda@email.com', 'ACTIVE');
+('H005', 'Michael', 'Brown', '5678901234', 'michaelb', 'MALE', '1988-07-30', '654 Maple Dr, Town', 'hashed_pass5', 'michael@email.com', 'ACTIVE');
+-- Existing H001 to H005 are already inserted
+-- Below are new recipients referenced in subscribed_members
+
+INSERT INTO Recipient (h_id, first_name, last_name, mobile, user_name, gender, dob, address, password, email, status)
+VALUES
+('H006', 'Mary', 'Doe', '1234500006', 'marydoe', 'FEMALE', '1984-06-01', '101 Maple St', 'hashed_pass6', 'mary.doe@email.com', 'ACTIVE'),
+('H007', 'Tom', 'Doe', '1234500007', 'tomdoe', 'MALE', '2006-03-12', '102 Maple St', 'hashed_pass7', 'tom.doe@email.com', 'ACTIVE'),
+('H008', 'Lisa', 'Doe', '1234500008', 'lisadoe', 'FEMALE', '2008-07-14', '103 Maple St', 'hashed_pass8', 'lisa.doe@email.com', 'ACTIVE'),
+('H009', 'Robert', 'Doe', '1234500009', 'robertdoe', 'MALE', '2012-09-20', '104 Maple St', 'hashed_pass9', 'robert.doe@email.com', 'ACTIVE'),
+('H010', 'Mary', 'Doe', '1234500010', 'marydoe2', 'FEMALE', '1984-06-01', '105 Maple St', 'hashed_pass10', 'mary2.doe@email.com', 'ACTIVE'),
+('H011', 'Tom', 'Doe', '1234500011', 'tomdoe2', 'MALE', '2006-03-12', '106 Maple St', 'hashed_pass11', 'tom2.doe@email.com', 'ACTIVE'),
+('H012', 'Lisa', 'Doe', '1234500012', 'lisadoe2', 'FEMALE', '2008-07-14', '107 Maple St', 'hashed_pass12', 'lisa2.doe@email.com', 'ACTIVE'),
+('H013', 'Michael', 'Smith', '1234500013', 'mikesmith', 'MALE', '1981-02-01', '108 Elm St', 'hashed_pass13', 'michael.smith@email.com', 'ACTIVE'),
+('H014', 'Emily', 'Smith', '1234500014', 'emilysmith', 'FEMALE', '2009-05-21', '109 Elm St', 'hashed_pass14', 'emily.smith@email.com', 'ACTIVE'),
+('H015', 'Daniel', 'Smith', '1234500015', 'danielsmith', 'MALE', '2014-08-18', '110 Elm St', 'hashed_pass15', 'daniel.smith@email.com', 'ACTIVE'),
+('H016', 'Michael', 'Smith', '1234500016', 'mikesmith2', 'MALE', '1981-02-01', '111 Elm St', 'hashed_pass16', 'michael2.smith@email.com', 'ACTIVE'),
+('H017', 'Emily', 'Smith', '1234500017', 'emilysmith2', 'FEMALE', '2009-05-21', '112 Elm St', 'hashed_pass17', 'emily2.smith@email.com', 'ACTIVE'),
+('H018', 'Daniel', 'Smith', '1234500018', 'danielsmith2', 'MALE', '2014-08-18', '113 Elm St', 'hashed_pass18', 'daniel2.smith@email.com', 'ACTIVE'),
+('H019', 'Sarah', 'Smith', '1234500019', 'sarahsmith', 'FEMALE', '1954-12-25', '114 Elm St', 'hashed_pass19', 'sarah.smith@email.com', 'ACTIVE'),
+('H020', 'Jennifer', 'Johnson', '1234500020', 'jennjohnson', 'FEMALE', '1979-03-15', '115 Pine Rd', 'hashed_pass20', 'jennifer.j@email.com', 'ACTIVE'),
+('H021', 'David', 'Johnson', '1234500021', 'davidjohnson', 'MALE', '2005-10-01', '116 Pine Rd', 'hashed_pass21', 'david.j@email.com', 'ACTIVE'),
+('H022', 'Olivia', 'Johnson', '1234500022', 'oliviajohnson', 'FEMALE', '2008-02-20', '117 Pine Rd', 'hashed_pass22', 'olivia.j@email.com', 'ACTIVE'),
+('H023', 'James', 'Williams', '1234500023', 'jamesw', 'MALE', '1989-11-11', '118 Birch St', 'hashed_pass23', 'james.w@email.com', 'ACTIVE'),
+('H024', 'Sophia', 'Williams', '1234500024', 'sophiaw', 'FEMALE', '2016-07-19', '119 Birch St', 'hashed_pass24', 'sophia.w@email.com', 'ACTIVE'),
+('H025', 'Liam', 'Williams', '1234500025', 'liamw', 'MALE', '2019-01-10', '120 Birch St', 'hashed_pass25', 'liam.w@email.com', 'ACTIVE'),
+('H026', 'Emma', 'Williams', '1234500026', 'emmaw', 'FEMALE', '2022-03-05', '121 Birch St', 'hashed_pass26', 'emma.w@email.com', 'ACTIVE'),
+('H027', 'Elizabeth', 'Brown', '1234500027', 'elizabethb', 'FEMALE', '1991-08-30', '122 Cedar Ln', 'hashed_pass27', 'elizabeth.b@email.com', 'ACTIVE'),
+('H028', 'Noah', 'Brown', '1234500028', 'noahb', 'MALE', '2014-04-17', '123 Cedar Ln', 'hashed_pass28', 'noah.b@email.com', 'ACTIVE'),
+('H029', 'Ava', 'Brown', '1234500029', 'avab', 'FEMALE', '2017-06-09', '124 Cedar Ln', 'hashed_pass29', 'ava.b@email.com', 'ACTIVE'),
+('H030', 'Elizabeth', 'Brown', '1234500030', 'elizabethb2', 'FEMALE', '1991-08-30', '125 Cedar Ln', 'hashed_pass30', 'elizabeth2.b@email.com', 'ACTIVE'),
+('H031', 'Noah', 'Brown', '1234500031', 'noahb2', 'MALE', '2014-04-17', '126 Cedar Ln', 'hashed_pass31', 'noah2.b@email.com', 'ACTIVE'),
+('H032', 'Ava', 'Brown', '1234500032', 'avab2', 'FEMALE', '2017-06-09', '127 Cedar Ln', 'hashed_pass32', 'ava2.b@email.com', 'ACTIVE'),
+('H033', 'William', 'Brown', '1234500033', 'williamb', 'MALE', '1956-11-21', '128 Cedar Ln', 'hashed_pass33', 'william.b@email.com', 'ACTIVE'),
+('H034', 'Grace', 'Brown', '1234500034', 'graceb', 'FEMALE', '1959-02-02', '129 Cedar Ln', 'hashed_pass34', 'grace.b@email.com', 'ACTIVE');
+
 -- Insert insurance companies
 INSERT INTO Insurance_company (company_id, name, logo_url, head_office, contact_email, contact_phone)
 VALUES
@@ -100,272 +130,128 @@ VALUES
 ('COV045', 'PLAN020', 30000, 2500000);
 -- Insert subscriptions for patients (5 patients with 20 plans each)
 -- For H001 (20 plans - mix of individual and family)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
+-- For H001 (20 plans)
+INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid, start_date)
 VALUES
-('SUB001', 'H001', 'COV001', '2023-01-01', '2024-01-01', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB002', 'H001', 'COV004', '2023-02-01', '2024-02-01', 'FAMILY', 'ACTIVE', 15000, 15000),
-('SUB003', 'H001', 'COV007', '2023-03-01', '2024-03-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB004', 'H001', 'COV010', '2023-04-01', '2024-04-01', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB005', 'H001', 'COV012', '2023-05-01', '2024-05-01', 'FAMILY', 'ACTIVE', 18000, 18000),
-('SUB006', 'H001', 'COV014', '2023-06-01', '2024-06-01', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB007', 'H001', 'COV016', '2023-07-01', '2024-07-01', 'INDIVIDUAL', 'ACTIVE', 4000, 4000),
-('SUB008', 'H001', 'COV018', '2023-08-01', '2024-08-01', 'FAMILY', 'ACTIVE', 12000, 12000),
-('SUB009', 'H001', 'COV020', '2023-09-01', '2024-09-01', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB010', 'H001', 'COV022', '2023-10-01', '2024-10-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB011', 'H001', 'COV025', '2023-11-01', '2024-11-01', 'FAMILY', 'ACTIVE', 25000, 25000),
-('SUB012', 'H001', 'COV028', '2023-12-01', '2024-12-01', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB013', 'H001', 'COV030', '2024-01-01', '2025-01-01', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB014', 'H001', 'COV032', '2024-02-01', '2025-02-01', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB015', 'H001', 'COV034', '2024-03-01', '2025-03-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB016', 'H001', 'COV036', '2024-04-01', '2025-04-01', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB017', 'H001', 'COV038', '2024-05-01', '2025-05-01', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB018', 'H001', 'COV040', '2024-06-01', '2025-06-01', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB019', 'H001', 'COV042', '2024-07-01', '2025-07-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB020', 'H001', 'COV044', '2024-08-01', '2025-08-01', 'FAMILY', 'ACTIVE', 20000, 20000);
+('SUB001', 'H001', 'COV001', '2023-01-01', '2024-01-01', 'INDIVIDUAL', 'ACTIVE', 5000, 5000, '2023-01-01'),
+('SUB002', 'H001', 'COV004', '2023-02-01', '2024-02-01', 'FAMILY', 'ACTIVE', 15000, 15000, '2023-02-01'),
+('SUB003', 'H001', 'COV007', '2023-03-01', '2024-03-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000, '2023-03-01'),
+('SUB004', 'H001', 'COV010', '2023-04-01', '2024-04-01', 'INDIVIDUAL', 'ACTIVE', 3000, 3000, '2023-04-01'),
+('SUB005', 'H001', 'COV012', '2023-05-01', '2024-05-01', 'FAMILY', 'ACTIVE', 18000, 18000, '2023-05-01'),
+('SUB006', 'H001', 'COV014', '2023-06-01', '2024-06-01', 'INDIVIDUAL', 'ACTIVE', 12000, 12000, '2023-06-01'),
+('SUB007', 'H001', 'COV016', '2023-07-01', '2024-07-01', 'INDIVIDUAL', 'ACTIVE', 4000, 4000, '2023-07-01'),
+('SUB008', 'H001', 'COV018', '2023-08-01', '2024-08-01', 'FAMILY', 'ACTIVE', 12000, 12000, '2023-08-01'),
+('SUB009', 'H001', 'COV020', '2023-09-01', '2024-09-01', 'INDIVIDUAL', 'ACTIVE', 12000, 12000, '2023-09-01'),
+('SUB010', 'H001', 'COV022', '2023-10-01', '2024-10-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000, '2023-10-01'),
+('SUB011', 'H001', 'COV025', '2023-11-01', '2024-11-01', 'FAMILY', 'ACTIVE', 25000, 25000, '2023-11-01'),
+('SUB012', 'H001', 'COV028', '2023-12-01', '2024-12-01', 'INDIVIDUAL', 'ACTIVE', 7000, 7000, '2023-12-01'),
+('SUB013', 'H001', 'COV030', '2024-01-01', '2025-01-01', 'INDIVIDUAL', 'ACTIVE', 5000, 5000, '2024-01-01'),
+('SUB014', 'H001', 'COV032', '2024-02-01', '2025-02-01', 'INDIVIDUAL', 'ACTIVE', 3000, 3000, '2024-02-01'),
+('SUB015', 'H001', 'COV034', '2024-03-01', '2025-03-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000, '2024-03-01'),
+('SUB016', 'H001', 'COV036', '2024-04-01', '2025-04-01', 'INDIVIDUAL', 'ACTIVE', 3000, 3000, '2024-04-01'),
+('SUB017', 'H001', 'COV038', '2024-05-01', '2025-05-01', 'INDIVIDUAL', 'ACTIVE', 15000, 15000, '2024-05-01'),
+('SUB018', 'H001', 'COV040', '2024-06-01', '2025-06-01', 'INDIVIDUAL', 'ACTIVE', 12000, 12000, '2024-06-01'),
+('SUB019', 'H001', 'COV042', '2024-07-01', '2025-07-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000, '2024-07-01'),
+('SUB020', 'H001', 'COV044', '2024-08-01', '2025-08-01', 'FAMILY', 'ACTIVE', 20000, 20000, '2024-08-01');
 
 -- For H002 (20 plans)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
+INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid, start_date)
 VALUES
-('SUB021', 'H002', 'COV002', '2023-01-15', '2024-01-15', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB022', 'H002', 'COV005', '2023-02-15', '2024-02-15', 'FAMILY', 'ACTIVE', 22000, 22000),
-('SUB023', 'H002', 'COV008', '2023-03-15', '2024-03-15', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB024', 'H002', 'COV011', '2023-04-15', '2024-04-15', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB025', 'H002', 'COV013', '2023-05-15', '2024-05-15', 'FAMILY', 'ACTIVE', 28000, 28000),
-('SUB026', 'H002', 'COV015', '2023-06-15', '2024-06-15', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB027', 'H002', 'COV017', '2023-07-15', '2024-07-15', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB028', 'H002', 'COV019', '2023-08-15', '2024-08-15', 'FAMILY', 'ACTIVE', 16000, 16000),
-('SUB029', 'H002', 'COV021', '2023-09-15', '2024-09-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB030', 'H002', 'COV023', '2023-10-15', '2024-10-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB031', 'H002', 'COV026', '2023-11-15', '2024-11-15', 'FAMILY', 'ACTIVE', 35000, 35000),
-('SUB032', 'H002', 'COV029', '2023-12-15', '2024-12-15', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB033', 'H002', 'COV031', '2024-01-15', '2025-01-15', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB034', 'H002', 'COV033', '2024-02-15', '2025-02-15', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB035', 'H002', 'COV035', '2024-03-15', '2025-03-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB036', 'H002', 'COV037', '2024-04-15', '2025-04-15', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB037', 'H002', 'COV039', '2024-05-15', '2025-05-15', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB038', 'H002', 'COV041', '2024-06-15', '2025-06-15', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB039', 'H002', 'COV043', '2024-07-15', '2025-07-15', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB040', 'H002', 'COV045', '2024-08-15', '2025-08-15', 'FAMILY', 'ACTIVE', 30000, 30000);
--- For H003 (20 plans - mix of individual and family)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB041', 'H003', 'COV003', '2023-01-05', '2024-01-05', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB042', 'H003', 'COV006', '2023-02-05', '2024-02-05', 'FAMILY', 'ACTIVE', 30000, 30000),
-('SUB043', 'H003', 'COV009', '2023-03-05', '2024-03-05', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB044', 'H003', 'COV011', '2023-04-05', '2024-04-05', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB045', 'H003', 'COV013', '2023-05-05', '2024-05-05', 'FAMILY', 'ACTIVE', 28000, 28000),
-('SUB046', 'H003', 'COV015', '2023-06-05', '2024-06-05', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB047', 'H003', 'COV017', '2023-07-05', '2024-07-05', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB048', 'H003', 'COV019', '2023-08-05', '2024-08-05', 'FAMILY', 'ACTIVE', 16000, 16000),
-('SUB049', 'H003', 'COV021', '2023-09-05', '2024-09-05', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB050', 'H003', 'COV023', '2023-10-05', '2024-10-05', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB051', 'H003', 'COV026', '2023-11-05', '2024-11-05', 'FAMILY', 'ACTIVE', 35000, 35000),
-('SUB052', 'H003', 'COV029', '2023-12-05', '2024-12-05', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB053', 'H003', 'COV031', '2024-01-05', '2025-01-05', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB054', 'H003', 'COV033', '2024-02-05', '2025-02-05', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB055', 'H003', 'COV035', '2024-03-05', '2025-03-05', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB056', 'H003', 'COV037', '2024-04-05', '2025-04-05', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB057', 'H003', 'COV039', '2024-05-05', '2025-05-05', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB058', 'H003', 'COV041', '2024-06-05', '2025-06-05', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB059', 'H003', 'COV043', '2024-07-05', '2025-07-05', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB060', 'H003', 'COV045', '2024-08-05', '2025-08-05', 'FAMILY', 'ACTIVE', 30000, 30000);
+('SUB021', 'H002', 'COV002', '2023-01-15', '2024-01-15', 'INDIVIDUAL', 'ACTIVE', 8000, 8000, '2023-01-15'),
+('SUB022', 'H002', 'COV005', '2023-02-15', '2024-02-15', 'FAMILY', 'ACTIVE', 22000, 22000, '2023-02-15'),
+('SUB023', 'H002', 'COV008', '2023-03-15', '2024-03-15', 'INDIVIDUAL', 'ACTIVE', 15000, 15000, '2023-03-15'),
+('SUB024', 'H002', 'COV011', '2023-04-15', '2024-04-15', 'INDIVIDUAL', 'ACTIVE', 4500, 4500, '2023-04-15'),
+('SUB025', 'H002', 'COV013', '2023-05-15', '2024-05-15', 'FAMILY', 'ACTIVE', 28000, 28000, '2023-05-15'),
+('SUB026', 'H002', 'COV015', '2023-06-15', '2024-06-15', 'INDIVIDUAL', 'ACTIVE', 20000, 20000, '2023-06-15'),
+('SUB027', 'H002', 'COV017', '2023-07-15', '2024-07-15', 'INDIVIDUAL', 'ACTIVE', 7000, 7000, '2023-07-15'),
+('SUB028', 'H002', 'COV019', '2023-08-15', '2024-08-15', 'FAMILY', 'ACTIVE', 16000, 16000, '2023-08-15'),
+('SUB029', 'H002', 'COV021', '2023-09-15', '2024-09-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000, '2023-09-15'),
+('SUB030', 'H002', 'COV023', '2023-10-15', '2024-10-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000, '2023-10-15'),
+('SUB031', 'H002', 'COV026', '2023-11-15', '2024-11-15', 'FAMILY', 'ACTIVE', 35000, 35000, '2023-11-15'),
+('SUB032', 'H002', 'COV029', '2023-12-15', '2024-12-15', 'INDIVIDUAL', 'ACTIVE', 12000, 12000, '2023-12-15'),
+('SUB033', 'H002', 'COV031', '2024-01-15', '2025-01-15', 'INDIVIDUAL', 'ACTIVE', 8000, 8000, '2024-01-15'),
+('SUB034', 'H002', 'COV033', '2024-02-15', '2025-02-15', 'INDIVIDUAL', 'ACTIVE', 4500, 4500, '2024-02-15'),
+('SUB035', 'H002', 'COV035', '2024-03-15', '2025-03-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000, '2024-03-15'),
+('SUB036', 'H002', 'COV037', '2024-04-15', '2025-04-15', 'INDIVIDUAL', 'ACTIVE', 5000, 5000, '2024-04-15'),
+('SUB037', 'H002', 'COV039', '2024-05-15', '2025-05-15', 'INDIVIDUAL', 'ACTIVE', 25000, 25000, '2024-05-15'),
+('SUB038', 'H002', 'COV041', '2024-06-15', '2025-06-15', 'INDIVIDUAL', 'ACTIVE', 20000, 20000, '2024-06-15'),
+('SUB039', 'H002', 'COV043', '2024-07-15', '2025-07-15', 'INDIVIDUAL', 'ACTIVE', 15000, 15000, '2024-07-15'),
+('SUB040', 'H002', 'COV045', '2024-08-15', '2025-08-15', 'FAMILY', 'ACTIVE', 30000, 30000, '2024-08-15');
 
--- For H004 (20 plans - mix of individual and family)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB061', 'H004', 'COV001', '2023-01-10', '2024-01-10', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB062', 'H004', 'COV004', '2023-02-10', '2024-02-10', 'FAMILY', 'ACTIVE', 15000, 15000),
-('SUB063', 'H004', 'COV007', '2023-03-10', '2024-03-10', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB064', 'H004', 'COV010', '2023-04-10', '2024-04-10', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB065', 'H004', 'COV012', '2023-05-10', '2024-05-10', 'FAMILY', 'ACTIVE', 18000, 18000),
-('SUB066', 'H004', 'COV014', '2023-06-10', '2024-06-10', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB067', 'H004', 'COV016', '2023-07-10', '2024-07-10', 'INDIVIDUAL', 'ACTIVE', 4000, 4000),
-('SUB068', 'H004', 'COV018', '2023-08-10', '2024-08-10', 'FAMILY', 'ACTIVE', 12000, 12000),
-('SUB069', 'H004', 'COV020', '2023-09-10', '2024-09-10', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB070', 'H004', 'COV022', '2023-10-10', '2024-10-10', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB071', 'H004', 'COV025', '2023-11-10', '2024-11-10', 'FAMILY', 'ACTIVE', 25000, 25000),
-('SUB072', 'H004', 'COV028', '2023-12-10', '2024-12-10', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB073', 'H004', 'COV030', '2024-01-10', '2025-01-10', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB074', 'H004', 'COV032', '2024-02-10', '2025-02-10', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB075', 'H004', 'COV034', '2024-03-10', '2025-03-10', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB076', 'H004', 'COV036', '2024-04-10', '2025-04-10', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB077', 'H004', 'COV038', '2024-05-10', '2025-05-10', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB078', 'H004', 'COV040', '2024-06-10', '2025-06-10', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB079', 'H004', 'COV042', '2024-07-10', '2025-07-10', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB080', 'H004', 'COV044', '2024-08-10', '2025-08-10', 'FAMILY', 'ACTIVE', 20000, 20000);
+-- INSERT INTO subscribed_members table
+-- Family plans for H001
+-- Family plans for H001
+INSERT INTO subscribed_members (member_id, subscribe_id, h_id, full_name, age, gender, relation_with_proposer, aadhar_no) VALUES
+-- SUB002 (Family plan)
+('MEM001', 'SUB002', 'H001', 'John Doe', 43, 'MALE', 'SELF', '769152153246'),
+('MEM002', 'SUB002', 'H006', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '127344634377'),
+('MEM003', 'SUB002', 'H007', 'Tom Doe', 18, 'MALE', 'CHILD', '180093187563'),
+('MEM004', 'SUB002', 'H008', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '687082469699'),
+('MEM005', 'SUB002', 'H009', 'Robert Doe', 12, 'MALE', 'CHILD', '212108007118'),
 
--- For H005 (20 plans - mix of individual and family)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB081', 'H005', 'COV002', '2023-01-15', '2024-01-15', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB082', 'H005', 'COV005', '2023-02-15', '2024-02-15', 'FAMILY', 'ACTIVE', 22000, 22000),
-('SUB083', 'H005', 'COV008', '2023-03-15', '2024-03-15', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB084', 'H005', 'COV011', '2023-04-15', '2024-04-15', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB085', 'H005', 'COV013', '2023-05-15', '2024-05-15', 'FAMILY', 'ACTIVE', 28000, 28000),
-('SUB086', 'H005', 'COV015', '2023-06-15', '2024-06-15', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB087', 'H005', 'COV017', '2023-07-15', '2024-07-15', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB088', 'H005', 'COV019', '2023-08-15', '2024-08-15', 'FAMILY', 'ACTIVE', 16000, 16000),
-('SUB089', 'H005', 'COV021', '2023-09-15', '2024-09-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB090', 'H005', 'COV023', '2023-10-15', '2024-10-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB091', 'H005', 'COV026', '2023-11-15', '2024-11-15', 'FAMILY', 'ACTIVE', 35000, 35000),
-('SUB092', 'H005', 'COV029', '2023-12-15', '2024-12-15', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB093', 'H005', 'COV031', '2024-01-15', '2025-01-15', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB094', 'H005', 'COV033', '2024-02-15', '2025-02-15', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB095', 'H005', 'COV035', '2024-03-15', '2025-03-15', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB096', 'H005', 'COV037', '2024-04-15', '2025-04-15', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB097', 'H005', 'COV039', '2024-05-15', '2025-05-15', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB098', 'H005', 'COV041', '2024-06-15', '2025-06-15', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB099', 'H005', 'COV043', '2024-07-15', '2025-07-15', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB100', 'H005', 'COV045', '2024-08-15', '2025-08-15', 'FAMILY', 'ACTIVE', 30000, 30000);
--- For H006 (15 plans - fewer than the first 5 patients)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB101', 'H006', 'COV003', '2023-01-20', '2024-01-20', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB102', 'H006', 'COV006', '2023-02-20', '2024-02-20', 'FAMILY', 'ACTIVE', 30000, 30000),
-('SUB103', 'H006', 'COV009', '2023-03-20', '2024-03-20', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB104', 'H006', 'COV012', '2023-04-20', '2024-04-20', 'FAMILY', 'ACTIVE', 18000, 18000),
-('SUB105', 'H006', 'COV015', '2023-05-20', '2024-05-20', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB106', 'H006', 'COV018', '2023-06-20', '2024-06-20', 'FAMILY', 'ACTIVE', 12000, 12000),
-('SUB107', 'H006', 'COV021', '2023-07-20', '2024-07-20', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB108', 'H006', 'COV024', '2023-08-20', '2024-08-20', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB109', 'H006', 'COV027', '2023-09-20', '2024-09-20', 'FAMILY', 'ACTIVE', 50000, 50000),
-('SUB110', 'H006', 'COV030', '2023-10-20', '2024-10-20', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB111', 'H006', 'COV033', '2023-11-20', '2024-11-20', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB112', 'H006', 'COV036', '2023-12-20', '2024-12-20', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB113', 'H006', 'COV039', '2024-01-20', '2025-01-20', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB114', 'H006', 'COV042', '2024-02-20', '2025-02-20', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB115', 'H006', 'COV045', '2024-03-20', '2025-03-20', 'FAMILY', 'ACTIVE', 30000, 30000);
+-- SUB005 (Family plan)
+('MEM006', 'SUB005', 'H001', 'John Doe', 43, 'MALE', 'SELF', '769152153246'),
+('MEM007', 'SUB005', 'H006', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '127344634377'),
+('MEM008', 'SUB005', 'H007', 'Tom Doe', 18, 'MALE', 'CHILD', '180093187563'),
+('MEM009', 'SUB005', 'H008', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '687082469699'),
+('MEM010', 'SUB005', 'H009', 'Robert Doe', 12, 'MALE', 'CHILD', '212108007118'),
 
--- For H007 (15 plans)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB116', 'H007', 'COV002', '2023-01-25', '2024-01-25', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB117', 'H007', 'COV005', '2023-02-25', '2024-02-25', 'FAMILY', 'ACTIVE', 22000, 22000),
-('SUB118', 'H007', 'COV008', '2023-03-25', '2024-03-25', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB119', 'H007', 'COV011', '2023-04-25', '2024-04-25', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB120', 'H007', 'COV014', '2023-05-25', '2024-05-25', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB121', 'H007', 'COV017', '2023-06-25', '2024-06-25', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB122', 'H007', 'COV020', '2023-07-25', '2024-07-25', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB123', 'H007', 'COV023', '2023-08-25', '2024-08-25', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB124', 'H007', 'COV026', '2023-09-25', '2024-09-25', 'FAMILY', 'ACTIVE', 35000, 35000),
-('SUB125', 'H007', 'COV029', '2023-10-25', '2024-10-25', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB126', 'H007', 'COV032', '2023-11-25', '2024-11-25', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB127', 'H007', 'COV035', '2023-12-25', '2024-12-25', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB128', 'H007', 'COV038', '2024-01-25', '2025-01-25', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB129', 'H007', 'COV041', '2024-02-25', '2025-02-25', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB130', 'H007', 'COV044', '2024-03-25', '2025-03-25', 'FAMILY', 'ACTIVE', 20000, 20000);
+-- SUB008 (Family plan)
+('MEM011', 'SUB008', 'H001', 'John Doe', 43, 'MALE', 'SELF', '769152153246'),
+('MEM012', 'SUB008', 'H006', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '127344634377'),
+('MEM013', 'SUB008', 'H007', 'Tom Doe', 18, 'MALE', 'CHILD', '180093187563'),
+('MEM014', 'SUB008', 'H008', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '687082469699'),
+('MEM015', 'SUB008', 'H009', 'Robert Doe', 12, 'MALE', 'CHILD', '212108007118'),
 
--- For H008 (15 plans)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB131', 'H008', 'COV001', '2023-01-30', '2024-01-30', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB132', 'H008', 'COV004', '2023-02-28', '2024-02-28', 'FAMILY', 'ACTIVE', 15000, 15000),
-('SUB133', 'H008', 'COV007', '2023-03-30', '2024-03-30', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB134', 'H008', 'COV010', '2023-04-30', '2024-04-30', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB135', 'H008', 'COV013', '2023-05-30', '2024-05-30', 'FAMILY', 'ACTIVE', 28000, 28000),
-('SUB136', 'H008', 'COV016', '2023-06-30', '2024-06-30', 'INDIVIDUAL', 'ACTIVE', 4000, 4000),
-('SUB137', 'H008', 'COV019', '2023-07-30', '2024-07-30', 'FAMILY', 'ACTIVE', 16000, 16000),
-('SUB138', 'H008', 'COV022', '2023-08-30', '2024-08-30', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB139', 'H008', 'COV025', '2023-09-30', '2024-09-30', 'FAMILY', 'ACTIVE', 25000, 25000),
-('SUB140', 'H008', 'COV028', '2023-10-30', '2024-10-30', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB141', 'H008', 'COV031', '2023-11-30', '2024-11-30', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB142', 'H008', 'COV034', '2023-12-30', '2024-12-30', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB143', 'H008', 'COV037', '2024-01-30', '2025-01-30', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB144', 'H008', 'COV040', '2024-02-28', '2025-02-28', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB145', 'H008', 'COV043', '2024-03-30', '2025-03-30', 'INDIVIDUAL', 'ACTIVE', 15000, 15000);
+-- SUB011 (Family plan)
+('MEM016', 'SUB011', 'H001', 'John Doe', 43, 'MALE', 'SELF', '769152153246'),
+('MEM017', 'SUB011', 'H006', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '127344634377'),
+('MEM018', 'SUB011', 'H007', 'Tom Doe', 18, 'MALE', 'CHILD', '180093187563'),
+('MEM019', 'SUB011', 'H008', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '687082469699'),
+('MEM020', 'SUB011', 'H009', 'Robert Doe', 12, 'MALE', 'CHILD', '212108007118'),
 
--- For H009 (15 plans)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB146', 'H009', 'COV003', '2023-02-01', '2024-02-01', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB147', 'H009', 'COV006', '2023-03-01', '2024-03-01', 'FAMILY', 'ACTIVE', 30000, 30000),
-('SUB148', 'H009', 'COV009', '2023-04-01', '2024-04-01', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB149', 'H009', 'COV012', '2023-05-01', '2024-05-01', 'FAMILY', 'ACTIVE', 18000, 18000),
-('SUB150', 'H009', 'COV015', '2023-06-01', '2024-06-01', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB151', 'H009', 'COV018', '2023-07-01', '2024-07-01', 'FAMILY', 'ACTIVE', 12000, 12000),
-('SUB152', 'H009', 'COV021', '2023-08-01', '2024-08-01', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB153', 'H009', 'COV024', '2023-09-01', '2024-09-01', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB154', 'H009', 'COV027', '2023-10-01', '2024-10-01', 'FAMILY', 'ACTIVE', 50000, 50000),
-('SUB155', 'H009', 'COV030', '2023-11-01', '2024-11-01', 'INDIVIDUAL', 'ACTIVE', 5000, 5000),
-('SUB156', 'H009', 'COV033', '2023-12-01', '2024-12-01', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB157', 'H009', 'COV036', '2024-01-01', '2025-01-01', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB158', 'H009', 'COV039', '2024-02-01', '2025-02-01', 'INDIVIDUAL', 'ACTIVE', 25000, 25000),
-('SUB159', 'H009', 'COV042', '2024-03-01', '2025-03-01', 'INDIVIDUAL', 'ACTIVE', 10000, 10000),
-('SUB160', 'H009', 'COV045', '2024-04-01', '2025-04-01', 'FAMILY', 'ACTIVE', 30000, 30000);
+-- SUB020 (Family plan)
+('MEM021', 'SUB020', 'H001', 'John Doe', 43, 'MALE', 'SELF', '769152153246'),
+('MEM022', 'SUB020', 'H006', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '127344634377'),
+('MEM023', 'SUB020', 'H007', 'Tom Doe', 18, 'MALE', 'CHILD', '180093187563'),
+('MEM024', 'SUB020', 'H008', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '687082469699'),
+('MEM025', 'SUB020', 'H009', 'Robert Doe', 12, 'MALE', 'CHILD', '212108007118');
 
--- For H010 (15 plans)
-INSERT INTO subscribe (subscribe_id, h_id, coverage_id, subscribe_date, expiry_date, type, status, total_premium, amount_paid)
-VALUES
-('SUB161', 'H010', 'COV002', '2023-02-05', '2024-02-05', 'INDIVIDUAL', 'ACTIVE', 8000, 8000),
-('SUB162', 'H010', 'COV005', '2023-03-05', '2024-03-05', 'FAMILY', 'ACTIVE', 22000, 22000),
-('SUB163', 'H010', 'COV008', '2023-04-05', '2024-04-05', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB164', 'H010', 'COV011', '2023-05-05', '2024-05-05', 'INDIVIDUAL', 'ACTIVE', 4500, 4500),
-('SUB165', 'H010', 'COV014', '2023-06-05', '2024-06-05', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB166', 'H010', 'COV017', '2023-07-05', '2024-07-05', 'INDIVIDUAL', 'ACTIVE', 7000, 7000),
-('SUB167', 'H010', 'COV020', '2023-08-05', '2024-08-05', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB168', 'H010', 'COV023', '2023-09-05', '2024-09-05', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB169', 'H010', 'COV026', '2023-10-05', '2024-10-05', 'FAMILY', 'ACTIVE', 35000, 35000),
-('SUB170', 'H010', 'COV029', '2023-11-05', '2024-11-05', 'INDIVIDUAL', 'ACTIVE', 12000, 12000),
-('SUB171', 'H010', 'COV032', '2023-12-05', '2024-12-05', 'INDIVIDUAL', 'ACTIVE', 3000, 3000),
-('SUB172', 'H010', 'COV035', '2024-01-05', '2025-01-05', 'INDIVIDUAL', 'ACTIVE', 18000, 18000),
-('SUB173', 'H010', 'COV038', '2024-02-05', '2025-02-05', 'INDIVIDUAL', 'ACTIVE', 15000, 15000),
-('SUB174', 'H010', 'COV041', '2024-03-05', '2025-03-05', 'INDIVIDUAL', 'ACTIVE', 20000, 20000),
-('SUB175', 'H010', 'COV044', '2024-04-05', '2025-04-05', 'FAMILY', 'ACTIVE', 20000, 20000);
--- Similarly for H003, H004, H005 (20 plans each)
--- [Additional INSERT statements for H003, H004, H005 would go here]
--- Insert doctor availability
--- Family members for SUB002 (H001's family plan)
--- SUB002 (H001's family plan)
-INSERT INTO subscribed_members VALUES
-('MEM001', 'SUB002', 'John Doe', 43, 'MALE', 'SELF', '111122223333'),
-('MEM002', 'SUB002', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '111122223334'),
-('MEM003', 'SUB002', 'Tom Doe', 18, 'MALE', 'CHILD', '111122223335'),
-('MEM004', 'SUB002', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '111122223336'),
-('MEM005', 'SUB002', 'Robert Doe', 12, 'MALE', 'CHILD', '111122223337'),
-('MEM006', 'SUB002', 'Susan Doe', 8, 'FEMALE', 'CHILD', '111122223338'),
-('MEM007', 'SUB002', 'James Doe', 70, 'MALE', 'PARENT', '111122223339'),
-('MEM008', 'SUB002', 'Margaret Doe', 68, 'FEMALE', 'PARENT', '111122223340'),
-('MEM009', 'SUB002', 'David Doe', 45, 'MALE', 'SIBLING', '111122223341'),
-('MEM010', 'SUB002', 'Sarah Doe', 42, 'FEMALE', 'SIBLING', '111122223342');
+-- Family plans for H002
+INSERT INTO subscribed_members (member_id, subscribe_id, h_id, full_name, age, gender, relation_with_proposer, aadhar_no) VALUES
+-- SUB022 (Family plan)
+('MEM026', 'SUB022', 'H002', 'Jane Smith', 38, 'FEMALE', 'SELF', '235002354238'),
+('MEM027', 'SUB022', 'H013', 'Michael Smith', 42, 'MALE', 'SPOUSE', '257938721339'),
+('MEM028', 'SUB022', 'H014', 'Emily Smith', 15, 'FEMALE', 'CHILD', '613943723840'),
+('MEM029', 'SUB022', 'H015', 'Daniel Smith', 10, 'MALE', 'CHILD', '258080496934'),
 
--- SUB005 (H001's family plan)
-INSERT INTO subscribed_members VALUES
-('MEM011', 'SUB005', 'John Doe', 43, 'MALE', 'SELF', '111122223333'),
-('MEM012', 'SUB005', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '111122223334'),
-('MEM013', 'SUB005', 'Tom Doe', 18, 'MALE', 'CHILD', '111122223335'),
-('MEM014', 'SUB005', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '111122223336'),
-('MEM015', 'SUB005', 'Robert Doe', 12, 'MALE', 'CHILD', '111122223337'),
-('MEM016', 'SUB005', 'Susan Doe', 8, 'FEMALE', 'CHILD', '111122223338'),
-('MEM017', 'SUB005', 'James Doe', 70, 'MALE', 'PARENT', '111122223339'),
-('MEM018', 'SUB005', 'Margaret Doe', 68, 'FEMALE', 'PARENT', '111122223340'),
-('MEM019', 'SUB005', 'David Doe', 45, 'MALE', 'SIBLING', '111122223341'),
-('MEM020', 'SUB005', 'Sarah Doe', 42, 'FEMALE', 'SIBLING', '111122223342');
+-- SUB025 (Family plan)
+('MEM030', 'SUB025', 'H002', 'Jane Smith', 38, 'FEMALE', 'SELF', '235002354238'),
+('MEM031', 'SUB025', 'H013', 'Michael Smith', 42, 'MALE', 'SPOUSE', '257938721339'),
+('MEM032', 'SUB025', 'H014', 'Emily Smith', 15, 'FEMALE', 'CHILD', '613943723840'),
+('MEM033', 'SUB025', 'H015', 'Daniel Smith', 10, 'MALE', 'CHILD', '258080496934'),
+('MEM034', 'SUB025', 'H019', 'Sarah Smith', 70, 'FEMALE', 'PARENT', '119711051617'),
 
--- SUB011 (H001's family plan)
-INSERT INTO subscribed_members VALUES
-('MEM021', 'SUB011', 'John Doe', 43, 'MALE', 'SELF', '111122223333'),
-('MEM022', 'SUB011', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '111122223334'),
-('MEM023', 'SUB011', 'Tom Doe', 18, 'MALE', 'CHILD', '111122223335'),
-('MEM024', 'SUB011', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '111122223336'),
-('MEM025', 'SUB011', 'Robert Doe', 12, 'MALE', 'CHILD', '111122223337'),
-('MEM026', 'SUB011', 'Susan Doe', 8, 'FEMALE', 'CHILD', '111122223338'),
-('MEM027', 'SUB011', 'James Doe', 70, 'MALE', 'PARENT', '111122223339'),
-('MEM028', 'SUB011', 'Margaret Doe', 68, 'FEMALE', 'PARENT', '111122223340'),
-('MEM029', 'SUB011', 'David Doe', 45, 'MALE', 'SIBLING', '111122223341'),
-('MEM030', 'SUB011', 'Sarah Doe', 42, 'FEMALE', 'SIBLING', '111122223342');
+-- SUB028 (Family plan)
+('MEM035', 'SUB028', 'H002', 'Jane Smith', 38, 'FEMALE', 'SELF', '235002354238'),
+('MEM036', 'SUB028', 'H016', 'Michael Smith', 42, 'MALE', 'SPOUSE', '239934660921'),
+('MEM037', 'SUB028', 'H017', 'Emily Smith', 15, 'FEMALE', 'CHILD', '709746043759'),
+('MEM038', 'SUB028', 'H018', 'Daniel Smith', 10, 'MALE', 'CHILD', '692302598211'),
 
--- SUB020 (H001's family plan)
-INSERT INTO subscribed_members VALUES
-('MEM031', 'SUB020', 'John Doe', 43, 'MALE', 'SELF', '111122223333'),
-('MEM032', 'SUB020', 'Mary Doe', 40, 'FEMALE', 'SPOUSE', '111122223334'),
-('MEM033', 'SUB020', 'Tom Doe', 18, 'MALE', 'CHILD', '111122223335'),
-('MEM034', 'SUB020', 'Lisa Doe', 16, 'FEMALE', 'CHILD', '111122223336'),
-('MEM035', 'SUB020', 'Robert Doe', 12, 'MALE', 'CHILD', '111122223337'),
-('MEM036', 'SUB020', 'Susan Doe', 8, 'FEMALE', 'CHILD', '111122223338'),
-('MEM037', 'SUB020', 'James Doe', 70, 'MALE', 'PARENT', '111122223339'),
-('MEM038', 'SUB020', 'Margaret Doe', 68, 'FEMALE', 'PARENT', '111122223340'),
-('MEM039', 'SUB020', 'David Doe', 45, 'MALE', 'SIBLING', '111122223341'),
-('MEM040', 'SUB020', 'Sarah Doe', 42, 'FEMALE', 'SIBLING', '111122223342');
+-- SUB031 (Family plan)
+('MEM039', 'SUB031', 'H002', 'Jane Smith', 38, 'FEMALE', 'SELF', '235002354238'),
+('MEM040', 'SUB031', 'H013', 'Michael Smith', 42, 'MALE', 'SPOUSE', '257938721339'),
+('MEM041', 'SUB031', 'H014', 'Emily Smith', 15, 'FEMALE', 'CHILD', '613943723840'),
+('MEM042', 'SUB031', 'H015', 'Daniel Smith', 10, 'MALE', 'CHILD', '258080496934'),
+('MEM043', 'SUB031', 'H019', 'Sarah Smith', 70, 'FEMALE', 'PARENT', '119711051617'),
+
+-- SUB040 (Family plan)
+('MEM044', 'SUB040', 'H002', 'Jane Smith', 38, 'FEMALE', 'SELF', '235002354238'),
+('MEM045', 'SUB040', 'H016', 'Michael Smith', 42, 'MALE', 'SPOUSE', '239934660921'),
+('MEM046', 'SUB040', 'H017', 'Emily Smith', 15, 'FEMALE', 'CHILD', '709746043759'),
+('MEM047', 'SUB040', 'H018', 'Daniel Smith', 10, 'MALE', 'CHILD', '692302598211'),
+('MEM048', 'SUB040', 'H019', 'Sarah Smith', 70, 'FEMALE', 'PARENT', '119711051617');
+
 INSERT INTO Doctor_availability (availability_id, doctor_id, available_date, start_time, end_time, max_capacity)
 VALUES
 ('AVAIL001', 'DOC001', '2023-10-15', '09:00:00', '17:00:00', 15),

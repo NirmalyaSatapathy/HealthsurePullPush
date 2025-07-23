@@ -284,7 +284,7 @@ input[type="radio"]::-moz-focus-inner {
                            action="#{insuranceController.showInsuranceForPatient(patient.hId)}"
                            styleClass="btn btn-primary" />
           <h:commandButton value="As a member"
-                           action="RelatedInsurance"
+                           action="#{insuranceController.showRelatedInsuranceController(patient.hId)}"
                            styleClass="btn btn-primary" />
         </h:column>
       </h:dataTable>

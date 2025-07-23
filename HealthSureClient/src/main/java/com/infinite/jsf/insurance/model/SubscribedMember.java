@@ -1,13 +1,24 @@
 package com.infinite.jsf.insurance.model;
 
+import com.infinite.jsf.recipient.model.Recipient;
+
 public class SubscribedMember {
     private String memberId;
+    private Recipient recipient;
     private Subscribe subscribe;  // Many-to-One with Subscribe
     private String fullName;
     private Integer age;
     private String gender;
     private String relationWithProposer;
-    private String aadharNo;
+    public Recipient getRecipient() {
+		return recipient;
+	}
+
+	public void setRecipient(Recipient recipient) {
+		this.recipient = recipient;
+	}
+
+	private String aadharNo;
 
     // Constructors
     public SubscribedMember() {}

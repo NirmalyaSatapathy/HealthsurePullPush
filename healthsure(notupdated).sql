@@ -338,6 +338,7 @@ CREATE TABLE subscribe (
     h_id VARCHAR(50),
     coverage_id VARCHAR(50),
     subscribe_date DATE NOT NULL,
+    start_date DATE NOT NULL,
     expiry_date DATE NOT NULL,
     type enum('INDIVIDUAL','FAMILY'),
     status ENUM('ACTIVE', 'EXPIRED') NOT NULL,
@@ -349,11 +350,13 @@ CREATE TABLE subscribe (
 CREATE TABLE subscribed_members (
     member_id VARCHAR(50) PRIMARY KEY,
     subscribe_id VARCHAR(50),
+     h_id VARCHAR(50),
     full_name VARCHAR(100) NOT NULL,
     age INT,
     gender VARCHAR(10),
     relation_with_proposer VARCHAR(30), -- Self, Spouse, Child, Parent
     aadhar_no VARCHAR(20),
+	FOREIGN KEY (h_id) REFERENCES Recipient(h_id),
     FOREIGN KEY (subscribe_id) REFERENCES subscribe(subscribe_id)
 );
 

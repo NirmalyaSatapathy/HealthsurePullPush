@@ -18,6 +18,7 @@ import com.infinite.jsf.insurance.model.SubscriptionStatus;
 import com.infinite.jsf.insurance.model.SubscriptionType;
 import com.infinite.jsf.provider.dao.InsuranceDao;
 import com.infinite.jsf.provider.model.PatientInsuranceDetails;
+import com.infinite.jsf.provider.model.RelatedPatientInsuranceDetails;
 
 public class InsuranceDaoImpl implements InsuranceDao {
 
@@ -87,6 +88,52 @@ public class InsuranceDaoImpl implements InsuranceDao {
 
             System.out.println("printing details for a single insurance");
             System.out.println(details);
+            detailsList.add(details);
+        }
+
+        session.close();
+        return detailsList;
+    }
+    public List<RelatedPatientInsuranceDetails> showRelatedInsuranceOfMember(String hId) {
+        Session session = sessionFactory.openSession();
+        session.clear();
+
+        Query query = session.getNamedQuery("RelatedPatientInsuranceDetails.findByMemberId");
+        query.setParameter("hId", hId);
+
+        List<Object[]> results = query.list();
+        List<RelatedPatientInsuranceDetails> detailsList = new ArrayList<>();
+
+        for (Object[] row : results) {
+            // Extract and normalize ENUM fields
+            String statusRaw = (String) row[10];
+            String typeRaw = (String) row[11];
+
+            if (statusRaw == null || !statusRaw.equalsIgnoreCase("ACTIVE")) {
+                continue; // Skip non-ACTIVE records
+            }
+
+            RelatedPatientInsuranceDetails details = new RelatedPatientInsuranceDetails();
+
+            details.setSubscribeId((String) row[0]);          // subscribeId
+            details.setMemberHId((String) row[1]);            // memberHId
+            details.setMemberName((String) row[2]);           // memberName
+            details.setMemberAge((Integer) row[3]);           // age
+            details.setMemberGender((String) row[4]);         // gender
+            details.setRelationWithProposer((String) row[5]); // relation
+            details.setProposerName((String) row[6]);         // proposerName
+            details.setEnrollmentDate((Date) row[7]);         // enrollment
+            details.setCoverageStartDate((Date) row[8]);      // start
+            details.setCoverageEndDate((Date) row[9]);        // end
+            details.setCoverageStatus(statusRaw.toUpperCase());
+            details.setCoverageType(typeRaw.toUpperCase());
+            details.setCoverageLimit((Double) row[12]);
+            details.setRemaining((Double) row[13]);
+            details.setClaimed((Double) row[14]);
+            details.setLastClaimDate((Date) row[15]);
+            details.setPlanName((String) row[16]);
+            details.setCompanyName((String) row[17]);
+
             detailsList.add(details);
         }
 
