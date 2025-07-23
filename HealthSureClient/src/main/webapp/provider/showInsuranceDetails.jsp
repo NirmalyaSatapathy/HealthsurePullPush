@@ -494,11 +494,102 @@ input[type="radio"]::-moz-focus-inner {
       <h:panelGroup rendered="#{insuranceController.cameFromPatientSearch and insuranceController.showInsuranceFlag}"
                     style="margin-top:20px;">
         <h:commandButton value="Back to Patient Lists"
-                         action="#{insuranceController.backToPatients}"
+                         action="#{insuranceController.backToPatients()}"
                          styleClass="btn btn-tertiary" />
       </h:panelGroup>
     </h:form>
   </h:panelGroup>
+  <!-- Related Member Insurance Table -->
+<h:panelGroup rendered="#{insuranceController.showRelatedInsuranceFlag}">
+<h:form prependId="false">
+    <h3>Related Member Insurance Details</h3>
+    <h:dataTable value="#{insuranceController.relatedInsuranceList}" 
+                 var="d" 
+                 styleClass="data-table">
+        
+        <h:column>
+            <f:facet name="header"><h:outputText value="Full Name" /></f:facet>
+            <h:outputText value="#{d.memberName}" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Age" /></f:facet>
+            <h:outputText value="#{d.memberAge}" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Gender" /></f:facet>
+            <h:outputText value="#{d.memberGender}" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Relation" /></f:facet>
+            <h:outputText value="#{d.relationWithProposer}" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Subscribed By" /></f:facet>
+            <h:outputText value="#{d.proposerName}" />
+        </h:column>
+<h:column>
+            <f:facet name="header"><h:outputText value="Company " /></f:facet>
+            <h:outputText value="#{d.companyName}" />
+        </h:column>
+        <h:column>
+            <f:facet name="header"><h:outputText value="Plan " /></f:facet>
+            <h:outputText value="#{d.planName}" />
+        </h:column>
+        <h:column>
+            <f:facet name="header"><h:outputText value="Subscribe Date" /></f:facet>
+            <h:outputText value="#{d.enrollmentDate}">
+                <f:convertDateTime pattern="yyyy-MM-dd" />
+            </h:outputText>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Coverage Start" /></f:facet>
+            <h:outputText value="#{d.coverageStartDate}">
+                <f:convertDateTime pattern="yyyy-MM-dd" />
+            </h:outputText>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Coverage End" /></f:facet>
+            <h:outputText value="#{d.coverageEndDate}">
+                <f:convertDateTime pattern="yyyy-MM-dd" />
+            </h:outputText>
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Coverage Amount" /></f:facet>
+            <h:outputText value="#{d.coverageLimit}" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Remaining Amount" /></f:facet>
+            <h:outputText value="#{d.remaining}" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Total Claimed" /></f:facet>
+            <h:outputText value="#{d.claimed}" />
+        </h:column>
+
+        <h:column>
+            <f:facet name="header"><h:outputText value="Last Claim Date" /></f:facet>
+            <h:outputText value="#{d.lastClaimDate}">
+                <f:convertDateTime pattern="yyyy-MM-dd" />
+            </h:outputText>
+        </h:column>
+        
+    </h:dataTable>
+    
+    <h:commandButton value="Back to Patient Lists"
+                         action="#{insuranceController.backFromRelatedInsurance()}"
+                         styleClass="btn btn-tertiary"
+                         rendered="#{insuranceController.cameFromPatientSearch and insuranceController.showRelatedInsuranceFlag}"/>
+     </h:form>
+</h:panelGroup>
 </body>
 </html>
 </f:view>

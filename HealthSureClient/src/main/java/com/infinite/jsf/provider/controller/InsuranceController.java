@@ -31,6 +31,7 @@ public class InsuranceController {
     private boolean showInsuranceTable;
     private boolean showInsuranceFlag = false;
     private boolean showPatientsFlag = false;
+    private boolean showRelatedInsuranceFlag = false;
     private List<SubscribedMember> subscribedMembers;
     private List<PatientInsuranceDetails> patientInsuranceList;
     private List<Recipient> associatedPatients;
@@ -54,6 +55,14 @@ public class InsuranceController {
 
 	public int getInsurancePageSize() {
 		return insurancePageSize;
+	}
+
+	public boolean isShowRelatedInsuranceFlag() {
+		return showRelatedInsuranceFlag;
+	}
+
+	public void setShowRelatedInsuranceFlag(boolean showRelatedInsuranceFlag) {
+		this.showRelatedInsuranceFlag = showRelatedInsuranceFlag;
 	}
 
 	public void setInsurancePageSize(int insurancePageSize) {
@@ -398,12 +407,15 @@ public class InsuranceController {
         providerDao = new ProviderDaoImpl();
         FacesContext context = FacesContext.getCurrentInstance();
         
+        // Reset all display flags and data
         topMessage = null;
         patientInsuranceList = null;
         associatedPatients = null;
-        relatedInsuranceList = null; // Add this line to reset related insurance list
+        relatedInsuranceList = null;
         showPatientsFlag = false;
         showInsuranceFlag = false;
+        showRelatedInsuranceFlag = false;
+        relatedInsuranceList = null;
 
         // Validate doctor ID
         if (doctorId == null || doctorId.trim().isEmpty()) {
@@ -433,13 +445,15 @@ public class InsuranceController {
                 return null;
             }
         }
-        if (insuranceType != null&&!insuranceType.isEmpty()) {
+        
+        if (insuranceType != null && !insuranceType.isEmpty()) {
             if (healthId == null || healthId.trim().isEmpty()) {
                 FacesContext.getCurrentInstance().addMessage("insuranceType",
                     new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter patient id to search", null));
                 return null;
             }
         }
+
         // Case 1: Both doctor ID and patient ID are provided
         if (healthId != null && !healthId.trim().isEmpty()) {
             cameFromPatientSearch = false;
@@ -524,6 +538,7 @@ public class InsuranceController {
                             "No insurance found for patient ID: " + healthId, null));
                 } else {
                     showInsuranceFlag = true;
+                    showRelatedInsuranceFlag = false;
                 }
             } else if ("relatedAsAMember".equalsIgnoreCase(insuranceType)) {
                 // Show insurance where patient is a member
@@ -532,12 +547,15 @@ public class InsuranceController {
                     context.addMessage("recipientId", new FacesMessage(FacesMessage.SEVERITY_WARN,
                             "No related insurance found where patient ID " + healthId + " is a member", null));
                 } else {
-                	relatedInsuranceList=insuranceDaoImpl.showRelatedInsuranceOfMember(healthId);
-                	return "RelatedInsurance?faces-redirect=true";
+                    showInsuranceFlag = false;
+                    showPatientsFlag = false;
+                    showRelatedInsuranceFlag = true;
+                    cameFromPatientSearch = true;
                 }
             }
+          }
 
-        } 
+       
         // Case 2: Only patient name is provided (search by name)
         else if (patientName != null && !patientName.trim().isEmpty()) {
             String cleaned = patientName.replaceAll("\\s+", "");
@@ -571,6 +589,7 @@ public class InsuranceController {
             }
 
             showPatientsFlag = true;
+            showRelatedInsuranceFlag = false;
 
         } 
         // Case 3: Only doctor ID is provided (show all patients)
@@ -581,6 +600,7 @@ public class InsuranceController {
                         "No patients found for Doctor ID: " + doctorId, null));
             } else {
                 showPatientsFlag = true;
+                showRelatedInsuranceFlag = false;
             }
         }
 
@@ -903,6 +923,8 @@ public class InsuranceController {
         this.cameFromPatientSearch = false;
         this.topMessage = null;
         this.insuranceType=null;
+        showRelatedInsuranceFlag = false;
+        relatedInsuranceList = null;
         // Reset pagination
         this.insuranceFirst = 0;
         this.patientFirst = 0;
@@ -934,7 +956,8 @@ public class InsuranceController {
         this.showInsuranceFlag = false;
         this.cameFromPatientSearch = false;
         this.topMessage = null;
-
+        showRelatedInsuranceFlag = false;
+        relatedInsuranceList = null;
         // Reset pagination
         this.insuranceFirst = 0;
         this.patientFirst = 0;
@@ -951,10 +974,25 @@ public class InsuranceController {
         FacesContext.getCurrentInstance().getViewRoot().getChildren().clear();
         return "ProviderDashboard?faces-redirect=true";
     }
-    public String showRelatedInsuranceController(String hId)
-    {
-    	relatedInsuranceList=insuranceDaoImpl.showRelatedInsuranceOfMember(hId);
-    	return "RelatedInsurance?faces-redirect=true";
+ // New method to show related insurance (modified from original)
+    public String showRelatedInsuranceController(String hId) {
+        relatedInsuranceList = insuranceDaoImpl.showRelatedInsuranceOfMember(hId);
+        showInsuranceFlag = false;
+        showPatientsFlag = false;
+        showRelatedInsuranceFlag = true;
+        cameFromPatientSearch = true;
+        return null; // Stay on same page
+    }
+
+    // New back method specifically for related insurance
+    public String backFromRelatedInsurance() {
+        // Only reset what's needed for this case
+        showRelatedInsuranceFlag = false;
+        relatedInsuranceList = null;
+        // Return to patient list
+        showPatientsFlag = true;
+        topMessage = null;
+        return null;
     }
 
 
