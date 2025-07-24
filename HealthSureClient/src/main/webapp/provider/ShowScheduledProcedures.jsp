@@ -24,7 +24,20 @@
             border-bottom: 2px solid #BBDEFB;
             padding-bottom: 6px;
         }
+.sort-icon {
+	font-size: 0.7em;
+	padding: 0;
+	margin: 0;
+	line-height: 1;
+	display: inline-block;
+}
 
+.sort-icons {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: 4px;
+}
         .form-group {
             margin-bottom: 15px;
         }
@@ -175,120 +188,148 @@
             <h:outputText value="Total: #{procedureController.allScheduledProcedures.size()} procedures"
                           style="font-weight: bold; display: block; margin-top: 20px;" />
 
-            <h:dataTable value="#{procedureController.scheduledProcedures}"
-                         var="p"
-                         styleClass="data-table">
+           <h:dataTable value="#{procedureController.scheduledProcedures}"
+             var="p"
+             styleClass="data-table">
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:commandLink action="#{procedureController.sortBy('appointmentId')}">
-                            <span class="sort-header">
-                                Appointment ID
-                                <h:outputText styleClass="arrow"
-                                             value="#{procedureController.sortField eq 'appointmentId'
-                                                     ? (procedureController.sortAscending ? '↑' : '↓') : ''}" />
-                            </span>
-                        </h:commandLink>
-                    </f:facet>
-                    <h:outputText value="#{p.appointment.appointmentId}" />
-                </h:column>
+    <!-- Appointment ID -->
+    <h:column>
+        <f:facet name="header">
+            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                <h:outputText value="Appointment ID" />
+                <h:panelGroup styleClass="sort-icons">
+                    <h:commandLink action="#{procedureController.sortByAsc('appointmentId')}"
+                                  rendered="#{!(procedureController.sortField eq 'appointmentId' and procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▲</h:commandLink>
+                    <h:commandLink action="#{procedureController.sortByDesc('appointmentId')}"
+                                  rendered="#{!(procedureController.sortField eq 'appointmentId' and not procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▼</h:commandLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:facet>
+        <h:outputText value="#{p.appointment.appointmentId}" />
+    </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:commandLink action="#{procedureController.sortBy('procedureId')}">
-                            <span class="sort-header">
-                                Procedure ID
-                                <h:outputText styleClass="arrow"
-                                             value="#{procedureController.sortField eq 'procedureId'
-                                                     ? (procedureController.sortAscending ? '↑' : '↓') : ''}" />
-                            </span>
-                        </h:commandLink>
-                    </f:facet>
-                    <h:outputText value="#{p.procedureId}" />
-                </h:column>
+    <!-- Procedure ID -->
+    <h:column>
+        <f:facet name="header">
+            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                <h:outputText value="Procedure ID" />
+                <h:panelGroup styleClass="sort-icons">
+                    <h:commandLink action="#{procedureController.sortByAsc('procedureId')}"
+                                  rendered="#{!(procedureController.sortField eq 'procedureId' and procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▲</h:commandLink>
+                    <h:commandLink action="#{procedureController.sortByDesc('procedureId')}"
+                                  rendered="#{!(procedureController.sortField eq 'procedureId' and not procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▼</h:commandLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:facet>
+        <h:outputText value="#{p.procedureId}" />
+    </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:commandLink action="#{procedureController.sortBy('recipientFirstName')}">
-                            <span class="sort-header">
-                                Recipient First Name
-                                <h:outputText styleClass="arrow"
-                                             value="#{procedureController.sortField eq 'recipientFirstName'
-                                                     ? (procedureController.sortAscending ? '↑' : '↓') : ''}" />
-                            </span>
-                        </h:commandLink>
-                    </f:facet>
-                    <h:outputText value="#{p.recipient.firstName}" />
-                </h:column>
+    <!-- Recipient First Name -->
+    <h:column>
+        <f:facet name="header">
+            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                <h:outputText value="Recipient First Name" />
+                <h:panelGroup styleClass="sort-icons">
+                    <h:commandLink action="#{procedureController.sortByAsc('recipientFirstName')}"
+                                  rendered="#{!(procedureController.sortField eq 'recipientFirstName' and procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▲</h:commandLink>
+                    <h:commandLink action="#{procedureController.sortByDesc('recipientFirstName')}"
+                                  rendered="#{!(procedureController.sortField eq 'recipientFirstName' and not procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▼</h:commandLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:facet>
+        <h:outputText value="#{p.recipient.firstName}" />
+    </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:commandLink action="#{procedureController.sortBy('recipientLastName')}">
-                            <span class="sort-header">
-                                Recipient Last Name
-                                <h:outputText styleClass="arrow"
-                                             value="#{procedureController.sortField eq 'recipientLastName'
-                                                     ? (procedureController.sortAscending ? '↑' : '↓') : ''}" />
-                            </span>
-                        </h:commandLink>
-                    </f:facet>
-                    <h:outputText value="#{p.recipient.lastName}" />
-                </h:column>
+    <!-- Recipient Last Name -->
+    <h:column>
+        <f:facet name="header">
+            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                <h:outputText value="Recipient Last Name" />
+                <h:panelGroup styleClass="sort-icons">
+                    <h:commandLink action="#{procedureController.sortByAsc('recipientLastName')}"
+                                  rendered="#{!(procedureController.sortField eq 'recipientLastName' and procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▲</h:commandLink>
+                    <h:commandLink action="#{procedureController.sortByDesc('recipientLastName')}"
+                                  rendered="#{!(procedureController.sortField eq 'recipientLastName' and not procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▼</h:commandLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:facet>
+        <h:outputText value="#{p.recipient.lastName}" />
+    </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:commandLink action="#{procedureController.sortBy('doctorName')}">
-                            <span class="sort-header">
-                                Doctor
-                                <h:outputText styleClass="arrow"
-                                             value="#{procedureController.sortField eq 'doctorName'
-                                                     ? (procedureController.sortAscending ? '↑' : '↓') : ''}" />
-                            </span>
-                        </h:commandLink>
-                    </f:facet>
-                    <h:outputText value="#{p.doctor.doctorName}" />
-                </h:column>
+    <!-- Doctor Name -->
+    <h:column>
+        <f:facet name="header">
+            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                <h:outputText value="Doctor" />
+                <h:panelGroup styleClass="sort-icons">
+                    <h:commandLink action="#{procedureController.sortByAsc('doctorName')}"
+                                  rendered="#{!(procedureController.sortField eq 'doctorName' and procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▲</h:commandLink>
+                    <h:commandLink action="#{procedureController.sortByDesc('doctorName')}"
+                                  rendered="#{!(procedureController.sortField eq 'doctorName' and not procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▼</h:commandLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:facet>
+        <h:outputText value="#{p.doctor.doctorName}" />
+    </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:commandLink action="#{procedureController.sortBy('providerName')}">
-                            <span class="sort-header">
-                                Provider
-                                <h:outputText styleClass="arrow"
-                                             value="#{procedureController.sortField eq 'providerName'
-                                                     ? (procedureController.sortAscending ? '↑' : '↓') : ''}" />
-                            </span>
-                        </h:commandLink>
-                    </f:facet>
-                    <h:outputText value="#{p.provider.name}" />
-                </h:column>
+    <!-- Provider Name -->
+    <h:column>
+        <f:facet name="header">
+            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                <h:outputText value="Provider" />
+                <h:panelGroup styleClass="sort-icons">
+                    <h:commandLink action="#{procedureController.sortByAsc('providerName')}"
+                                  rendered="#{!(procedureController.sortField eq 'providerName' and procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▲</h:commandLink>
+                    <h:commandLink action="#{procedureController.sortByDesc('providerName')}"
+                                  rendered="#{!(procedureController.sortField eq 'providerName' and not procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▼</h:commandLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:facet>
+        <h:outputText value="#{p.provider.name}" />
+    </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:commandLink action="#{procedureController.sortBy('scheduledDate')}">
-                            <span class="sort-header">
-                                Scheduled Date
-                                <h:outputText styleClass="arrow"
-                                             value="#{procedureController.sortField eq 'scheduledDate'
-                                                     ? (procedureController.sortAscending ? '↑' : '↓') : ''}" />
-                            </span>
-                        </h:commandLink>
-                    </f:facet>
-                    <h:outputText value="#{p.scheduledDate}">
-                        <f:convertDateTime pattern="yyyy-MM-dd" />
-                    </h:outputText>
-                </h:column>
+    <!-- Scheduled Date -->
+    <h:column>
+        <f:facet name="header">
+            <h:panelGroup layout="block" style="display: flex; align-items: center;">
+                <h:outputText value="Scheduled Date" />
+                <h:panelGroup styleClass="sort-icons">
+                    <h:commandLink action="#{procedureController.sortByAsc('scheduledDate')}"
+                                  rendered="#{!(procedureController.sortField eq 'scheduledDate' and procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▲</h:commandLink>
+                    <h:commandLink action="#{procedureController.sortByDesc('scheduledDate')}"
+                                  rendered="#{!(procedureController.sortField eq 'scheduledDate' and not procedureController.sortAscending)}"
+                                  styleClass="sort-icon">▼</h:commandLink>
+                </h:panelGroup>
+            </h:panelGroup>
+        </f:facet>
+        <h:outputText value="#{p.scheduledDate}">
+            <f:convertDateTime pattern="yyyy-MM-dd" />
+        </h:outputText>
+    </h:column>
 
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Action" />
-                    </f:facet>
-                    <h:commandButton value="Start Procedure"
-                                     action="#{procedureController.startProcedure(p)}"
-                                     styleClass="btn btn-primary" />
-                </h:column>
-            </h:dataTable>
-
+    <!-- Action Column -->
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Action" />
+        </f:facet>
+        <h:commandButton value="Start Procedure"
+                         action="#{procedureController.startProcedure(p)}"
+                         styleClass="btn btn-primary" />
+    </h:column>
+</h:dataTable>
             <div class="pagination-group">
                 <h:panelGrid columns="5" cellpadding="10">
                     <h:commandButton value="First"

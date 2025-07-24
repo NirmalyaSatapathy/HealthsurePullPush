@@ -1541,61 +1541,64 @@ public class ProcedureController {
             this.sortAscending = sortAscending;
         }
         // Sorting logic
-        public void sortBy(String field) {
-            if (field.equals(sortField)) {
-                sortAscending = !sortAscending; // toggle direction
-            } else {
-                sortField = field;
-                sortAscending = true; // default ascending on new field
-            }
+     // Sorting control methods
+        public void sortByAsc(String field) {
+            this.sortField = field;
+            this.sortAscending = true;
+            sortCurrentList();
+        }
 
-            Comparator<MedicalProcedure> comparator = getComparatorForField(field);
-            if (comparator != null && allScheduledProcedures != null) {
+        public void sortByDesc(String field) {
+            this.sortField = field;
+            this.sortAscending = false;
+            sortCurrentList();
+        }
+
+        private void sortCurrentList() {
+            if (allScheduledProcedures != null && !allScheduledProcedures.isEmpty()) {
+                sortScheduledProcedures();
+            } 
+            else if (allInProgressProcedures != null && !allInProgressProcedures.isEmpty()) {
+                sortInProgressProcedures();
+            } 
+            else if (allBookedAppointments != null && !allBookedAppointments.isEmpty()) {
+                sortBookedAppointments();
+            }
+            goToFirstPage(); // Reset to first page after sorting
+        }
+
+        // Comparator-based sorting implementations
+        private void sortScheduledProcedures() {
+            Comparator<MedicalProcedure> comparator = getComparatorForField(sortField);
+            if (comparator != null) {
                 if (!sortAscending) {
                     comparator = comparator.reversed();
                 }
                 allScheduledProcedures.sort(comparator);
-                currentPage = 1;
-                paginate();
             }
         }
-        public void sortByInProgress(String field) {
-            if (field.equals(sortField)) {
-                sortAscending = !sortAscending; // toggle direction
-            } else {
-                sortField = field;
-                sortAscending = true; // default ascending on new field
-            }
 
-            Comparator<MedicalProcedure> comparator = getComparatorForField(field);
-            if (comparator != null && allInProgressProcedures != null) {
+        private void sortInProgressProcedures() {
+            Comparator<MedicalProcedure> comparator = getComparatorForField(sortField);
+            if (comparator != null) {
                 if (!sortAscending) {
                     comparator = comparator.reversed();
                 }
                 allInProgressProcedures.sort(comparator);
-                currentPage = 1;
-                paginate();
             }
         }
-        public void sortByBooked(String field) {
-            if (field.equals(sortField)) {
-                sortAscending = !sortAscending;
-            } else {
-                sortField     = field;
-                sortAscending = true;
-            }
 
-            Comparator<Appointment> cmp = getComparatorForBookedField(field);
-            if (cmp != null && allBookedAppointments != null) {
+        private void sortBookedAppointments() {
+            Comparator<Appointment> comparator = getComparatorForBookedField(sortField);
+            if (comparator != null) {
                 if (!sortAscending) {
-                    cmp = cmp.reversed();
+                    comparator = comparator.reversed();
                 }
-                allBookedAppointments.sort(cmp);
-                currentPage = 1;
-                paginate();
+                allBookedAppointments.sort(comparator);
             }
         }
-        // Comparator mapping for each field(scheduled & inprogress)
+
+        // Your existing comparators (unchanged)
         private Comparator<MedicalProcedure> getComparatorForField(String field) {
             switch (field) {
                 case "procedureId":
@@ -1613,35 +1616,34 @@ public class ProcedureController {
                 case "appointmentId":
                     return Comparator.comparing(p -> p.getAppointment().getAppointmentId());
                 case "startedOn":
-                	return Comparator.comparing(MedicalProcedure::getFromDate);
+                    return Comparator.comparing(MedicalProcedure::getFromDate);
                 default:
                     return null;
             }
         }
+
         private Comparator<Appointment> getComparatorForBookedField(String field) {
             switch (field) {
-            case "appointmentId":
-                return Comparator.comparing(Appointment::getAppointmentId);
-            case "providerId":
-                return Comparator.comparing(a -> a.getProvider().getProviderId(),Comparator.nullsLast(String::compareTo));
-            case "doctorId":
-                return Comparator.comparing(a -> a.getDoctor().getDoctorId(),Comparator.nullsLast(String::compareTo));
-            case "doctorName":
-                return Comparator.comparing( a -> a.getDoctor().getDoctorName(),Comparator.nullsLast(String::compareTo));
-            case "recipientId":
-                return Comparator.comparing(a -> a.getRecipient().gethId(),Comparator.nullsLast(String::compareTo));
-            case "userName":
-                return Comparator.comparing(a -> a.getRecipient().getUserName(),Comparator.nullsLast(String::compareTo));
-            case "bookedAt":
-                return Comparator.comparing(
-                    Appointment::getBookedAt,Comparator.nullsLast(Date::compareTo));
-            case "status":
-                return Comparator.comparing(
-                    Appointment::getStatus,Comparator.nullsLast(String::compareTo));
-            default:
-                return null;
+                case "appointmentId":
+                    return Comparator.comparing(Appointment::getAppointmentId);
+                case "providerId":
+                    return Comparator.comparing(a -> a.getProvider().getProviderId(), Comparator.nullsLast(String::compareTo));
+                case "doctorId":
+                    return Comparator.comparing(a -> a.getDoctor().getDoctorId(), Comparator.nullsLast(String::compareTo));
+                case "doctorName":
+                    return Comparator.comparing(a -> a.getDoctor().getDoctorName(), Comparator.nullsLast(String::compareTo));
+                case "recipientId":
+                    return Comparator.comparing(a -> a.getRecipient().gethId(), Comparator.nullsLast(String::compareTo));
+                case "userName":
+                    return Comparator.comparing(a -> a.getRecipient().getUserName(), Comparator.nullsLast(String::compareTo));
+                case "bookedAt":
+                    return Comparator.comparing(Appointment::getBookedAt, Comparator.nullsLast(Date::compareTo));
+                case "status":
+                    return Comparator.comparing(Appointment::getStatus, Comparator.nullsLast(String::compareTo));
+                default:
+                    return null;
+            }
         }
-    }
         //Scheduled Reset
         public String resetPage() {
             // Reset form input fields

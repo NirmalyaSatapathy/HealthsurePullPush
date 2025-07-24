@@ -44,7 +44,9 @@ public class InsuranceController {
     private List<RelatedPatientInsuranceDetails> relatedInsuranceList=new ArrayList<RelatedPatientInsuranceDetails>();
     private int patientFirst = 0;
     private int patientPageSize = 3;
-
+    private String currentSort;
+    private int relatedFirst = 0;
+    private int relatedPageSize = 3; // Default page size, can be made configurable
     public int getInsuranceFirst() {
 		return insuranceFirst;
 	}
@@ -55,6 +57,30 @@ public class InsuranceController {
 
 	public int getInsurancePageSize() {
 		return insurancePageSize;
+	}
+
+	public int getRelatedFirst() {
+		return relatedFirst;
+	}
+
+	public void setRelatedFirst(int relatedFirst) {
+		this.relatedFirst = relatedFirst;
+	}
+
+	public int getRelatedPageSize() {
+		return relatedPageSize;
+	}
+
+	public void setRelatedPageSize(int relatedPageSize) {
+		this.relatedPageSize = relatedPageSize;
+	}
+
+	public String getCurrentSort() {
+		return currentSort;
+	}
+
+	public void setCurrentSort(String currentSort) {
+		this.currentSort = currentSort;
 	}
 
 	public boolean isShowRelatedInsuranceFlag() {
@@ -119,6 +145,48 @@ public class InsuranceController {
 
 	private int memberFirst = 0;
     private int memberPageSize = 3;
+ // Navigation methods
+    public void nextRelatedPage() {
+        if (relatedFirst + relatedPageSize < getRelatedInsuranceFullList().size()) {
+            relatedFirst += relatedPageSize;
+        }
+    }
+
+    public void previousRelatedPage() {
+        if (relatedFirst - relatedPageSize >= 0) {
+            relatedFirst -= relatedPageSize;
+        }
+    }
+
+    // Availability check methods
+    public boolean isNextRelatedAvailable() {
+        return relatedFirst + relatedPageSize < getRelatedInsuranceFullList().size();
+    }
+
+    public boolean isPreviousRelatedAvailable() {
+        return relatedFirst > 0;
+    }
+
+    // Paginated list accessor
+    public List<RelatedPatientInsuranceDetails> getPaginatedRelatedInsuranceList() {
+        if (relatedInsuranceList == null) return Collections.emptyList();
+        int toIndex = Math.min(relatedFirst + relatedPageSize, relatedInsuranceList.size());
+        return relatedInsuranceList.subList(relatedFirst, toIndex);
+    }
+
+    private List<RelatedPatientInsuranceDetails> getRelatedInsuranceFullList() {
+        return relatedInsuranceList == null ? Collections.emptyList() : relatedInsuranceList;
+    }
+
+    // Page info methods
+    public int getRelatedTotalPages() {
+        int size = relatedInsuranceList != null ? relatedInsuranceList.size() : 0;
+        return (int) Math.ceil((double) size / relatedPageSize);
+    }
+
+    public int getRelatedCurrentPage() {
+        return (relatedFirst / relatedPageSize) + 1;
+    }
     public void nextInsurancePage() {
         if (insuranceFirst + insurancePageSize < getPatientInsuranceFullList().size()) {
             insuranceFirst += insurancePageSize;
@@ -228,6 +296,7 @@ public class InsuranceController {
         insuranceFirst = 0;
         patientFirst = 0;
         memberFirst = 0;
+        relatedFirst = 0;
     }
     public int getAssociatedPatientsTotalPages() {
         int size = associatedPatients != null ? associatedPatients.size() : 0;
@@ -411,12 +480,12 @@ public class InsuranceController {
         topMessage = null;
         patientInsuranceList = null;
         associatedPatients = null;
-        relatedInsuranceList = null;
+       
         showPatientsFlag = false;
         showInsuranceFlag = false;
         showRelatedInsuranceFlag = false;
         relatedInsuranceList = null;
-
+        cameFromPatientSearch=false;
         // Validate doctor ID
         if (doctorId == null || doctorId.trim().isEmpty()) {
             FacesContext.getCurrentInstance().addMessage("doctorId",
@@ -535,7 +604,7 @@ public class InsuranceController {
                 patientInsuranceList = insuranceDaoImpl.showInsuranceOfRecipient(healthId);
                 if (patientInsuranceList == null || patientInsuranceList.isEmpty()) {
                     context.addMessage("recipientId", new FacesMessage(FacesMessage.SEVERITY_WARN,
-                            "No insurance found for patient ID: " + healthId, null));
+                            "No personal insurance found for patient ID: " + healthId, null));
                 } else {
                     showInsuranceFlag = true;
                     showRelatedInsuranceFlag = false;
@@ -550,7 +619,7 @@ public class InsuranceController {
                     showInsuranceFlag = false;
                     showPatientsFlag = false;
                     showRelatedInsuranceFlag = true;
-                    cameFromPatientSearch = true;
+                    cameFromPatientSearch = false;
                 }
             }
           }
@@ -601,6 +670,7 @@ public class InsuranceController {
             } else {
                 showPatientsFlag = true;
                 showRelatedInsuranceFlag = false;
+                cameFromPatientSearch=true;
             }
         }
 
@@ -787,7 +857,7 @@ public class InsuranceController {
         patientInsuranceList = insuranceDaoImpl.showInsuranceOfRecipient(hId);
         
         if (patientInsuranceList == null || patientInsuranceList.isEmpty()) {
-            topMessage = "No insurance found for patient ID: " + hId;
+            topMessage = "No personal insurance found for patient ID: " + hId;
             showInsuranceFlag = false;
             showPatientsFlag = true;
         } else {
@@ -812,16 +882,22 @@ public class InsuranceController {
 
         return "viewMembers?faces-redirect=true&ts=" + System.currentTimeMillis();
     }
-
-
-    public void sortBy(String listType, String field) {
-        if (field.equals(sortField)) {
-            ascending = !ascending;
-        } else {
-            sortField = field;
-            ascending = true;
-        }
-
+    public void sortByAsc(String listType,String field) {
+		currentSort = "asc";
+		this.sortField = field;
+		this.ascending = true;
+		sortBy(listType);
+	}
+ 
+	public void sortByDesc(String listType,String field) {
+		currentSort = "desc";
+		this.sortField = field;
+		this.ascending = false;
+		sortBy(listType);
+	}
+	
+    public void sortBy(String listType) {
+    	
         switch (listType) {
             case "insurance":
                 insuranceFirst = 0;
@@ -835,8 +911,37 @@ public class InsuranceController {
                 patientFirst = 0;
                 sortAssociatedPatients();
                 break;
+            case "related":
+            	relatedFirst=0;
+            	sortRelatedList();
+            	
         }
     }
+private void sortRelatedList() {
+		
+        if (relatedInsuranceList == null || sortField == null) return;
+
+        Collections.sort(relatedInsuranceList, (i1, i2) -> {
+            try {
+                Field f = i1.getClass().getDeclaredField(sortField);
+                f.setAccessible(true);
+                Object v1 = f.get(i1);
+                Object v2 = f.get(i2);
+
+                if (v1 == null || v2 == null) return 0;
+
+                if (v1 instanceof Date && v2 instanceof Date) {
+                    return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
+                } else if (v1 instanceof Comparable && v2 instanceof Comparable) {
+                    return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
+                } else {
+                    return 0;
+                }
+            } catch (Exception e) {
+                return 0;
+            }
+        });
+}
     private void sortAssociatedPatients() {
         if (associatedPatients == null || sortField == null) return;
 
@@ -929,11 +1034,11 @@ public class InsuranceController {
         this.insuranceFirst = 0;
         this.patientFirst = 0;
         this.memberFirst = 0;
-
+        this.relatedFirst=0;
         // Clear sorting
         this.sortField = null;
         this.ascending = true;
-
+        this.currentSort=null;
         // Clear selected info
         this.selectedItem = null;
         this.selectedPatientId = null;
@@ -977,6 +1082,13 @@ public class InsuranceController {
  // New method to show related insurance (modified from original)
     public String showRelatedInsuranceController(String hId) {
         relatedInsuranceList = insuranceDaoImpl.showRelatedInsuranceOfMember(hId);
+
+        if (this.relatedInsuranceList == null || this.relatedInsuranceList.isEmpty()) {
+            this.topMessage = "No related insurance found where patient ID " + this.healthId + " is a member";
+            return null;
+        } else {
+            this.topMessage = null; // Clear any previous message
+        }
         showInsuranceFlag = false;
         showPatientsFlag = false;
         showRelatedInsuranceFlag = true;
