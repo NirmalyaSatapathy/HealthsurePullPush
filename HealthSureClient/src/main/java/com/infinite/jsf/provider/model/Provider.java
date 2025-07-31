@@ -2,6 +2,7 @@ package com.infinite.jsf.provider.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -10,21 +11,25 @@ import com.infinite.jsf.admin.model.PaymentHistory;
 
 
 public class Provider {
-    private String providerId;
+	private String providerId;
     private String providerName;
     private String hospitalName;
     private String email;
+    private String telephone;
     private String address;
     private String city;
     private String state;
-    private String zipCode;
-    private ProviderStatus status;
-    private Timestamp createdAt;
+    private String zipcode;
+    private String password;
+    private LoginStatus status; // Should be "PENDING", "APPROVED", or "REJECTED"
+    private Date createdAt;
     
-    public Provider() {
-		super();
-		// TODO Auto-generated constructor stub
-	}
+ // ✅ For password update (not persisted to DB)
+    private String newPassword;
+    private String confirmPassword;
+
+
+
 	public String getProviderId() {
 		return providerId;
 	}
@@ -49,6 +54,12 @@ public class Provider {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+	public String getTelephone() {
+		return telephone;
+	}
+	public void setTelephone(String telephone) {
+		this.telephone = telephone;
+	}
 	public String getAddress() {
 		return address;
 	}
@@ -67,67 +78,64 @@ public class Provider {
 	public void setState(String state) {
 		this.state = state;
 	}
-	public String getZipCode() {
-		return zipCode;
+	public String getZipcode() {
+		return zipcode;
 	}
-	public void setZipCode(String zipCode) {
-		this.zipCode = zipCode;
+	public void setZipcode(String zipcode) {
+		this.zipcode = zipcode;
 	}
-	public ProviderStatus getStatus() {
+	public String getPassword() {
+		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	public LoginStatus getStatus() {
 		return status;
 	}
-	public void setStatus(ProviderStatus status) {
+	public void setStatus(LoginStatus status) {
 		this.status = status;
 	}
-	public Timestamp getCreatedAt() {
+	public Date getCreatedAt() {
 		return createdAt;
 	}
-	public void setCreatedAt(Timestamp createdAt) {
+	public void setCreatedAt(Date createdAt) {
 		this.createdAt = createdAt;
 	}
-	public Set<Doctor> getDoctors() {
-		return doctors;
+	
+	public String getNewPassword() {
+		return newPassword;
 	}
-	public void setDoctors(Set<Doctor> doctors) {
-		this.doctors = doctors;
+	public void setNewPassword(String newPassword) {
+		this.newPassword = newPassword;
 	}
-	public Set<Account> getAccounts() {
-		return accounts;
+	public String getConfirmPassword() {
+		return confirmPassword;
 	}
-	public void setAccounts(Set<Account> accounts) {
-		this.accounts = accounts;
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
 	}
-	public Set<Appointment> getAppointments() {
-		return appointments;
+	
+
+	public Provider(String providerId, String providerName, String hospitalName, String email,String telephone, String address,
+			String city, String state, String zipcode, String password, LoginStatus status, Date createdAt) {
+		super();
+		this.providerId = providerId;
+		this.providerName = providerName;
+		this.hospitalName = hospitalName;
+		this.email = email;
+		this.telephone = telephone;
+		this.address = address;
+		this.city = city;
+		this.state = state;
+		this.zipcode = zipcode;
+		this.password = password;
+		this.status = status;
+		this.createdAt = createdAt;
 	}
-	public void setAppointments(Set<Appointment> appointments) {
-		this.appointments = appointments;
+
+	public Provider() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
-	public Set<MedicalProcedure> getProcedures() {
-		return procedures;
-	}
-	public void setProcedures(Set<MedicalProcedure> procedures) {
-		this.procedures = procedures;
-	}
-	public Set<Claims> getClaims() {
-		return claims;
-	}
-	public void setClaims(Set<Claims> claims) {
-		this.claims = claims;
-	}
-	public Set<PaymentHistory> getPaymentHistories() {
-		return paymentHistories;
-	}
-	public void setPaymentHistories(Set<PaymentHistory> paymentHistories) {
-		this.paymentHistories = paymentHistories;
-	}
-	// One-to-Many relationships
-    private Set<Doctor> doctors;
-    private Set<Account> accounts;
-    private Set<Appointment> appointments;
-    private Set<MedicalProcedure> procedures;
-    private Set<Claims> claims;
-    private Set<PaymentHistory> paymentHistories;
-    
-    // Constructors, getters and setters
 }

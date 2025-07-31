@@ -10,7 +10,7 @@
       <generator class="assigned"/>
     </id>
     <many-to-one name="prescription" class="com.infinite.jsf.provider.model.Prescription" column="prescription_id" not-null="true" fetch="join"/>
-    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctor" column="doctor_id" not-null="true" fetch="join"/>
+    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctors" column="doctor_id" not-null="true" fetch="join"/>
     <many-to-one name="recipient" class="com.infinite.jsf.recipient.model.Recipient" column="h_id" not-null="true" fetch="join"/>
     <property name="quantityDispensed" column="quantity_dispensed" type="integer" not-null="true"/>
     <property name="dispenseDate" column="dispense_date" type="date" not-null="true"/>

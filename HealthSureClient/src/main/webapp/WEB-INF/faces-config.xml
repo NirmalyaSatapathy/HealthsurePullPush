@@ -11,7 +11,7 @@
 </managed-bean>
  <managed-bean>
 	<managed-bean-name>doctor</managed-bean-name>
-    <managed-bean-class>com.infinite.ejb.provider.model.Doctor</managed-bean-class>
+    <managed-bean-class>com.infinite.ejb.provider.model.Doctors</managed-bean-class>
     <managed-bean-scope>session</managed-bean-scope>
 </managed-bean>
  <managed-bean>

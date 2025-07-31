@@ -6,7 +6,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Patient Insurance Details</title>
+    <title>Patient Details</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
@@ -15,20 +15,25 @@
             padding: 20px;
         }
 
+        center {
+            margin-bottom: 30px;
+        }
+
         h2 {
             color: #3f51b5;
             font-size: 28px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
 
         .data-table {
             width: 100%;
             border-collapse: collapse;
+            margin-top: 30px;
         }
 
         .data-table th,
         .data-table td {
-            padding: 10px;
+            padding: 12px;
             text-align: left;
             border: 1px solid #ddd;
         }
@@ -49,91 +54,84 @@
         .message {
             color: red;
             font-weight: bold;
+            margin-top: 20px;
             text-align: center;
+        }
+
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 24px;
+            }
         }
     </style>
 </head>
 <body>
-    <h2>Related Member Insurance Details</h2>
+<h2>Related as a Member Insurance Details</h2>
+    <!-- Table to display patient details -->
+<%-- <h:dataTable value="#{bean.list}" var="d" border="1" styleClass="data-table"> --%>
+        <h:dataTable value="null" var="d" border="1" styleClass="data-table">
+            <h:column>
+                <f:facet name="header"><h:outputText value="Full Name" /></f:facet>
+                <h:outputText value="Nrmalya" />
+            </h:column>
 
-    <h:dataTable value="#{insuranceController.relatedInsuranceList}" var="d" styleClass="data-table" border="1">
+            <h:column>
+                <f:facet name="header"><h:outputText value="Age" /></f:facet>
+                <h:outputText value="20" />
+            </h:column>
 
-        <h:column>
-            <f:facet name="header"><h:outputText value="Full Name" /></f:facet>
-            <h:outputText value="#{d.memberName}" />
-        </h:column>
+            <h:column>
+                <f:facet name="header"><h:outputText value="Gender" /></f:facet>
+                <h:outputText value="Male" />
+            </h:column>
 
-        <h:column>
-            <f:facet name="header"><h:outputText value="Age" /></f:facet>
-            <h:outputText value="#{d.memberAge}" />
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Gender" /></f:facet>
-            <h:outputText value="#{d.memberGender}" />
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Relation" /></f:facet>
-            <h:outputText value="#{d.relationWithProposer}" />
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Subscribed By" /></f:facet>
-            <h:outputText value="#{d.proposerName}" />
-        </h:column>
-<h:column>
-            <f:facet name="header"><h:outputText value="Company " /></f:facet>
-            <h:outputText value="#{d.companyName}" />
-        </h:column>
-        <h:column>
-            <f:facet name="header"><h:outputText value="Plan " /></f:facet>
-            <h:outputText value="#{d.planName}" />
-        </h:column>
-        <h:column>
-            <f:facet name="header"><h:outputText value="Subscribe Date" /></f:facet>
-            <h:outputText value="#{d.enrollmentDate}">
-                <f:convertDateTime pattern="yyyy-MM-dd" />
-            </h:outputText>
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Coverage Start" /></f:facet>
-            <h:outputText value="#{d.coverageStartDate}">
-                <f:convertDateTime pattern="yyyy-MM-dd" />
-            </h:outputText>
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Coverage End" /></f:facet>
-            <h:outputText value="#{d.coverageEndDate}">
-                <f:convertDateTime pattern="yyyy-MM-dd" />
-            </h:outputText>
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Coverage Amount" /></f:facet>
-            <h:outputText value="#{d.coverageLimit}" />
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Remaining Amount" /></f:facet>
-            <h:outputText value="#{d.remaining}" />
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Total Claimed" /></f:facet>
-            <h:outputText value="#{d.claimed}" />
-        </h:column>
-
-        <h:column>
-            <f:facet name="header"><h:outputText value="Last Claim Date" /></f:facet>
-            <h:outputText value="#{d.lastClaimDate}">
-                <f:convertDateTime pattern="yyyy-MM-dd" />
-            </h:outputText>
-        </h:column>
-
-    </h:dataTable>
+            <h:column>
+                <f:facet name="header"><h:outputText value="Relation" /></f:facet>
+                <h:outputText value="son1"/>
+            </h:column>
+             <h:column>
+                <f:facet name="header"><h:outputText value="Subscribed by" /></f:facet>
+                <h:outputText value="Suman"/>
+              
+            </h:column>
+             <h:column>
+                <f:facet name="header"><h:outputText value="Subscribe Date" /></f:facet>
+                <h:outputText value="2025-08-09">
+                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                </h:outputText>
+            </h:column>
+              <h:column>
+                <f:facet name="header"><h:outputText value="Coverage start Date" /></f:facet>
+                <h:outputText value="2025-08-09">
+                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header"><h:outputText value="Coverage end Date" /></f:facet>
+                <h:outputText value="2025-09-09">
+                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                </h:outputText>
+            </h:column>
+            <h:column>
+                <f:facet name="header"><h:outputText value="Coverage amount" /></f:facet>
+                 <h:outputText value="08732973"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header"><h:outputText value="Remaining amount" /></f:facet>
+                <h:outputText value="3893832"/>
+            
+            </h:column>
+            <h:column>
+                <f:facet name="header"><h:outputText value="Total claimed" /></f:facet>
+                <h:outputText value="3883833"/>
+            </h:column>
+            <h:column>
+                <f:facet name="header"><h:outputText value="Last claim date" /></f:facet>
+                <h:outputText value="2025-09-09">
+                    <f:convertDateTime pattern="yyyy-MM-dd" />
+                </h:outputText>
+            </h:column>
+        </h:dataTable>
 </body>
 </html>
 </f:view>

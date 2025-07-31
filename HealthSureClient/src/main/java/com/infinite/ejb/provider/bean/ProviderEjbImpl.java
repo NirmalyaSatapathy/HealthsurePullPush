@@ -7,7 +7,7 @@ import java.util.Map;
 import javax.faces.context.FacesContext;
 import javax.naming.NamingException;
 
-import com.infinite.ejb.provider.model.Doctor;
+import com.infinite.ejb.provider.model.Doctors;
 import com.infinite.ejb.provider.model.MedicalProcedure;
 import com.infinite.ejb.provider.model.PrescribedMedicines;
 import com.infinite.ejb.provider.model.Prescription;
@@ -103,5 +103,51 @@ public class ProviderEjbImpl {
 		// TODO Auto-generated method stub
 		
 		return remote.addProcedureDailyLog(procedureLog);
+	}
+	
+	public List<Prescription> fetchPrescriptions(String procedureID) {
+		// TODO Auto-generated method stub
+		return remote.fetchPrescriptions(procedureID);
+	}
+
+	
+	public List<PrescribedMedicines> fetchMedicines(String prescriptionId) {
+		// TODO Auto-generated method stub
+		return remote.fetchMedicines(prescriptionId);
+	}
+
+	
+	public List<ProcedureTest> fetchTests(String prescriptionId) {
+		// TODO Auto-generated method stub
+		return remote.fetchTests(prescriptionId);
+	}
+
+	
+	public List<ProcedureDailyLog> fetchLogs(String procedureID) {
+		// TODO Auto-generated method stub
+		return remote.fetchLogs(procedureID);
+	}
+	
+	public String updatePrescription(Prescription p) throws SQLException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return remote.updatePrescription(p);
+	}
+
+	
+	public String updateMedicine(PrescribedMedicines m) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return remote.updateMedicine(m);
+	}
+
+	
+	public String updateTest(ProcedureTest t) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return remote.updateTest(t);
+	}
+
+	
+	public String updateLog(ProcedureDailyLog l) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return remote.updateLog(l);
 	}
 }

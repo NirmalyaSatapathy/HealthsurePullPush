@@ -14,7 +14,7 @@
     <many-to-one name="appointment" class="com.infinite.jsf.provider.model.Appointment" column="appointment_id" not-null="true" fetch="join"/>
     <many-to-one name="recipient" class="com.infinite.jsf.recipient.model.Recipient" column="h_id" not-null="true" fetch="join"/>
     <many-to-one name="provider" class="com.infinite.jsf.provider.model.Provider" column="provider_id" not-null="true" fetch="join"/>
-    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctor" column="doctor_id" not-null="true" fetch="join"/>
+    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctors" column="doctor_id" not-null="true" fetch="join"/>
 
     <!-- Date and Enum Properties -->
     <property name="scheduledDate" column="scheduled_date" type="date"/>

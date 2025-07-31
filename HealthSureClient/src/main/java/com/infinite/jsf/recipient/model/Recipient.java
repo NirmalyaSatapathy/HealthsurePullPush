@@ -22,24 +22,11 @@ public class Recipient {
     private Gender gender;
     private Date dob;
     private String address;
-    private Timestamp createdAt;
+    private Date createdAt;//change
     private String password;
     private String email;
     private RecipientStatus status;
-    private Integer loginAttempts;
-    private Timestamp lockedUntil;
-    private Timestamp lastLogin;
-    private Timestamp passwordUpdatedAt;
     
-    // Relationships
-    private Set<Appointment> appointments;
-    private Set<MedicalProcedure> procedures;
-    private Set<Subscribe> subscriptions;
-    private Set<Prescription> prescriptions;
-    private Set<DispensedMedicine> dispensedMedicines;
-    private Set<DispensedEquipment> dispensedEquipments;
-    private Set<Claims> claims;
-    private Set<PaymentHistory> paymentHistories;
 
     // Constructors
     public Recipient() {}
@@ -58,7 +45,7 @@ public class Recipient {
         this.password = password;
         this.email = email;
         this.status = RecipientStatus.ACTIVE;
-        this.loginAttempts = 0;
+       
         this.createdAt = new Timestamp(System.currentTimeMillis());
     }
 
@@ -127,11 +114,11 @@ public class Recipient {
         this.address = address;
     }
 
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
 
@@ -157,103 +144,6 @@ public class Recipient {
 
     public void setStatus(RecipientStatus status) {
         this.status = status;
-    }
-
-    public Integer getLoginAttempts() {
-        return loginAttempts;
-    }
-
-    public void setLoginAttempts(Integer loginAttempts) {
-        this.loginAttempts = loginAttempts;
-    }
-
-    public Timestamp getLockedUntil() {
-        return lockedUntil;
-    }
-
-    public void setLockedUntil(Timestamp lockedUntil) {
-        this.lockedUntil = lockedUntil;
-    }
-
-    public Timestamp getLastLogin() {
-        return lastLogin;
-    }
-
-    public void setLastLogin(Timestamp lastLogin) {
-        this.lastLogin = lastLogin;
-    }
-
-    public Timestamp getPasswordUpdatedAt() {
-        return passwordUpdatedAt;
-    }
-
-    public void setPasswordUpdatedAt(Timestamp passwordUpdatedAt) {
-        this.passwordUpdatedAt = passwordUpdatedAt;
-    }
-
-    // Relationship getters and setters
-    public Set<Appointment> getAppointments() {
-        return appointments;
-    }
-
-    public void setAppointments(Set<Appointment> appointments) {
-        this.appointments = appointments;
-    }
-
-    public Set<MedicalProcedure> getProcedures() {
-        return procedures;
-    }
-
-    public void setProcedures(Set<MedicalProcedure> procedures) {
-        this.procedures = procedures;
-    }
-
-    public Set<Subscribe> getSubscriptions() {
-        return subscriptions;
-    }
-
-    public void setSubscriptions(Set<Subscribe> subscriptions) {
-        this.subscriptions = subscriptions;
-    }
-
-    public Set<Prescription> getPrescriptions() {
-        return prescriptions;
-    }
-
-    public void setPrescriptions(Set<Prescription> prescriptions) {
-        this.prescriptions = prescriptions;
-    }
-
-    public Set<DispensedMedicine> getDispensedMedicines() {
-        return dispensedMedicines;
-    }
-
-    public void setDispensedMedicines(Set<DispensedMedicine> dispensedMedicines) {
-        this.dispensedMedicines = dispensedMedicines;
-    }
-
-    public Set<DispensedEquipment> getDispensedEquipments() {
-        return dispensedEquipments;
-    }
-
-    public void setDispensedEquipments(Set<DispensedEquipment> dispensedEquipments) {
-        this.dispensedEquipments = dispensedEquipments;
-    }
-
-    public Set<Claims> getClaims() {
-        return claims;
-    }
-
-    public void setClaims(Set<Claims> claims) {
-        this.claims = claims;
-    }
-
-    public Set<PaymentHistory> getPaymentHistories() {
-        return paymentHistories;
-    }
-
-    public void setPaymentHistories(Set<PaymentHistory> paymentHistories) {
-        this.paymentHistories = paymentHistories;
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.infinite.ejb.provider.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.Set;
 
@@ -8,17 +9,43 @@ import com.infinite.ejb.recipient.model.Recipient;
 public class Appointment implements Serializable{
 
     private String appointmentId;
-    private Doctor doctor;
+    private Doctors doctor;
     private Recipient recipient;
     private DoctorAvailability availability;
     private Provider provider;
-
     private Date requestedAt;
     private Date bookedAt;
-    private String status;
+    private AppointmentStatus status;
     private String notes;
+    private Date start;
+    private Date end;
+    private int slotNo;
+    
+    public Date getStart() {
+		return start;
+	}
 
-    @Override
+	public void setStart(Date start) {
+		this.start = start;
+	}
+
+	public Date getEnd() {
+		return end;
+	}
+
+	public void setEnd(Date end) {
+		this.end = end;
+	}
+
+	public int getSlotNo() {
+		return slotNo;
+	}
+
+	public void setSlotNo(int slotNo) {
+		this.slotNo = slotNo;
+	}
+
+	@Override
 	public String toString() {
 		return "Appointment [appointmentId=" + appointmentId + ", doctor=" + doctor + ", recipient=" + recipient
 				+ ", availability=" + availability + ", provider=" + provider + ", requestedAt=" + requestedAt
@@ -39,11 +66,11 @@ public class Appointment implements Serializable{
         this.appointmentId = appointmentId;
     }
 
-    public Doctor getDoctor() {
+    public Doctors getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(Doctors doctor) {
         this.doctor = doctor;
     }
 
@@ -87,7 +114,7 @@ public class Appointment implements Serializable{
         this.bookedAt = bookedAt;
     }
 
-    public String getStatus() {
+    public AppointmentStatus getStatus() {
         return status;
     }
 
@@ -96,7 +123,7 @@ public class Appointment implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(AppointmentStatus status) {
         this.status = status;
     }
 

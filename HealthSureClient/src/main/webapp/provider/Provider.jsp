@@ -6,56 +6,122 @@
 <html lang="en">
 <head>
     <title>Provider Home</title>
-    <!-- Tailwind CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" type="text/css" href="/HealthSureClient/resources/css/provider.css" />
 </head>
-<body class="bg-gray-100">
+
+<body class="center-wrapper">
 <f:view>
-    <!-- ✅ Include Fixed Navbar -->"src/main/webapp/provider/Provider.jsp"
+
+    <!-- 🌐 Navigation -->
     <jsp:include page="/navbar/NavProvider.jsp" />
 
-    <!-- ✅ Main Content -->
-    <div class="max-w-4xl mx-auto pt-28 px-4 text-center mb-20">
-
-        <!-- ✅ Welcome Message -->
-        <h1 class="text-4xl font-bold text-blue-700 mb-4">
-            Welcome, <h:outputText value="#{sessionScope.provider_name}" />
-        </h1>
-
-        <!-- ✅ Provider Details Section -->
-        <div class="bg-white p-6 rounded-xl shadow-md text-left text-gray-800 mb-8 space-y-1">
-            <p><strong>Provider ID:</strong> <h:outputText value="#{sessionScope.provider_id}" /></p>
-            <p><strong>Hospital Name:</strong> <h:outputText value="#{sessionScope.hospital_name}" /></p>
-            <p><strong>Email:</strong> <h:outputText value="#{sessionScope.email}" /></p>
-            <p><strong>Address:</strong> <h:outputText value="#{sessionScope.address}" /></p>
-            <p><strong>City:</strong> <h:outputText value="#{sessionScope.city}" /></p>
-            <p><strong>State:</strong> <h:outputText value="#{sessionScope.state}" /></p>
-            <p><strong>ZIP Code:</strong> <h:outputText value="#{sessionScope.zip_code}" /></p>
-        </div>
-
-        <!-- ✅ Action Buttons -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-		    <h:form>
-		        <h:commandButton value="Manage Appointments" action="#{providerBean.manageAppointments}"
-		            styleClass="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105" />
-		    </h:form>
-		    <h:form>
-		        <h:commandButton value="View Medical History" action="#{providerBean.viewHistory}"
-		            styleClass="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105" />
-		    </h:form>
-		    <h:form>
-		        <h:commandButton value="Create Claim" action="#{providerBean.createClaim}"
-		            styleClass="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105" />
-		    </h:form>
-		    <h:form>
-		        <h:commandButton value="Search Payments" action="#{providerBean.searchPayments}"
-		            styleClass="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-semibold shadow-lg transition-all duration-300 transform hover:-translate-y-1 hover:scale-105" />
-		    </h:form>
-		</div>
+    <!-- 👋 Welcome Message -->
+    <div class="container-xl">
+        <h2 class="welcome-heading">
+            Welcome, <h:outputText value="#{providerBean.providerName}" /> 👋
+        </h2>
+        <p class="subtext">Here’s a snapshot of your practice this week.</p>
     </div>
-</f:view>
 
-<!-- ✅ Footer -->
-<jsp:include page="/footer/Footer.jsp" />
+    <!-- 📊 Dashboard Overview -->
+    <div class="container-xl">
+        <div class="dashboard-grid">
+
+            <div class="card">
+                <h3 class="card-title" style="color: #3b82f6;">Appointments</h3>
+                <p class="card-value"><h:outputText value="#{providerBean.totalAppointments}" /></p>
+                <p class="card-note">Scheduled this week</p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title" style="color: #10b981;">Patients</h3>
+                <p class="card-value"><h:outputText value="#{providerBean.totalPatients}" /></p>
+                <p class="card-note">Under your care</p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title" style="color: #8b5cf6;">Claims</h3>
+                <p class="card-value"><h:outputText value="#{providerBean.totalClaims}" /></p>
+                <p class="card-note">Filed this month</p>
+            </div>
+
+            <div class="card">
+                <h3 class="card-title" style="color: #ef4444;">Payments</h3>
+                <p class="card-value">₹<h:outputText value="#{providerBean.totalPayments}" /></p>
+                <p class="card-note">Total received</p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- 💡 Insights -->
+    <div class="container-md">
+        <div class="insight-box">
+            <p class="insight-text">
+                "The good physician treats the disease; the great physician treats the patient who has the disease." — William Osler
+            </p>
+        </div>
+    </div>
+
+    <!-- 🚀 Quick Actions -->
+    <div class="container-xl quick-actions">
+        <h3 class="quick-actions-title">Quick Actions</h3>
+        <div class="action-grid">
+
+            <h:form>
+                <h:commandButton value="📅 Update Availability"
+                                 action="#{providerBean.manageAppointments}"
+                                 styleClass="action-button btn-blue" />
+            </h:form>
+
+            <h:form>
+                <h:commandButton value="📅 View Appointments"
+                                 action="#{providerBean.viewHistory}"
+                                 styleClass="action-button btn-green" />
+            </h:form>
+
+            <h:form>
+                <h:commandButton value="🧾 Scheduled Procedures"
+                                 action="ShowScheduledProcedures"
+                                 styleClass="action-button btn-purple" />
+            </h:form>
+
+            <h:form>
+                <h:commandButton value="🧾 Ongoing Procedures"
+                                 action="ShowOnGoingProcedures"
+                                 styleClass="action-button btn-pink" />
+            </h:form>
+
+            <h:form>
+                <h:commandButton value="💳 File Insurance Claim"
+                                 action="#{claimController.searchUnclaimedProcedure}"
+                                 styleClass="action-button btn-indigo" />
+            </h:form>
+
+            <h:form>
+                <h:commandButton value="💳 Update Insurance Claim"
+                                 action="#{claimController.showPendingClaims}"
+                                 styleClass="action-button btn-indigo" />
+            </h:form>
+
+            <h:form>
+                <h:commandButton value="💳 Claims History"
+                                 action="#{providerBean.searchPayments}"
+                                 styleClass="action-button btn-teal" />
+            </h:form>
+
+            <h:form>
+                <h:commandButton value="💳 Payment Records"
+                                 action="#{providerBean.createClaim}"
+                                 styleClass="action-button btn-fuchsia" />
+            </h:form>
+
+        </div>
+    </div>
+
+    <!-- 📎 Footer -->
+    <jsp:include page="/footer/Footer.jsp" />
+
+</f:view>
 </body>
 </html>

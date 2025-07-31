@@ -128,6 +128,21 @@
     .submit-button:hover {
       background-color: #117a8b;
     }
+    .message-container ul {
+  list-style: none; /* Remove bullet */
+  padding-left: 0;
+  margin: 0 0 1rem 0;
+}
+
+.message-container li {
+  background-color: #ffe6e6; /* Light red background for visibility */
+  color: #c62828;            /* Strong red text */
+  padding: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
   </style>
 </head>
 <body>
@@ -137,7 +152,9 @@
       <div class="nav-title">Procedure Action Panel</div>
 
       <h:form prependId="false">
-
+<div class="message-container">
+  <h:messages globalOnly="true" layout="list" />
+</div>
         <!-- Row 1: Add Actions -->
         <div class="button-row row1">
           <div class="button-group">
@@ -164,22 +181,16 @@
                 styleClass="action-button edit-button" />
             </div>
           </h:panelGroup>
-
-          <h:panelGroup rendered="#{not empty procedureController.prescriptions}">
-            <div class="button-group">
-              <h:commandButton
-                value="Edit Last Prescription"
-                action="AddPrescription?faces-redirect=true"
-                styleClass="action-button edit-button" />
-            </div>
-          </h:panelGroup>
- <h:panelGroup rendered="#{not empty procedureController.procedureLogs}">
-            <div class="button-group">
-              <h:commandButton value="Edit Last Log"
-                               action="AddPrescription?faces-redirect=true"
+          <div class="button-group">
+              <h:commandButton value="Review Prescriptions"
+                               action="#{procedureController.loadViewPrescriptions()}"
                                styleClass="action-button edit-button" />
             </div>
-          </h:panelGroup>
+             <div class="button-group">
+              <h:commandButton value="Review Logs"
+                               action="#{procedureController.loadViewLogs()}"
+                               styleClass="action-button edit-button" />
+            </div>
           <div class="button-group">
             <h:commandButton
               value="Submit Procedure"

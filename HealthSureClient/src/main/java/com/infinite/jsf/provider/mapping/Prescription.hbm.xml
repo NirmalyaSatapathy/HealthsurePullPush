@@ -16,7 +16,8 @@
 
     <many-to-one name="provider" class="com.infinite.jsf.provider.model.Provider" column="provider_id" not-null="true" fetch="join"/>
 
-    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctor" column="doctor_id" not-null="true" fetch="join"/>
+    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctors" column="doctor_id" not-null="true" fetch="join"/>
+     <many-to-one name="prescribedDoc" class="com.infinite.jsf.provider.model.Doctors" column="prescribed_by" not-null="true" fetch="join"/>
     <list name="tests" table="prescribed_tests" cascade="all" inverse="true" lazy="true">
     <key column="prescription_id"/>
     <list-index column="test_order"/> <!-- Add this column to your DB if not present -->

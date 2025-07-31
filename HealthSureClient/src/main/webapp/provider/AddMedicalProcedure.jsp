@@ -183,10 +183,14 @@
 
                         <div class="form-group">
                             <label for="procedureDate">Procedure Date <span style="color:red">*</span></label>
-                            <h:inputText id="procedureDate" value="#{procedureController.procedure.procedureDate}" readonly="true" styleClass="form-control">
+                            <h:inputText id="procedureDate" value="#{procedureController.procedure.procedureDate}"  styleClass="form-control">
                                 <f:convertDateTime pattern="yyyy-MM-dd" />
                             </h:inputText>
                             <h:message for="procedureDate" styleClass="error" />
+                             <script>
+                                let s = document.querySelector('#procedureDate');
+                                if (s) s.setAttribute('type', 'date');
+                            </script>
                         </div>
 
                         <div class="form-group full-width">

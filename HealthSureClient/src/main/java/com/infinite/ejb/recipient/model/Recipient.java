@@ -26,29 +26,8 @@ public class Recipient implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 	private String email;
-    private Status status;
-    private int loginAttempts;
-    private Date lockedUntil;
-    private Date lastLogin;
-    private Date passwordUpdatedAt;
-    private Set<PaymentHistory> paymentHistory;
-    public Set<PaymentHistory> getPaymentHistory() {
-		return paymentHistory;
-	}
-	public void setPaymentHistory(Set<PaymentHistory> paymentHistory) {
-		this.paymentHistory = paymentHistory;
-	}
-	// Relationships
-    private Set<Appointment> appointments;
-    public Set<Appointment> getAppointments() {
-		return appointments;
-	}
-	public void setAppointments(Set<Appointment> appointments) {
-		this.appointments = appointments;
-	}
-	private Set<Subscribe> subscriptions;
-    private Set<MedicalProcedure> medicalProcedures;
-    private Set<Claims> claims;
+    private RecipientStatus status;
+    
 
     // Getters & Setters
     public String gethId() { return hId; }
@@ -84,37 +63,25 @@ public class Recipient implements Serializable{
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
-    public Status getStatus() { return status; }
-    public void setStatus(Status status) { this.status = status; }
-
-    public int getLoginAttempts() { return loginAttempts; }
-    public void setLoginAttempts(int loginAttempts) { this.loginAttempts = loginAttempts; }
-
-    public Date getLockedUntil() { return lockedUntil; }
-    public void setLockedUntil(Date lockedUntil) { this.lockedUntil = lockedUntil; }
-
-    public Date getLastLogin() { return lastLogin; }
-    public void setLastLogin(Date lastLogin) { this.lastLogin = lastLogin; }
-
-    public Date getPasswordUpdatedAt() { return passwordUpdatedAt; }
-    public void setPasswordUpdatedAt(Date passwordUpdatedAt) { this.passwordUpdatedAt = passwordUpdatedAt; }
-
-    @Override
-	public String toString() {
-		return "Recipient [hId=" + hId + ", firstName=" + firstName + ", lastName=" + lastName + ", mobile=" + mobile
-				+ ", userName=" + userName + ", gender=" + gender + ", dob=" + dob + ", address=" + address
-				+ ", createdAt=" + createdAt + ", password=" + password + ", email=" + email + ", status=" + status
-				+ ", loginAttempts=" + loginAttempts + ", lockedUntil=" + lockedUntil + ", lastLogin=" + lastLogin
-				+ ", passwordUpdatedAt=" + passwordUpdatedAt + ", paymentHistory=" + paymentHistory + ", appointments="
-				+ appointments + ", subscriptions=" + subscriptions + ", medicalProcedures=" + medicalProcedures
-				+ ", claims=" + claims + "]";
+    public RecipientStatus getStatus() { return status; }
+    public void setStatus(RecipientStatus status) { this.status = status; }
+	public Recipient(String hId, String firstName, String lastName, String mobile, String userName, Gender gender,
+			Date dob, String address, Date createdAt, String password, String email, RecipientStatus status) {
+		super();
+		this.hId = hId;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.mobile = mobile;
+		this.userName = userName;
+		this.gender = gender;
+		this.dob = dob;
+		this.address = address;
+		this.createdAt = createdAt;
+		this.password = password;
+		this.email = email;
+		this.status = status;
 	}
-	public Set<Subscribe> getSubscriptions() { return subscriptions; }
-    public void setSubscriptions(Set<Subscribe> subscriptions) { this.subscriptions = subscriptions; }
 
-    public Set<MedicalProcedure> getMedicalProcedures() { return medicalProcedures; }
-    public void setMedicalProcedures(Set<MedicalProcedure> medicalProcedures) { this.medicalProcedures = medicalProcedures; }
 
-    public Set<Claims> getClaims() { return claims; }
-    public void setClaims(Set<Claims> claims) { this.claims = claims; }
+   
 }

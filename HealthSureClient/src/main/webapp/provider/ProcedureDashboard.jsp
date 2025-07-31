@@ -125,13 +125,14 @@
                              action="#{procedureController.gotoProcedureForm()}"
                              styleClass="action-button edit-button" />
           </div>
-  <h:panelGroup rendered="#{not empty procedureController.prescriptions}">
+           <h:panelGroup rendered="#{not empty procedureController.prescriptions}">
             <div class="button-group">
-              <h:commandButton value="Edit Last Prescription"
-                               action="AddPrescription?faces-redirect=true"
+              <h:commandButton value="Review Prescriptions"
+                               action="#{procedureController.loadViewPrescriptions()}"
                                styleClass="action-button edit-button" />
             </div>
           </h:panelGroup>
+ 
           <div class="button-group">
             <h:commandButton value="Submit Procedure"
                              action="#{procedureController.procedureSubmit()}"

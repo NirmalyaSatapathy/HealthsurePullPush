@@ -9,11 +9,13 @@ CREATE TABLE Providers (
     provider_id VARCHAR(20) PRIMARY KEY,
     provider_name VARCHAR(100) NOT NULL,
     hospital_name VARCHAR(100) NOT NULL,
+    telephone VARCHAR(20) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(255),
     address VARCHAR(225) NOT NULL,
     city VARCHAR(225) NOT NULL,
     state VARCHAR(225) NOT NULL,   
-    zip_code VARCHAR(225) NOT NULL,
+    zipcode VARCHAR(225) NOT NULL,
     status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -26,11 +28,11 @@ CREATE TABLE Doctors (
     specialization VARCHAR(100),
     license_no VARCHAR(50) UNIQUE NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    phone_number VARCHAR(10) NOT NULL,
     address VARCHAR(225) NOT NULL,
-    gender VARCHAR(10),
-    password VARCHAR(255) NOT NULL,
-    login_status ENUM('PENDING', 'APPROVED', 'REJECTED') DEFAULT 'PENDING',
-    doctor_status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'INACTIVE',
+   gender ENUM('MALE','FEMALE') NOT NULL,
+   doctor_type ENUM('STANDARD','ADHOC') DEFAULT 'STANDARD',
+    doctor_status ENUM('ACTIVE', 'INACTIVE','0N_LEAVE') DEFAULT 'INACTIVE',
     FOREIGN KEY (provider_id) REFERENCES Providers(provider_id)
 );
 
@@ -43,21 +45,14 @@ CREATE TABLE Accounts (
     FOREIGN KEY (provider_id) REFERENCES Providers(provider_id)
 );
 
-CREATE TABLE Otp_logs (
+CREATE TABLE Provider_Otp (
     otp_id INT PRIMARY KEY AUTO_INCREMENT,
-    user_type ENUM('PROVIDER', 'RECIPIENT', 'PHARMACY', 'ADMIN'),
+	email VARCHAR(100) UNIQUE NOT NULL,
     otp_code VARCHAR(10) NOT NULL,
-    is_used BOOLEAN DEFAULT FALSE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE Provider_password (
-    reset_id INT PRIMARY KEY AUTO_INCREMENT,
-    provider_id VARCHAR(20) NOT NULL,
-    old_password VARCHAR(255),
-    new_password VARCHAR(255),
-    reset_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (provider_id) REFERENCES Providers(provider_id)
+    created_at TimeStamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expires_at TimeStamp NULL,
+    is_verified BOOLEAN DEFAULT FALSE,
+    FOREIGN KEY (email) REFERENCES Providers(email)
 );
 
 CREATE TABLE Doctor_availability (
@@ -67,10 +62,14 @@ CREATE TABLE Doctor_availability (
     start_time TIME NOT NULL,
     end_time TIME NOT NULL,
     slot_type ENUM('STANDARD', 'ADHOC') DEFAULT 'STANDARD',
-    max_capacity INT NOT NULL DEFAULT 15,
+    total_slots INT NOT NULL,
+    patient_window INT GENERATED ALWAYS AS (
+    TIMESTAMPDIFF(MINUTE, start_time, end_time) / total_slots
+	) STORED,
     is_recurring BOOLEAN DEFAULT FALSE,
     notes VARCHAR(255),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
 );
 
@@ -89,14 +88,10 @@ CREATE TABLE Recipient (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
-    status ENUM('ACTIVE', 'INACTIVE', 'BLOCKED') DEFAULT 'ACTIVE',
-    login_attempts INT DEFAULT 0,
-    locked_until DATETIME DEFAULT NULL,
-    last_login DATETIME DEFAULT NULL,
-    password_updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    status ENUM('ACTIVE', 'INACTIVE', 'BLOCKED') DEFAULT 'ACTIVE'
 );
 
-CREATE TABLE Otp (
+CREATE TABLE Recipient_Otp (
     otp_id INT PRIMARY KEY AUTO_INCREMENT,
     user_name VARCHAR(100) UNIQUE NOT NULL,
     otp_code INT NOT NULL,
@@ -104,8 +99,9 @@ CREATE TABLE Otp (
     status ENUM('PENDING', 'VERIFIED', 'EXPIRED') DEFAULT 'PENDING',
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at DATETIME NOT NULL,
-    purpose ENUM('REGISTER','FORGOT_PASSWORD') NOT NULL,
-    FOREIGN KEY (user_name) REFERENCES Recipient(user_name) ON DELETE CASCADE
+    purpose ENUM('REGISTER','FORGOT_PASSWORD','RESEND_OTP') NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    CONSTRAINT fk_user FOREIGN KEY (user_name) REFERENCES recipient(user_name) ON DELETE CASCADE
 );
 
 -- ===========================
@@ -119,7 +115,12 @@ CREATE TABLE Appointment (
     provider_id VARCHAR(36) NOT NULL,
     requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     booked_at TIMESTAMP NULL,
+    cancelled_at TIMESTAMP NULL,
+  completed_at TIMESTAMP NULL,
     status ENUM('PENDING', 'BOOKED', 'CANCELLED', 'COMPLETED') DEFAULT 'PENDING',
+    slot_no INT NOT NULL,
+  start TIMESTAMP,
+  end TIMESTAMP,
     notes TEXT,
     FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id),
     FOREIGN KEY (h_id) REFERENCES Recipient(h_id),
@@ -156,6 +157,7 @@ CREATE TABLE prescription (
     h_id VARCHAR(20) NOT NULL,
     provider_id VARCHAR(20) NOT NULL,
     doctor_id VARCHAR(20) NOT NULL,
+    prescribed_by VARCHAR(20) NOT NULL,
     written_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     start_date TIMESTAMP,
     end_date TIMESTAMP,
@@ -163,7 +165,8 @@ CREATE TABLE prescription (
     FOREIGN KEY (procedure_id) REFERENCES medical_procedure(procedure_id),
     FOREIGN KEY (h_id) REFERENCES Recipient(h_id),
     FOREIGN KEY (provider_id) REFERENCES Providers(provider_id),
-    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id)
+    FOREIGN KEY (doctor_id) REFERENCES Doctors(doctor_id),
+    foreign key(prescribed_by) REFERENCES Doctors(doctor_id)
 );
 CREATE TABLE prescribed_medicines (
     prescribed_id VARCHAR(20) PRIMARY KEY,
@@ -190,6 +193,7 @@ CREATE TABLE prescribed_tests (
 CREATE TABLE procedure_daily_log (
     log_id VARCHAR(20) PRIMARY KEY,
     procedure_id VARCHAR(20) NOT NULL,
+    logged_by VARCHAR(20) NOT NULL,
     log_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     vitals TEXT,  -- optional (BP, temp, pulse)
     notes TEXT,   -- e.g., "Patient stable", "No new meds today"

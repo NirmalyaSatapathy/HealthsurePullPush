@@ -13,7 +13,7 @@
     <!-- Many-to-One: reference to MedicalProcedure -->
     <many-to-one name="medicalProcedure" class="com.infinite.jsf.provider.model.MedicalProcedure"
                  column="procedure_id" not-null="true" fetch="join"/>
-
+ <many-to-one name="loggedDoctor" class="com.infinite.jsf.provider.model.Doctors" column="logged_by" not-null="true" fetch="join"/>
     <!-- Log date for the entry -->
     <property name="logDate" column="log_date" type="date" not-null="true"/>
 

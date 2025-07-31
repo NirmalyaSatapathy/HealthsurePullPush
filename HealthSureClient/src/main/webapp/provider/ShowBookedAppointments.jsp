@@ -341,23 +341,7 @@
         </h:outputText>
     </h:column>
 
-    <!-- Status -->
-    <h:column>
-        <f:facet name="header">
-            <h:panelGroup layout="block" style="display: flex; align-items: center;">
-                <h:outputText value="Status" />
-                <h:panelGroup styleClass="sort-icons">
-                    <h:commandLink action="#{procedureController.sortByAsc('status')}"
-                                  rendered="#{!(procedureController.sortField eq 'status' and procedureController.sortAscending)}"
-                                  styleClass="sort-icon">▲</h:commandLink>
-                    <h:commandLink action="#{procedureController.sortByDesc('status')}"
-                                  rendered="#{!(procedureController.sortField eq 'status' and not procedureController.sortAscending)}"
-                                  styleClass="sort-icon">▼</h:commandLink>
-                </h:panelGroup>
-            </h:panelGroup>
-        </f:facet>
-        <h:outputText value="#{appt.status}" />
-    </h:column>
+    
 
     <!-- Action -->
     <h:column>

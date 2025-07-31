@@ -12,6 +12,7 @@ public class Subscribe {
     private Recipient recipient;
     private InsuranceCoverageOption coverage;
     private Date subscribeDate;
+    private Date StartDate;
     private Date expiryDate;
     private SubscriptionType type;
     private SubscriptionStatus status;
@@ -76,7 +77,19 @@ public class Subscribe {
         return expiryDate;
     }
 
-    public void setExpiryDate(Date expiryDate) {
+    public Date getStartDate() {
+		return StartDate;
+	}
+
+	public void setStartDate(Date startDate) {
+		StartDate = startDate;
+	}
+
+	public void setTotalPremium(double totalPremium) {
+		this.totalPremium = totalPremium;
+	}
+
+	public void setExpiryDate(Date expiryDate) {
         this.expiryDate = expiryDate;
     }
 

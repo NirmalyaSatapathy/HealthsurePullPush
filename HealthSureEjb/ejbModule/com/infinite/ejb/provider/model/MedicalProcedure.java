@@ -8,7 +8,7 @@ import com.infinite.ejb.insurance.model.Subscribe;
 import com.infinite.ejb.recipient.model.Recipient;
 import com.infinite.ejb.provider.model.ProcedureDailyLog;
 import com.infinite.ejb.provider.model.Appointment;
-import com.infinite.ejb.provider.model.Doctor;
+import com.infinite.ejb.provider.model.Doctors;
 import com.infinite.ejb.provider.model.Provider;
 
 public class MedicalProcedure implements Serializable {
@@ -17,7 +17,7 @@ public class MedicalProcedure implements Serializable {
     private Appointment appointment;
     private Recipient recipient;
     private Provider provider;
-    private Doctor doctor;
+    private Doctors doctor;
 
     private Date scheduledDate;      // NEW: for procedures planned ahead
     private Date procedureDate;      // actual date
@@ -53,7 +53,7 @@ public class MedicalProcedure implements Serializable {
         this.appointment = new Appointment();
         this.recipient = new Recipient();
         this.provider = new Provider();
-        this.doctor = new Doctor();
+        this.doctor = new Doctors();
     }
 
     // Getters and Setters
@@ -89,11 +89,11 @@ public class MedicalProcedure implements Serializable {
         this.provider = provider;
     }
 
-    public Doctor getDoctor() {
+    public Doctors getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(Doctors doctor) {
         this.doctor = doctor;
     }
     public Date getScheduledDate() {

@@ -101,9 +101,11 @@
         }
         .sort-icon {
             color: white;
-            text-decoration: none;
-            font-size: 10px;
-            line-height: 0.8;
+           font-size: 0.7em;
+	padding: 0;
+	margin: 0;
+	line-height: 1;
+	display: inline-block;
         }
         .sort-icon:hover {
             color: #BBDEFB;

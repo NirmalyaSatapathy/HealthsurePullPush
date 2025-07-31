@@ -4,7 +4,8 @@ import java.util.Calendar;
 import java.util.Date;
 
 import com.infinite.ejb.provider.model.Appointment;
-import com.infinite.ejb.provider.model.Doctor;
+import com.infinite.ejb.provider.model.AppointmentStatus;
+import com.infinite.ejb.provider.model.Doctors;
 import com.infinite.ejb.provider.model.DoctorAvailability;
 import com.infinite.ejb.provider.model.MedicalProcedure;
 import com.infinite.ejb.provider.model.Provider;
@@ -21,7 +22,7 @@ public class Converter {
 	    ejbAppointment.setAppointmentId(jsfAppointment.getAppointmentId());
 	    ejbAppointment.setRequestedAt(jsfAppointment.getRequestedAt());
 	    ejbAppointment.setBookedAt(jsfAppointment.getBookedAt());
-	    ejbAppointment.setStatus(jsfAppointment.getStatus().name());
+	    ejbAppointment.setStatus(AppointmentStatus.valueOf(jsfAppointment.getStatus().name()));
 	    ejbAppointment.setNotes(jsfAppointment.getNotes());
 
 	    // Entity mapping (custom conversion methods assumed)
@@ -31,13 +32,15 @@ public class Converter {
 
 	    return ejbAppointment;
 	}
-	public static com.infinite.ejb.provider.model.Doctor convertToEJBDoctor(
-	        com.infinite.jsf.provider.model.Doctor jsfDoctor) {
+	public static com.infinite.ejb.provider.model.Doctors convertToEJBDoctor(
+	        com.infinite.jsf.provider.model.Doctors jsfDoctor) {
 	    if (jsfDoctor == null || jsfDoctor.getDoctorId() == null) return null;
 
-	    com.infinite.ejb.provider.model.Doctor ejbDoctor = new com.infinite.ejb.provider.model.Doctor();
+	    com.infinite.ejb.provider.model.Doctors ejbDoctor = new com.infinite.ejb.provider.model.Doctors();
 	    ejbDoctor.setDoctorId(jsfDoctor.getDoctorId());
 	    ejbDoctor.setDoctorName(jsfDoctor.getDoctorName());
+	    ejbDoctor.setAddress(jsfDoctor.getAddress());
+	    ejbDoctor.setSpecialization(jsfDoctor.getSpecialization());
 	    return ejbDoctor;
 	}
 	public static com.infinite.ejb.provider.model.Provider convertToEJBProvider(
@@ -73,14 +76,10 @@ public class Converter {
 
 	    	ejbRecipient.setStatus(
 	    	    jsfRecipient.getStatus() != null 
-	    	    ? com.infinite.ejb.recipient.model.Status.valueOf(jsfRecipient.getStatus().name()) 
+	    	    ? com.infinite.ejb.recipient.model.RecipientStatus.valueOf(jsfRecipient.getStatus().name()) 
 	    	    : null
 	    	);
 
-	    ejbRecipient.setLoginAttempts(jsfRecipient.getLoginAttempts());
-	    ejbRecipient.setLockedUntil(jsfRecipient.getLockedUntil());
-	    ejbRecipient.setLastLogin(jsfRecipient.getLastLogin());
-	    ejbRecipient.setPasswordUpdatedAt(jsfRecipient.getPasswordUpdatedAt());
 
 	    return ejbRecipient;
 	}

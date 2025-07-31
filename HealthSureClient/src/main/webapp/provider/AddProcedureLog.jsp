@@ -165,25 +165,25 @@
                         <h:outputLabel for="logId" value="Log ID:" />
                         <h:inputText id="logId" value="#{procedureController.procedureLog.logId}" readonly="true" styleClass="form-control" />
                     </div>
-
+					<div class="form-group">
+                        <h:outputLabel for="loggedBy" value="Logged By:" />
+                        <h:inputText id="loggedBy" value="#{procedureController.procedureLog.loggedDoctor.doctorId}" styleClass="form-control" />
+                    <h:message for="loggedBy" styleClass="error-message" />
+                    </div>
                     <div class="form-group full-width">
                         <h:outputLabel for="logDate">Log Date <span style="color:red">*</span></h:outputLabel>
                         <h:inputText id="logDate" value="#{procedureController.procedureLog.logDate}" styleClass="form-control">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </h:inputText>
                         <h:message for="logDate" styleClass="error-message" />
-                        <script>
-                            const calendarInput = document.querySelector("#logDate");
-                            if (calendarInput) {
-                                calendarInput.setAttribute("type", "date");
-                                const today = new Date().toISOString().split("T")[0];
-                                calendarInput.setAttribute("min", today);
-                            }
-                        </script>
+                         <script>
+                                let e = document.querySelector('#logDate');
+                                if (e) e.setAttribute('type', 'date');
+                            </script>
                     </div>
 
                     <div class="form-group full-width">
-                        <h:outputLabel for="vitals" value="Vitals (optional):" />
+                        <h:outputLabel for="vitals"><span style="color:red">*</span>Vitals</h:outputLabel>
                         <h:inputText id="vitals" value="#{procedureController.procedureLog.vitals}" styleClass="form-control" />
                         <h:message for="vitals" styleClass="error-message" />
                     </div>
@@ -199,10 +199,9 @@
                     <h:commandButton value="Save Log" action="#{procedureController.addProcedureLogController(procedureController.procedureLog)}" styleClass="btn-add" />
                     <h:commandButton value="Reset Form" action="#{procedureController.createNewProcedureLog()}" immediate="true" styleClass="btn-reset" />
                 </div>
-
-                <div class="button-group">
-                    <h:commandButton value="Edit Procedure" action="#{procedureController.gotoProcedureForm()}" styleClass="action-button" />
-                </div>
+                <h:commandButton value="back"
+							action="LongTermProcedureDashboard?faces-redirect=true"
+							styleClass="shared-button" />
             </h:form>
         </div>
     </div>

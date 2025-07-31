@@ -6,18 +6,19 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.infinite.jsf.provider.model.Appointment;
+import com.infinite.jsf.provider.model.Doctors;
+import com.infinite.jsf.provider.model.SlotType;
+
 public class DoctorAvailability {
+
     private String availabilityId;
-    private Doctor doctor;
+
+    private Doctors doctor;  // many-to-one relationship with Doctors
+
     private Date availableDate;
-    private Time startTime;
-    private Time endTime;
-    private SlotType slotType;
-    private Integer maxCapacity;
-    private Boolean isRecurring;
-    private String notes;
-    private Timestamp createdAt;
-    
+    private Date startTime;
+    private Date endTime;
     private Set<Appointment> appointments = new HashSet<>();
 
     public Set<Appointment> getAppointments() {
@@ -28,23 +29,24 @@ public class DoctorAvailability {
         this.appointments = appointments;
     }
 
+    public DoctorAvailability() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
 
-    // Constructors
-    public DoctorAvailability() {}
 
-    public DoctorAvailability(String availabilityId, Doctor doctor, Date availableDate, 
-                            Time startTime, Time endTime, SlotType slotType) {
-        this.availabilityId = availabilityId;
-        this.doctor = doctor;
-        this.availableDate = availableDate;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.slotType = slotType;
-        this.maxCapacity = 15; // Default value
-        this.isRecurring = false;
-    }
+    private SlotType slotType; // 'STANDARD' or 'ADHOC'
 
+    private int totalSlots;
+
+    private boolean isRecurring;
+
+    private String notes;
+
+    private Date createdAt;
+    private Date updatedAt;
     // Getters and Setters
+
     public String getAvailabilityId() {
         return availabilityId;
     }
@@ -53,11 +55,11 @@ public class DoctorAvailability {
         this.availabilityId = availabilityId;
     }
 
-    public Doctor getDoctor() {
+    public Doctors getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(Doctors doctor) {
         this.doctor = doctor;
     }
 
@@ -69,19 +71,19 @@ public class DoctorAvailability {
         this.availableDate = availableDate;
     }
 
-    public Time getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
@@ -93,19 +95,29 @@ public class DoctorAvailability {
         this.slotType = slotType;
     }
 
-    public Integer getMaxCapacity() {
-        return maxCapacity;
-    }
+  
 
-    public void setMaxCapacity(Integer maxCapacity) {
-        this.maxCapacity = maxCapacity;
-    }
+    public int getTotalSlots() {
+		return totalSlots;
+	}
 
-    public Boolean getIsRecurring() {
+	public void setTotalSlots(int totalSlots) {
+		this.totalSlots = totalSlots;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public boolean isRecurring() {
         return isRecurring;
     }
 
-    public void setIsRecurring(Boolean isRecurring) {
+    public void setRecurring(boolean isRecurring) {
         this.isRecurring = isRecurring;
     }
 
@@ -117,27 +129,11 @@ public class DoctorAvailability {
         this.notes = notes;
     }
 
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
-    }
-
-    @Override
-    public String toString() {
-        return "DoctorAvailability{" +
-               "availabilityId='" + availabilityId + '\'' +
-               ", doctor=" + doctor.getDoctorId() +
-               ", availableDate=" + availableDate +
-               ", startTime=" + startTime +
-               ", endTime=" + endTime +
-               ", slotType=" + slotType +
-               ", maxCapacity=" + maxCapacity +
-               ", isRecurring=" + isRecurring +
-               ", notes='" + notes + '\'' +
-               ", createdAt=" + createdAt +
-               '}';
     }
 }

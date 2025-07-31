@@ -1,106 +1,67 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
-
+ 
 <hibernate-mapping>
     <class name="com.infinite.jsf.recipient.model.Recipient" table="recipient">
         <id name="hId" type="string">
             <column name="h_id" />
+            
         </id>
-
+ 
         <property name="firstName" type="java.lang.String">
             <column name="first_name" />
         </property>
-
+ 
         <property name="lastName" type="java.lang.String">
             <column name="last_name" />
         </property>
-
+ 
         <property name="mobile" type="java.lang.String">
             <column name="mobile" />
         </property>
-
+ 
         <property name="userName" type="java.lang.String">
             <column name="user_name" />
         </property>
-
+ 
         <property name="gender">
-            <column name="gender" />
-            <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">com.infinite.jsf.recipient.model.Gender</param>
-                <param name="type">12</param>
-            </type>
-        </property>
-
+			<column name="gender"/>
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">com.infinite.jsf.recipient.model.Gender</param>
+				<param name="type">12</param>
+			</type>
+		</property>
         <property name="dob" type="date">
             <column name="dob" />
         </property>
-
+ 
         <property name="address" type="java.lang.String">
             <column name="address" />
         </property>
-
+ 
         <property name="createdAt" type="timestamp">
             <column name="created_at" />
         </property>
-
+ 
         <property name="password" type="java.lang.String">
             <column name="password" />
         </property>
-
+ 
         <property name="email" type="java.lang.String">
             <column name="email" />
         </property>
-
+ 
         <property name="status">
             <column name="status" />
             <type name="org.hibernate.type.EnumType">
-                <param name="enumClass">com.infinite.jsf.recipient.model.RecipientStatus</param>
-                <param name="type">12</param>
+              <param name="enumClass">com.infinite.jsf.recipient.model.RecipientStatus</param>
+			  <param name="type">12</param>
             </type>
         </property>
-
-        <property name="loginAttempts" type="int">
-            <column name="login_attempts" />
-        </property>
-
-        <property name="lockedUntil" type="timestamp">
-            <column name="locked_until" />
-        </property>
-
-        <property name="lastLogin" type="timestamp">
-            <column name="last_login" />
-        </property>
-
-        <property name="passwordUpdatedAt" type="timestamp">
-            <column name="password_updated_at" />
-        </property>
-
-        <!-- One-to-Many: recipient -> subscribe -->
-        <set name="subscriptions" table="subscribe" inverse="true" lazy="true" cascade="all">
-            <key>
-                <column name="h_id"/>
-            </key>
-            <one-to-many class="com.infinite.jsf.insurance.model.Subscribe"/>
-        </set>
-
-        <!-- One-to-Many: recipient -> medical_procedure -->
-        <set name="procedures" table="medical_procedure" inverse="true" lazy="true" cascade="all">
-            <key>
-                <column name="h_id"/>
-            </key>
-            <one-to-many class="com.infinite.jsf.provider.model.MedicalProcedure"/>
-        </set>
-
-        <!-- One-to-Many: recipient -> claims -->
-        <set name="claims" table="claims" inverse="true" lazy="true" cascade="all">
-            <key>
-                <column name="h_id"/>
-            </key>
-            <one-to-many class="com.infinite.jsf.provider.model.Claims"/>
-        </set>
-    </class>
-   <sql-query name="PatientInsuranceDetails.findByRecipientId">
+ 
+</class>
+  <sql-query name="PatientInsuranceDetails.findByRecipientId">
     <return-scalar column="subscribeId" type="string"/>
     <return-scalar column="hId" type="string"/>
     <return-scalar column="patientName" type="string"/>
@@ -198,7 +159,6 @@ GROUP BY s.subscribe_id, r.h_id, r.first_name, r.last_name, ic.name, ip.plan_nam
             ico.coverage_amount, ip.plan_name, ic.name
     ]]>
 </sql-query>
-
-
-    
 </hibernate-mapping>
+        
+ 

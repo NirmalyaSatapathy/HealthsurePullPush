@@ -1,194 +1,192 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h" %>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<f:view>
 <html>
 <head>
-    <title>Add Medical Procedure</title>
+    <title>Started Procedure Details</title>
+
+    <!-- Disable caching -->
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
     <style>
-    body {
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        background: linear-gradient(to right, #e0f7fa, #f1f8e9);
-        margin: 0;
-        padding: 0;
-    }
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background-color: #f4f8fb;
+            overflow: hidden;
+        }
 
-    .container {
-        max-width: 850px;
-        margin: 40px auto;
-        background-color: #ffffff;
-        border-radius: 10px;
-        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
-        padding: 25px 30px;
-    }
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
 
-    h2 {
-        text-align: center; 
-        color: #00796b;
-        font-size: 22px;
-        margin-bottom: 20px;
-    }
+        .main-content {
+            flex-grow: 1;
+            padding: 10px;
+            overflow-y: auto;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 90px;
+        }
 
-    .form-grid {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 18px 30px;
-    }
+        .form-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
 
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
+        .form-title {
+            text-align: center;
+            font-size: 22px;
+            margin-bottom: 12px;
+            color: #2a3f54;
+        }
 
-    label {
-        font-weight: 600;
-        color: #2c3e50;
-        margin-bottom: 5px;
-        font-size: 14px;
-    }
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
 
-    input[type="text"], textarea {
-        padding: 8px 10px;
-        font-size: 13px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        width: 100%;
-        box-sizing: border-box;
-    }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
 
-    textarea {
-        resize: vertical;
-        min-height: 60px;
-    }
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
 
-    .full-width {
-        grid-column: 1 / 3;
-    }
+        label {
+            font-weight: bold;
+            margin-bottom: 4px;
+            font-size: 15px;
+            color: #2c3e50;
+        }
 
-    .button-group {
-        display: flex;
-        justify-content: center;
-        gap: 20px;
-        margin-top: 25px;
-    }
+        .form-control {
+            width: 100%;
+            padding: 6px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
 
-    .green-button {
-        background-color: #43a047;
-        color: white;
-        padding: 10px 20px;
-        font-size: 13px;
-        font-weight: bold;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+        h\:inputTextarea.form-control {
+            resize: vertical;
+            min-height: 40px;
+        }
 
-    .green-button:hover {
-        background-color: #388e3c;
-    }
+        .error-message {
+            color: #d32f2f;
+            font-size: 13px;
+            margin-top: 3px;
+        }
 
-    .blue-button {
-        background-color: #007bff;
-        color: white;
-        padding: 10px 20px;
-        font-size: 13px;
-        font-weight: bold;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+        .button-group {
+            display: flex;
+            justify-content: center;
+            gap: 16px;
+            margin-top: 18px;
+        }
 
-    .blue-button:hover {
-        background-color: #0056b3;
-    }
+        .green-button {
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
 
-    .error-message {
-        color: #d32f2f;
-        font-size: 12px;
-        margin-top: 3px;
-    }
-</style>
-
+        .green-button:hover {
+            background-color: #218838;
+        }
+    </style>
 </head>
 <body>
- <jsp:include page="/navbar/NavProvider.jsp" />
-<f:view>
-    <div class="container">
-        <h:form prependId="false">
-            <h2>Started Procedure Details</h2>
+    <div class="page-wrapper">
+        <jsp:include page="/navbar/NavProvider.jsp" />
 
-            <div class="form-grid">
-                <div class="form-group">
-                    <h:outputLabel for="procedureId" value="Procedure ID:" />
-                    <h:inputText id="procedureId" value="#{procedureController.procedure.procedureId}" readonly="true" />
-                </div>
+        <div class="main-content">
+            <div class="form-container">
+                <div class="form-title">Procedure Details</div>
 
-                <div class="form-group">
-                    <h:outputLabel for="appointmentId">
-                        Appointment ID: <span style="color:red">*</span>
-                    </h:outputLabel>
-                    <h:inputText id="appointmentId" value="#{procedureController.procedure.appointment.appointmentId}" readonly="true" />
-                    <h:message for="appointmentId" styleClass="error-message" />
-                </div>
+                <h:form prependId="false">
+                    <h:messages globalOnly="true" styleClass="error-message" />
 
-                <div class="form-group">
-                    <h:outputLabel for="recipientId">
-                        Patient (h_id): <span style="color:red">*</span>
-                    </h:outputLabel>
-                    <h:inputText id="recipientId" value="#{procedureController.procedure.recipient.hId}" readonly="true" />
-                    <h:message for="recipientId" styleClass="error-message" />
-                </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="procedureId">Procedure ID</label>
+                            <h:inputText id="procedureId" value="#{procedureController.procedure.procedureId}" readonly="true" styleClass="form-control" />
+                        </div>
 
-                <div class="form-group">
-                    <h:outputLabel for="providerId">
-                        Provider ID: <span style="color:red">*</span>
-                    </h:outputLabel>
-                    <h:inputText id="providerId" value="#{procedureController.procedure.provider.providerId}" readonly="true" />
-                    <h:message for="providerId" styleClass="error-message" />
-                </div>
+                        <div class="form-group">
+                            <label for="appointmentId">Appointment ID <span style="color:red">*</span></label>
+                            <h:inputText id="appointmentId" value="#{procedureController.procedure.appointment.appointmentId}" readonly="true" styleClass="form-control" />
+                            <h:message for="appointmentId" styleClass="error-message" />
+                        </div>
 
-                <div class="form-group">
-                    <h:outputLabel for="doctorId">
-                        Doctor ID: <span style="color:red">*</span>
-                    </h:outputLabel>
-                    <h:inputText id="doctorId" value="#{procedureController.procedure.doctor.doctorId}" readonly="true" />
-                    <h:message for="doctorId" styleClass="error-message" />
-                </div>
+                        <div class="form-group">
+                            <label for="recipientId">Patient (h_id) <span style="color:red">*</span></label>
+                            <h:inputText id="recipientId" value="#{procedureController.procedure.recipient.hId}" readonly="true" styleClass="form-control" />
+                            <h:message for="recipientId" styleClass="error-message" />
+                        </div>
 
-                <div class="form-group">
-                    <h:outputLabel for="procedureDate">
-                        Procedure Start Date: <span style="color:red">*</span>
-                    </h:outputLabel>
-                    <h:inputText id="fromDate" value="#{procedureController.procedure.fromDate}" readonly="true">
-                        <f:convertDateTime pattern="yyyy-MM-dd" />
-                    </h:inputText>
-                    <h:message for="procedureDate" styleClass="error-message" />
-                </div>
+                        <div class="form-group">
+                            <label for="providerId">Provider ID <span style="color:red">*</span></label>
+                            <h:inputText id="providerId" value="#{procedureController.procedure.provider.providerId}" readonly="true" styleClass="form-control" />
+                            <h:message for="providerId" styleClass="error-message" />
+                        </div>
 
-                <div class="form-group full-width">
-                    <h:outputLabel for="diagnosis">
-                        Diagnosis: <span style="color:red">*</span>
-                    </h:outputLabel>
-                    <h:inputTextarea id="diagnosis" value="#{procedureController.procedure.diagnosis}" readonly="true" />
-                    <h:message for="diagnosis" styleClass="error-message" />
-                </div>
+                        <div class="form-group">
+                            <label for="doctorId">Doctor ID <span style="color:red">*</span></label>
+                            <h:inputText id="doctorId" value="#{procedureController.procedure.doctor.doctorId}" readonly="true" styleClass="form-control" />
+                            <h:message for="doctorId" styleClass="error-message" />
+                        </div>
 
-                <div class="form-group full-width">
-                    <h:outputLabel for="recommendations" value="Recommendations:"/>
-                    <h:inputTextarea id="recommendations" value="#{procedureController.procedure.recommendations}" />
-                    <h:message for="recommendations" styleClass="error-message" />
-                </div>
+                        <div class="form-group">
+                            <label for="procedureDate">Procedure Start Date <span style="color:red">*</span></label>
+                            <h:inputText id="fromDate" value="#{procedureController.procedure.fromDate}" readonly="true" styleClass="form-control">
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
+                            </h:inputText>
+                            <h:message for="procedureDate" styleClass="error-message" />
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="diagnosis">Diagnosis <span style="color:red">*</span></label>
+                            <h:inputTextarea id="diagnosis" value="#{procedureController.procedure.diagnosis}" readonly="true" styleClass="form-control" />
+                            <h:message for="diagnosis" styleClass="error-message" />
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="recommendations">Recommendations</label>
+                            <h:inputTextarea id="recommendations" value="#{procedureController.procedure.recommendations}" styleClass="form-control" />
+                            <h:message for="recommendations" styleClass="error-message" />
+                        </div>
+                    </div>
+
+                    <div class="button-group">
+                        <h:commandButton value="Add Details" styleClass="green-button" action="#{procedureController.updateProcedure()}" />
+                    </div>
+                </h:form>
             </div>
-
-            <div class="button-group">
-                <h:commandButton value="Add Details"
-                                 styleClass="green-button"
-                                 action="#{procedureController.updateProcedure()}" />
-            </div>
-
-        </h:form>
+        </div>
     </div>
-</f:view>
 </body>
 </html>
+</f:view>

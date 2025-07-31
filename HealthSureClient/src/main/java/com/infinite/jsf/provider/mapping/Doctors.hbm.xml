@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+  "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+  "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="com.infinite.jsf.provider.model.Doctors" table="Doctors">
+    <id name="doctorId" column="doctor_id" type="string">
+      <generator class="assigned"/>
+    </id>
+
+    <many-to-one name="provider" class="com.infinite.jsf.provider.model.Provider" column="provider_id" not-null="true" fetch="join"/>
+
+    <property name="doctorName"      column="doctor_name"      type="string" not-null="true"/>
+        <property name="qualification"   column="qualification"    type="string" not-null="true"/>
+        <property name="specialization"  column="specialization"   type="string" not-null="true"/>
+        <property name="licenseNo"       column="license_no"       type="string" not-null="true"/>
+        <property name="email"           column="email"            type="string"/>
+        <property name="address"         column="address"          type="string"/>
+        <property name="phoneNumber"     column="phone_number"     type="string"/>
+
+        <!-- Enums -->
+        <property name="gender" not-null="false">
+            <column name="gender"/>
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.infinite.jsf.provider.model.Gender</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="doctorType" not-null="false">
+            <column name="doctor_type"/>
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.infinite.jsf.provider.model.DoctorType</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+        <property name="doctorStatus" not-null="true">
+            <column name="doctor_status"/>
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">com.infinite.jsf.provider.model.DoctorStatus</param>
+                <param name="useNamed">true</param>
+            </type>
+        </property>
+    </class>
+</hibernate-mapping>

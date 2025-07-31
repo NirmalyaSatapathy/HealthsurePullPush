@@ -297,7 +297,7 @@
                 </h:panelGroup>
             </h:panelGroup>
         </f:facet>
-        <h:outputText value="#{p.provider.name}" />
+        <h:outputText value="#{p.provider.hospitalName}" />
     </h:column>
 
     <!-- Scheduled Date -->

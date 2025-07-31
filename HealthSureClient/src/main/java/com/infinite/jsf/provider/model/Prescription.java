@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
-import com.infinite.jsf.provider.model.Doctor;
+import com.infinite.jsf.provider.model.Doctors;
 import com.infinite.jsf.provider.model.MedicalProcedure;
 import com.infinite.jsf.provider.model.Provider;
 import com.infinite.jsf.recipient.model.Recipient;
@@ -19,13 +19,21 @@ public class Prescription implements Serializable{
     private MedicalProcedure procedure;    // mapped from procedure_id
     private Recipient recipient;           // mapped from h_id
     private Provider provider;             // mapped from provider_id
-    private Doctor doctor;                 // mapped from doctor_id
+    private Doctors doctor;                 // mapped from doctor_id
     
     // Other fields
-    private Timestamp writtenOn;
-    private Timestamp createdAt;
+    private Date writtenOn;
+    private Date createdAt;
     private Date startDate;
     private Date endDate;
+    private Doctors prescribedDoc;
+    public Doctors getPrescribedDoc() {
+		return prescribedDoc;
+	}
+
+	public void setPrescribedDoc(Doctors prescribedDoc) {
+		this.prescribedDoc = prescribedDoc;
+	}
     @Override
     public String toString() {
         return "Prescription [" +
@@ -109,33 +117,34 @@ public class Prescription implements Serializable{
         this.provider = provider;
     }
 
-    public Doctor getDoctor() {
+    public Doctors getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(Doctors doctor) {
         this.doctor = doctor;
     }
 
-    public Timestamp getWrittenOn() {
+    public Date getWrittenOn() {
         return writtenOn;
     }
 
-    public void setWrittenOn(Timestamp writtenOn) {
+    public void setWrittenOn(Date writtenOn) {
         this.writtenOn = writtenOn;
     }
 
-    public Timestamp getCreatedAt() {
+    public Date getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Timestamp createdAt) {
+    public void setCreatedAt(Date createdAt) {
         this.createdAt = createdAt;
     }
     public Prescription() {
         this.procedure = new MedicalProcedure();
         this.recipient = new Recipient();
         this.provider = new Provider();
-        this.doctor = new Doctor();
+        this.doctor = new Doctors();
+        this.prescribedDoc=new Doctors();
     }
 }

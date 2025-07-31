@@ -15,7 +15,7 @@
 
     <property name="subscribeDate" column="subscribe_date" type="date" not-null="true"/>
     <property name="expiryDate" column="expiry_date" type="date" not-null="true"/>
-    
+     <property name="startDate" column="start_date" type="date" not-null="true"/>
     <!-- Proper Enum Mapping for type -->
     <property name="type">
       <column name="type" sql-type="enum('individual','family')"/>

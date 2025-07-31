@@ -11,7 +11,7 @@
     </id>
 
     <!-- doctor mapped only once -->
-    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctor" column="doctor_id" not-null="true" fetch="join"/>
+    <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctors" column="doctor_id" not-null="true" fetch="join"/>
 
     <property name="availableDate" column="available_date" type="date" not-null="true"/>
     <property name="startTime" column="start_time" type="time" not-null="true"/>
@@ -26,11 +26,10 @@
       </type>
     </property>
 
-    <property name="maxCapacity" column="max_capacity" type="integer"/>
-    <property name="isRecurring" column="is_recurring" type="boolean"/>
-    <property name="notes" column="notes" type="string"/>
-    <property name="createdAt" column="created_at" type="timestamp"/>
-
+   <property name="notes"/>
+    <property name="totalSlots" column="total_slots"/>
+    <property name="createdAt" column="created_at" type="timestamp" insert="false" update="false"/>
+    <property name="updatedAt" column="updated_at" type="timestamp" insert="false" update="false"/>
     <set name="appointments" table="Appointment" inverse="true" lazy="true" cascade="all">
   <key column="availability_id"/>
   <one-to-many class="com.infinite.jsf.provider.model.Appointment"/>

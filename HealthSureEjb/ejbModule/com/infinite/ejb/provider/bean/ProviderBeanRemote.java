@@ -27,4 +27,12 @@ public MedicalProcedure getProcedureById(String id);
 public String addProcedureDailyLog(ProcedureDailyLog log) throws ClassNotFoundException, SQLException;
 public List<MedicalProcedure> getScheduledProceduresByDoctor(String doctorId, String procedureId);
 public List<MedicalProcedure> getInProgressProceduresByDoctor(String doctorId, String procedureId);
+public List<Prescription> fetchPrescriptions(String procedureID);
+public List<PrescribedMedicines> fetchMedicines(String prescriptionId);
+public List<ProcedureTest> fetchTests(String prescriptionId);
+public List<ProcedureDailyLog> fetchLogs(String procedureID);
+public String updatePrescription(Prescription p) throws SQLException, ClassNotFoundException;
+public String updateMedicine(PrescribedMedicines m) throws ClassNotFoundException, SQLException;
+public String updateTest(ProcedureTest t) throws ClassNotFoundException, SQLException;
+public String updateLog(ProcedureDailyLog l)throws ClassNotFoundException, SQLException; 
 }

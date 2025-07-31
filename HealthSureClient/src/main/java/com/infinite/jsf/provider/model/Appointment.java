@@ -1,19 +1,55 @@
 package com.infinite.jsf.provider.model;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.Set;
 
 import com.infinite.jsf.recipient.model.Recipient;
 
 public class Appointment {
     private String appointmentId;
-    private Doctor doctor;
+    private Doctors doctor;
     private Recipient recipient;
     private DoctorAvailability availability;
     private Provider provider;
-    private Timestamp requestedAt;
-    private Timestamp bookedAt;
+    private Date requestedAt;
+    private Date bookedAt;
     private AppointmentStatus status;
+    private Date start;
+    private Date end;
+    private int slotNo;
+    private Date cancelledAt;
+    public Date getStart() {
+		return start;
+	}
+
+	public void setStart(Date start) {
+		this.start = start;
+	}
+
+	public Date getEnd() {
+		return end;
+	}
+
+	public Date getCancelledAt() {
+		return cancelledAt;
+	}
+
+	public void setCancelledAt(Date cancelledAt) {
+		this.cancelledAt = cancelledAt;
+	}
+
+	public void setEnd(Date end) {
+		this.end = end;
+	}
+
+	public int getSlotNo() {
+		return slotNo;
+	}
+
+	public void setSlotNo(int slotNo) {
+		this.slotNo = slotNo;
+	}
     public Set<MedicalProcedure> getProcedures() {
 		return procedures;
 	}
@@ -27,7 +63,7 @@ public class Appointment {
     // Constructors
     public Appointment() {}
 
-    public Appointment(String appointmentId, Doctor doctor, Recipient recipient, 
+    public Appointment(String appointmentId, Doctors doctor, Recipient recipient, 
                       DoctorAvailability availability, Provider provider) {
         this.appointmentId = appointmentId;
         this.doctor = doctor;
@@ -35,7 +71,7 @@ public class Appointment {
         this.availability = availability;
         this.provider = provider;
         this.status = AppointmentStatus.PENDING;
-        this.requestedAt = new Timestamp(System.currentTimeMillis());
+        this.requestedAt = new Date();
     }
 
     // Getters and Setters
@@ -47,11 +83,11 @@ public class Appointment {
         this.appointmentId = appointmentId;
     }
 
-    public Doctor getDoctor() {
+    public Doctors getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(Doctors doctor) {
         this.doctor = doctor;
     }
 
@@ -79,19 +115,19 @@ public class Appointment {
         this.provider = provider;
     }
 
-    public Timestamp getRequestedAt() {
+    public Date getRequestedAt() {
         return requestedAt;
     }
 
-    public void setRequestedAt(Timestamp requestedAt) {
+    public void setRequestedAt(Date requestedAt) {
         this.requestedAt = requestedAt;
     }
 
-    public Timestamp getBookedAt() {
+    public Date getBookedAt() {
         return bookedAt;
     }
 
-    public void setBookedAt(Timestamp bookedAt) {
+    public void setBookedAt(Date bookedAt) {
         this.bookedAt = bookedAt;
     }
 

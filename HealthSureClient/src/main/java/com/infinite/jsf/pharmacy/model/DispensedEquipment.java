@@ -2,7 +2,7 @@ package com.infinite.jsf.pharmacy.model;
 
 import java.util.Date;
 
-import com.infinite.jsf.provider.model.Doctor;
+import com.infinite.jsf.provider.model.Doctors;
 import com.infinite.jsf.provider.model.Prescription;
 import com.infinite.jsf.recipient.model.Recipient;
 
@@ -12,7 +12,7 @@ public class DispensedEquipment {
     private Integer quantityDispensed;
     private Date dispenseDate;
     private Prescription prescription;
-    private Doctor doctor;
+    private Doctors doctor;
     private Recipient recipient;
     private Pharmacist pharmacist;
     private Pharmacy pharmacy;
@@ -46,10 +46,10 @@ public class DispensedEquipment {
 	public void setPrescription(Prescription prescription) {
 		this.prescription = prescription;
 	}
-	public Doctor getDoctor() {
+	public Doctors getDoctor() {
 		return doctor;
 	}
-	public void setDoctor(Doctor doctor) {
+	public void setDoctor(Doctors doctor) {
 		this.doctor = doctor;
 	}
 	public Recipient getRecipient() {

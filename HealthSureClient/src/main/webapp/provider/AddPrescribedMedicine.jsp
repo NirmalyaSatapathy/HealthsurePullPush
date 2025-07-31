@@ -236,10 +236,9 @@
                     <h:commandButton value="Reset Form" action="#{procedureController.createNewPrescribedMedicine()}" immediate="true" styleClass="btn-reset" />
                 </div>
 
-                <div class="button-group">
-                    <h:commandButton value="Edit Prescription" action="AddPrescription?faces-redirect=true" styleClass="action-button" />
-                    <h:commandButton value="Edit Procedure" action="#{procedureController.gotoProcedureForm()}"styleClass="action-button" />
-          </div>
+               <h:commandButton value="back"
+							action="PrescriptionDashboard?faces-redirect=true"
+							styleClass="shared-button" />
          
         </h:form>
          </div>

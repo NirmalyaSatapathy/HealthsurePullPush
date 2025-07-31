@@ -10,11 +10,11 @@ public class DoctorAvailability implements Serializable{
 
     private String availabilityId;
 
-    private Doctor doctor;  // many-to-one relationship with Doctors
+    private Doctors doctor;  // many-to-one relationship with Doctors
 
     private Date availableDate;
-
-    private Time startTime;
+    private Date startTime;
+    private Date endTime;
     private Set<Appointment> appointments = new HashSet<>();
 
     public Set<Appointment> getAppointments() {
@@ -30,18 +30,17 @@ public class DoctorAvailability implements Serializable{
 		// TODO Auto-generated constructor stub
 	}
 
-	private Time endTime;
 
-    private String slotType;  // 'STANDARD' or 'ADHOC'
+    private SlotType slotType; // 'STANDARD' or 'ADHOC'
 
-    private int maxCapacity;
+    private int totalSlots;
 
     private boolean isRecurring;
 
     private String notes;
 
     private Date createdAt;
-
+    private Date updatedAt;
     // Getters and Setters
 
     public String getAvailabilityId() {
@@ -52,11 +51,11 @@ public class DoctorAvailability implements Serializable{
         this.availabilityId = availabilityId;
     }
 
-    public Doctor getDoctor() {
+    public Doctors getDoctor() {
         return doctor;
     }
 
-    public void setDoctor(Doctor doctor) {
+    public void setDoctor(Doctors doctor) {
         this.doctor = doctor;
     }
 
@@ -68,39 +67,49 @@ public class DoctorAvailability implements Serializable{
         this.availableDate = availableDate;
     }
 
-    public Time getStartTime() {
+    public Date getStartTime() {
         return startTime;
     }
 
-    public void setStartTime(Time startTime) {
+    public void setStartTime(Date startTime) {
         this.startTime = startTime;
     }
 
-    public Time getEndTime() {
+    public Date getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Time endTime) {
+    public void setEndTime(Date endTime) {
         this.endTime = endTime;
     }
 
-    public String getSlotType() {
+    public SlotType getSlotType() {
         return slotType;
     }
 
-    public void setSlotType(String slotType) {
+    public void setSlotType(SlotType slotType) {
         this.slotType = slotType;
     }
 
-    public int getMaxCapacity() {
-        return maxCapacity;
-    }
+  
 
-    public void setMaxCapacity(int maxCapacity) {
-        this.maxCapacity = maxCapacity;
-    }
+    public int getTotalSlots() {
+		return totalSlots;
+	}
 
-    public boolean isRecurring() {
+	public void setTotalSlots(int totalSlots) {
+		this.totalSlots = totalSlots;
+	}
+
+	public Date getUpdatedAt() {
+		return updatedAt;
+	}
+
+	public void setUpdatedAt(Date updatedAt) {
+		this.updatedAt = updatedAt;
+	}
+
+	public boolean isRecurring() {
         return isRecurring;
     }
 

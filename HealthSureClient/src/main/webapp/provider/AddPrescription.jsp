@@ -188,6 +188,15 @@
                                          styleClass="form-control"
                                          readonly="true" />
                         </div>
+                         <h:panelGroup rendered="#{procedureController.procedure.type ne 'SINGLE_DAY'}" styleClass="form-group full-width">
+                        <div class="form-group">
+                            <label for="prescribedBy">Prescribed BY</label>
+                            <h:inputText id="prescribedBy"
+                                         value="#{procedureController.prescription.prescribedDoc.doctorId}"
+                                         styleClass="form-control" />
+                            <h:message for="prescribedBy" styleClass="error" />
+                        </div>
+                        </h:panelGroup>
                     </div>
 
                     <!-- Date fields grid -->
@@ -246,13 +255,9 @@
                                          immediate="true"
                                          action="#{procedureController.createNewPrescription()}" />
                     </div>
-
-                    <div class="button-group">
-                        <h:commandButton value="Edit Procedure"
-                                         styleClass="btn-reset"
-                                         action="#{procedureController.gotoProcedureForm()}" />
-                    </div>
-
+                     <h:commandButton value="back"
+							action="#{procedureController.backFromViewPrescription()}"
+							styleClass="shared-button" />
                 </h:form>
             </div>
         </div>

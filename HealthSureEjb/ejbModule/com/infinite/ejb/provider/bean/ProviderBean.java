@@ -120,4 +120,52 @@ public class ProviderBean implements ProviderBeanRemote {
 		return providerDao.getInProgressProceduresByDoctor(doctorId, procedureId);
 	}
 
+	@Override
+	public List<Prescription> fetchPrescriptions(String procedureID) {
+		// TODO Auto-generated method stub
+		return providerDao.fetchPrescriptions(procedureID);
+	}
+
+	@Override
+	public List<PrescribedMedicines> fetchMedicines(String prescriptionId) {
+		// TODO Auto-generated method stub
+		return providerDao.fetchMedicines(prescriptionId);
+	}
+
+	@Override
+	public List<ProcedureTest> fetchTests(String prescriptionId) {
+		// TODO Auto-generated method stub
+		return providerDao.fetchTests(prescriptionId);
+	}
+
+	@Override
+	public List<ProcedureDailyLog> fetchLogs(String procedureID) {
+		// TODO Auto-generated method stub
+		return providerDao.fetchLogs(procedureID);
+	}
+
+	@Override
+	public String updatePrescription(Prescription p) throws SQLException, ClassNotFoundException {
+		// TODO Auto-generated method stub
+		return providerDao.updatePrescription(p);
+	}
+
+	@Override
+	public String updateMedicine(PrescribedMedicines m) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return providerDao.updateMedicine(m);
+	}
+
+	@Override
+	public String updateTest(ProcedureTest t) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return providerDao.updateTest(t);
+	}
+
+	@Override
+	public String updateLog(ProcedureDailyLog l) throws ClassNotFoundException, SQLException {
+		// TODO Auto-generated method stub
+		return providerDao.updateLog(l);
+	}
+
 }
