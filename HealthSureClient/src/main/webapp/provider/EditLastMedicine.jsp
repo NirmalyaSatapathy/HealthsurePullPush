@@ -207,20 +207,6 @@
                         </script>
                     </div>
 
-                    <div class="form-group">
-                        <label for="endDate">End Date <span style="color:red">*</span></label>
-                        <h:inputText id="endDate" value="#{procedureController.prescribedMedicine.endDate}" styleClass="form-control">
-                            <f:convertDateTime pattern="yyyy-MM-dd" />
-                        </h:inputText>
-                        <h:message for="endDate" styleClass="error" />
-                        <script>
-                            const calendarInput1 = document.querySelector("#endDate");
-                            if (calendarInput1) {
-                                calendarInput1.setAttribute("type", "date");
-                            }
-                        </script>
-                    </div>
-
                     <div class="form-group full-width">
                         <label for="notes">Notes</label>
                         <h:inputTextarea id="notes" value="#{procedureController.prescribedMedicine.notes}" styleClass="form-control" />
@@ -232,7 +218,7 @@
                     <h:commandButton value="save Medicine" action="#{procedureController.updateMedicine(procedureController.prescribedMedicine)}" styleClass="btn-add" />
                     <h:commandButton value="Reset Form" action="#{procedureController.restEditMedicine()}" immediate="true" styleClass="btn-reset" />
                  <h:commandButton value="back"
-							action="PrescriptionDashboard?faces-redirect=true"
+							action="#{procedureController.backFromLastMedicine()}"
 							styleClass="shared-button" />
                 </div>
         </h:form>

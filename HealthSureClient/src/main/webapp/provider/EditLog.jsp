@@ -199,7 +199,7 @@
                     <h:commandButton value="Save Log" action="#{procedureController.updateLog(procedureController.procedureLog)}" styleClass="btn-add" />
                     <h:commandButton value="Reset Form" action="#{procedureController.restEditLog()}" immediate="true" styleClass="btn-reset" />
                 <h:commandButton value="back"
-							action="ViewLogs?faces-redirect=true"
+							action="#{procedureController.backFromEditLogs()}"
 							styleClass="shared-button" />
                 </div>
             </h:form>

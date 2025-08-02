@@ -167,12 +167,12 @@
                     </div>
 					<div class="form-group">
                         <h:outputLabel for="loggedBy" value="Logged By:" />
-                        <h:inputText id="loggedBy" value="#{procedureController.procedureLog.loggedDoctor.doctorId}" styleClass="form-control" />
+                        <h:inputText id="loggedBy" value="#{procedureController.procedureLog.loggedDoctor.doctorId}" styleClass="form-control" readonly="true"/>
                     <h:message for="loggedBy" styleClass="error-message" />
                     </div>
                     <div class="form-group full-width">
                         <h:outputLabel for="logDate">Log Date <span style="color:red">*</span></h:outputLabel>
-                        <h:inputText id="logDate" value="#{procedureController.procedureLog.logDate}" styleClass="form-control">
+                        <h:inputText id="logDate" value="#{procedureController.procedureLog.logDate}" styleClass="form-control" readonly="true">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </h:inputText>
                         <h:message for="logDate" styleClass="error-message" />

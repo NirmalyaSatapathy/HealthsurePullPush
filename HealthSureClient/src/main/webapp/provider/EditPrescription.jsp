@@ -255,7 +255,7 @@
                                          immediate="true"
                                          action="#{procedureController.resetEditPrescription()}" />
                                           <h:commandButton value="back"
-							action="ViewPrescriptions?faces-redirect=true"
+							action="#{procedureController.backFromEditPrescription()}" />
 							styleClass="shared-button" />
                     </div>
                 </h:form>

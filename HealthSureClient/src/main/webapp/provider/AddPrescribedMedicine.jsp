@@ -210,20 +210,6 @@
                         </script>
                     </div>
 
-                    <div class="form-group">
-                        <label for="endDate">End Date <span style="color:red">*</span></label>
-                        <h:inputText id="endDate" value="#{procedureController.prescribedMedicine.endDate}" styleClass="form-control">
-                            <f:convertDateTime pattern="yyyy-MM-dd" />
-                        </h:inputText>
-                        <h:message for="endDate" styleClass="error" />
-                        <script>
-                            const calendarInput1 = document.querySelector("#endDate");
-                            if (calendarInput1) {
-                                calendarInput1.setAttribute("type", "date");
-                            }
-                        </script>
-                    </div>
-
                     <div class="form-group full-width">
                         <label for="notes">Notes</label>
                         <h:inputTextarea id="notes" value="#{procedureController.prescribedMedicine.notes}" styleClass="form-control" />

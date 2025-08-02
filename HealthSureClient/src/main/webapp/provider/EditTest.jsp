@@ -191,7 +191,7 @@ label, h\:outputLabel {
 							action="#{procedureController.restEditTest()}"
 							immediate="true" styleClass="shared-button" />
 							 <h:commandButton value="back"
-							action="ViewTests?faces-redirect=true"
+							action="#{procedureController.backFromEditTest()}"
 							styleClass="shared-button" />
 				</h:form>
 			</div>

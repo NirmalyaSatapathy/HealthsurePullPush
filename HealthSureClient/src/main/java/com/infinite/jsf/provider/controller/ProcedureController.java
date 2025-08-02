@@ -933,7 +933,8 @@ public class ProcedureController {
 
 		if (!isValid)
 			return null;
-
+		medicalProcedure.setRecipient(recipient);
+		medicalProcedure.setDoctor(doctor);
 		medicalProcedure.setFromDate(null);
 		medicalProcedure.setToDate(null);
 		medicalProcedure.setScheduledDate(null);
@@ -1088,13 +1089,14 @@ public class ProcedureController {
 
 		if (!isValid)
 			return null;
-
+		medicalProcedure.setRecipient(recipient);
+		medicalProcedure.setDoctor(doctor);
 		medicalProcedure.setProcedureDate(null);
 		medicalProcedure.setFromDate(null);
 		medicalProcedure.setToDate(null);
 		medicalProcedure.setType(ProcedureType.LONG_TERM);
 		medicalProcedure.setProcedureStatus(ProcedureStatus.SCHEDULED);
-
+		this.tempProcedure=medicalProcedure;
 		String res = providerEjb.addMedicalProcedure(medicalProcedure);
 		return res;
 	}
@@ -1238,507 +1240,513 @@ public class ProcedureController {
 
 		if (!isValid)
 			return null;
-
+		medicalProcedure.setRecipient(recipient);
+		medicalProcedure.setDoctor(doctor);
 		medicalProcedure.setScheduledDate(null);
 		medicalProcedure.setProcedureDate(null);
 		medicalProcedure.setToDate(null);
 		medicalProcedure.setType(ProcedureType.LONG_TERM);
 		medicalProcedure.setProcedureStatus(ProcedureStatus.IN_PROGRESS);
+		this.tempProcedure=medicalProcedure;
 		return "LongTermProcedureDashboard?faces-redirect=true";
 	}
 
 	public String addTestController(ProcedureTest procedureTest) throws ClassNotFoundException, SQLException {
-		procedureTests.removeIf(p -> p.getTestId().equals(procedureTest.getTestId()));
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
-		boolean isValid = true;
-		providerDao = new ProviderDaoImpl();
+	    procedureTests.removeIf(p -> p.getTestId().equals(procedureTest.getTestId()));
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
+	    boolean isValid = true;
+	    providerDao = new ProviderDaoImpl();
 
-		procedureTest.setPrescription(prescription);
-		// 1. Validate Test Name
-		String testName = procedureTest.getTestName();
-		if (testName.isEmpty()) {
-			context.addMessage("testName", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Test name", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (procedureTest.getTestDate() == null) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Test Date", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (procedureTest.getResultSummary().isEmpty()) {
-			context.addMessage("resultSummary",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Result summary", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
-		if (testName == null || testName.trim().length() < 2 || !testName.matches("^[a-zA-Z0-9 ()/\\-.]+$")) {
-			context.addMessage("testName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Test name must be at least 2 characters and contain only letters, numbers, spaces, (), /, -, and .",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-		//test duplicacy check
-		testName = testName.trim().replaceAll("\\s+", " ");
-		procedureTest.setTestName(testName);
-		loadViewTests(prescription);
-		for (ProcedureTest existingTest : viewTests) {
-			if (existingTest.getPrescription() != null
-					&& existingTest.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())
-					&& existingTest.getTestName() != null && existingTest.getTestName().equalsIgnoreCase(testName)
-					&& existingTest.getTestDate().equals(procedureTest.getTestDate())) {
-				context.addMessage("testName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"This Test is already prescribed in this prescription for the given date.", null));
-				context.validationFailed();
-				isValid = false;
-			}
-		}
-		// 2. Validate Test Date
-		Date testDate = procedureTest.getTestDate();
+	    procedureTest.setPrescription(prescription);
 
-		Date prescriptionStart = prescription.getStartDate();
-		Date prescriptionEnd = prescription.getEndDate();
+	    // 1. Validate Test Name
+	    String testName = procedureTest.getTestName();
+	    if (testName.isEmpty()) {
+	        context.addMessage("testName", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Test name", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		if (testDate.before(prescriptionStart)) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Test date (" + testDate
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    if (procedureTest.getTestDate() == null) {
+	        context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Test Date", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		if (testDate.after(prescriptionEnd)) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Test date (" + testDate + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    if (procedureTest.getResultSummary().isEmpty()) {
+	        context.addMessage("resultSummary",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Result summary", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		// 3. Validate Result Summary
-		String result = procedureTest.getResultSummary();
-		if (result.isEmpty()) {
-			context.addMessage("resultSummary",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Result summary", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
-		procedureTests.add(procedureTest);
-		return "PrescriptionDashboard?faces-redirect=true";
+	    if (!isValid)
+	        return null;
+
+	    // Check valid name format
+	    if (testName == null || testName.trim().length() < 2 || !testName.matches("^[a-zA-Z0-9 ()/\\-.]+$")) {
+	        context.addMessage("testName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Test name must be at least 2 characters and contain only letters, numbers, spaces, (), /, -, and .",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    // Normalize test name
+	    testName = testName.trim().replaceAll("\\s+", " ");
+	    procedureTest.setTestName(testName);
+
+	    // Check for duplicate test entry
+	    loadViewTests(prescription);
+	    for (ProcedureTest existingTest : viewTests) {
+	        if (existingTest.getPrescription() != null
+	                && existingTest.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())
+	                && existingTest.getTestName() != null && existingTest.getTestName().equalsIgnoreCase(testName)
+	                && existingTest.getTestDate().equals(procedureTest.getTestDate())) {
+	            context.addMessage("testName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "This Test is already prescribed in this prescription for the given date.", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+	    }
+
+	    // 2. Validate Test Date Range
+	    Date testDate = procedureTest.getTestDate();
+	    Date prescriptionStart = prescription.getStartDate();
+	    Date prescriptionEnd = prescription.getEndDate();
+
+	    if (testDate.before(prescriptionStart)) {
+	        context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Test date (" + formatDate(testDate) + ") cannot be before prescription start date (" + formatDate(prescriptionStart) + ").",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    if (testDate.after(prescriptionEnd)) {
+	        context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Test date (" + formatDate(testDate) + ") cannot be after prescription end date (" + formatDate(prescriptionEnd) + ").",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    // 3. Validate Result Summary again (redundant but preserved)
+	    String result = procedureTest.getResultSummary();
+	    if (result.isEmpty()) {
+	        context.addMessage("resultSummary",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Result summary", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    if (!isValid)
+	        return null;
+
+	    procedureTests.add(procedureTest);
+	    return "PrescriptionDashboard?faces-redirect=true";
 	}
 
 	public String addPresribedMedicinesController(PrescribedMedicines prescribedMedicine)
-			throws ClassNotFoundException, SQLException {
-		prescribedMedicines.removeIf(p -> p.getPrescribedId().equals(prescribedMedicine.getPrescribedId()));
-		FacesContext context = FacesContext.getCurrentInstance();
-		Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
-		boolean isValid = true;
-		providerDao = new ProviderDaoImpl();
-		prescribedMedicine.setPrescription(prescription);
+	        throws ClassNotFoundException, SQLException {
+	    prescribedMedicines.removeIf(p -> p.getPrescribedId().equals(prescribedMedicine.getPrescribedId()));
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
+	    boolean isValid = true;
+	    providerDao = new ProviderDaoImpl();
+	    prescribedMedicine.setPrescription(prescription);
 
-		// 1. Medicine Name Validation
-		String medicineName = prescribedMedicine.getMedicineName();
-		if (medicineName.isEmpty()) {
-			context.addMessage("medicineName",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter medicine name", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (prescribedMedicine.getDosage() == null || prescribedMedicine.getDosage().trim().isEmpty()) {
-			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter dosage", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (prescribedMedicine.getStartDate() == null) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Enter from which date to start taking medicine", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (prescribedMedicine.getEndDate() == null) {
-			context.addMessage("endDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter till which date to take the medicines", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (prescribedMedicine.getDuration().isEmpty()) {
-			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (prescribedMedicine.getType() == null) {
-			context.addMessage("type", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Medicine type", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
-		if (medicineName == null || !medicineName.matches("^[a-zA-Z0-9()\\-+/'. ]{2,50}$")) {
-			context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Medicine name must be 2–50 characters and can include letters, digits, -, /, +, (), '.', and spaces.",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    // 1. Medicine Name Validation
+	    String medicineName = prescribedMedicine.getMedicineName();
+	    if (medicineName == null || medicineName.trim().isEmpty()) {
+	        context.addMessage("medicineName",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter medicine name", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		// Normalize medicine name
-		medicineName = medicineName.trim().replaceAll("\\s+", " ");
-		prescribedMedicine.setMedicineName(medicineName);
-		// 3. Check for duplicate medicine in same prescription
-//		for (PrescribedMedicines existingMed : prescribedMedicines) {
-//			if (existingMed.getPrescription() != null
-//					&& existingMed.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())
-//					&& existingMed.getMedicineName() != null
-//					&& existingMed.getMedicineName().equalsIgnoreCase(medicineName)) {
-//
-//				context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-//						"This medicine is already prescribed in this prescription.", null));
-//				context.validationFailed();
-//				isValid = false;
-//			}
-//		}
-		loadViewMedicines(prescription);
-		for (PrescribedMedicines existingMed : viewMedicines) {
-			if (existingMed.getPrescription() != null
-					&& existingMed.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())
-					&& existingMed.getMedicineName() != null
-					&& existingMed.getMedicineName().equalsIgnoreCase(medicineName)) {
-				// Check for overlapping date ranges
-				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String currentStart = sdf.format(Converter.truncateTime(this.prescribedMedicine.getStartDate()));
-				String existingStart = sdf.format(Converter.truncateTime(existingMed.getStartDate()));
-				String currentEnd = sdf.format(Converter.truncateTime(this.prescribedMedicine.getEndDate()));
-				String existingEnd = sdf.format(Converter.truncateTime(existingMed.getEndDate()));
-				if (currentStart.equals(existingStart) && currentEnd.equals(existingEnd)
-						&& existingMed.getType().equals(this.prescribedMedicine.getType())) {
-					context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"This medicine is already prescribed in this prescription for the same date range and type",
-							null));
-					context.validationFailed();
-					isValid = false;
-				}
-			}
-		}
+	    if (prescribedMedicine.getDosage() == null || prescribedMedicine.getDosage().trim().isEmpty()) {
+	        context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter dosage", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		// 3. Dosage Validation
-		String dosage = prescribedMedicine.getDosage();
+	    if (prescribedMedicine.getStartDate() == null) {
+	        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Enter from which date to start taking medicine", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		MedicineType type = prescribedMedicine.getType();
-		String pattern = "";
-		String format = "";
-		switch (type) {
-		case TABLET:
-			pattern = "^\\d+\\s*tablet(s)?$";
-			format = "tablets";
-			break;
-		case SYRUP:
-			pattern = "^\\d+(\\.\\d+)?\\s*ml$";
-			format = "ml";
-			break;
-		case INJECTION:
-			pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
-			format = "ml/dose";
-			break;
-		case DROP:
-			pattern = "^\\d+\\s*drop(s)?$";
-			format = "drops";
-			break;
-		default:
-			context.addMessage("type",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    if (prescribedMedicine.getDuration() == null || prescribedMedicine.getDuration().trim().isEmpty()) {
+	        context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		if (!dosage.trim().toLowerCase().matches(pattern)) {
-			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Dosage format is invalid for " + type + " type:" + format, null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    if (prescribedMedicine.getType() == null) {
+	        context.addMessage("type", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Medicine type", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		// 4. Fetch Prescription Dates
-		Date prescriptionStart = prescription.getStartDate();
-		Date prescriptionEnd = prescription.getEndDate();
-		Date medStart = prescribedMedicine.getStartDate();
-		Date medEnd = prescribedMedicine.getEndDate();
+	    if (!isValid) return null;
 
-		// 5. Validate Medicine Date Range
+	    if (!medicineName.matches("^[a-zA-Z0-9()\\-+/'. ]{2,50}$")) {
+	        context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Medicine name must be 2–50 characters and can include letters, digits, -, /, +, (), '.', and spaces.",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		if (medEnd.before(medStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before start date (" + medStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    // Normalize medicine name
+	    medicineName = medicineName.trim().replaceAll("\\s+", " ");
+	    prescribedMedicine.setMedicineName(medicineName);
 
-		if (medStart.before(prescriptionStart)) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date (" + medStart
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    // 2. Check for duplicate medicine in same prescription
+	    loadViewMedicines(prescription);
+	    for (PrescribedMedicines existingMed : viewMedicines) {
+	        if (existingMed.getPrescription() != null
+	                && existingMed.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())
+	                && existingMed.getMedicineName() != null
+	                && existingMed.getMedicineName().equalsIgnoreCase(medicineName)) {
+	            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+	            String currentStart = sdf.format(Converter.truncateTime(prescribedMedicine.getStartDate()));
+	            String existingStart = sdf.format(Converter.truncateTime(existingMed.getStartDate()));
+	            Date medEndTemp = null;
 
-		if (medStart.after(prescriptionEnd)) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Start date (" + medStart + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
+	            try {
+	                int duration = Integer.parseInt(prescribedMedicine.getDuration().trim());
+	                Calendar cal = Calendar.getInstance();
+	                cal.setTime(prescribedMedicine.getStartDate());
+	                cal.add(Calendar.DATE, duration - 1);
+	                medEndTemp = cal.getTime();
+	                prescribedMedicine.setEndDate(medEndTemp);
+	            } catch (Exception e) {
+	                context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                        "Invalid duration format for calculation.", null));
+	                context.validationFailed();
+	                return null;
+	            }
 
-		if (medEnd.before(prescriptionStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before prescription start date (" + prescriptionStart + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
+	            String currentEnd = sdf.format(Converter.truncateTime(medEndTemp));
+	            String existingEnd = sdf.format(Converter.truncateTime(existingMed.getEndDate()));
 
-		if (medEnd.after(prescriptionEnd)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-		// 6. Duration Validation
-		long dayDiff = (medEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
-		if ((prescribedMedicine.getDuration().isEmpty())) {
-			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		try {
-			int durationDays = Integer.parseInt(prescribedMedicine.getDuration().trim());
+	            if (currentStart.equals(existingStart) && currentEnd.equals(existingEnd)
+	                    && existingMed.getType().equals(prescribedMedicine.getType())) {
+	                context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                        "This medicine is already prescribed in this prescription for the same date range and type",
+	                        null));
+	                context.validationFailed();
+	                isValid = false;
+	            }
+	        }
+	    }
 
-			if (durationDays != dayDiff) {
-				context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Duration (" + durationDays + " days) does not match actual period (" + dayDiff + " days).",
-						null));
-				context.validationFailed();
-				isValid = false;
-			}
-		} catch (NumberFormatException e) {
-			context.addMessage("duration",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Duration must be a valid integer number.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
-		prescribedMedicines.add(prescribedMedicine);
-		return "PrescriptionDashboard?faces-resirect=true";
+	    // 3. Dosage Validation
+	    String dosage = prescribedMedicine.getDosage();
+	    MedicineType type = prescribedMedicine.getType();
+	    String pattern = "";
+	    String format = "";
+	    switch (type) {
+	        case TABLET:
+	            pattern = "^\\d+\\s*tablet(s)?$";
+	            format = "tablets";
+	            break;
+	        case SYRUP:
+	            pattern = "^\\d+(\\.\\d+)?\\s*ml$";
+	            format = "ml";
+	            break;
+	        case INJECTION:
+	            pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
+	            format = "ml/dose";
+	            break;
+	        case DROP:
+	            pattern = "^\\d+\\s*drop(s)?$";
+	            format = "drops";
+	            break;
+	        default:
+	            context.addMessage("type",
+	                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
+	            context.validationFailed();
+	            isValid = false;
+	    }
+
+	    if (!dosage.trim().toLowerCase().matches(pattern)) {
+	        context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Dosage format is invalid for " + type + " type: " + format, null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    // 4. Prescription Dates and Duration Calculation
+	    Date prescriptionStart = prescription.getStartDate();
+	    Date prescriptionEnd = prescription.getEndDate();
+	    Date medStart = prescribedMedicine.getStartDate();
+	    Date medEnd = null;
+	    long durationDays = 0;
+
+	    try {
+	        durationDays = Long.parseLong(prescribedMedicine.getDuration().trim());
+
+	        if (durationDays <= 0) {
+	            context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Duration must be a positive integer.", null));
+	            context.validationFailed();
+	            isValid = false;
+	        } else {
+	            // Calculate end date from duration
+	            Calendar cal = Calendar.getInstance();
+	            cal.setTime(medStart);
+	            cal.add(Calendar.DATE, (int) durationDays - 1); // inclusive
+	            medEnd = cal.getTime();
+	            prescribedMedicine.setEndDate(medEnd);
+	        }
+	    } catch (NumberFormatException e) {
+	        context.addMessage("duration",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Duration must be a valid integer number.", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    if (medStart.before(prescriptionStart)) {
+	        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date (" + medStart
+	                + ") cannot be before prescription start date (" + prescriptionStart + ").", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    if (medStart.after(prescriptionEnd)) {
+	        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Start date (" + medStart + ") cannot be after prescription end date (" + prescriptionEnd + ").",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    if (medEnd != null && medEnd.after(prescriptionEnd)) {
+	        // Calculate the maximum valid duration from start date to prescription end date
+	        long maxAllowedDuration = (prescriptionEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
+
+	        // Format the dates
+	        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	        String formattedMedStart = sdf.format(medStart);
+	        String formattedPrescriptionEnd = sdf.format(prescriptionEnd);
+
+	        context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "The given duration falls outside the prescription period. Maximum allowed duration from "
+	                        + formattedMedStart + " to " + formattedPrescriptionEnd + " is " + maxAllowedDuration + " days.",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+	    if (!isValid)
+	        return null;
+
+	    prescribedMedicines.add(prescribedMedicine);
+	    return "PrescriptionDashboard?faces-redirect=true";
 	}
 
 	public String addPrescriptionController(Prescription prescription) throws ClassNotFoundException, SQLException {
 
-		prescriptions.removeIf(p -> p.getPrescriptionId().equals(prescription.getPrescriptionId()));
-		FacesContext context = FacesContext.getCurrentInstance();
-		boolean isValid = true;
-		prescription.setProcedure(procedure);
-		prescription.setProvider(procedure.getProvider());
-		prescription.setDoctor(procedure.getDoctor());
-		prescription.setRecipient(procedure.getRecipient());
-		// Validate writtenOn field
-		if (procedure.getType() != ProcedureType.SINGLE_DAY) {
-			if (prescription.getWrittenOn() == null) {
-				context.addMessage("writtenOn", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Please enter the Prescription Written On date.", null));
-				context.validationFailed();
-				isValid = false;
-			}
-			if (prescription.getPrescribedDoc().getDoctorId() == null
-					|| prescription.getPrescribedDoc().getDoctorId().isEmpty()) {
-				context.addMessage("prescribedBy",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter the Doctor who prescribed", null));
-				context.validationFailed();
-				isValid = false;
-			}
-			if (prescription.getPrescribedDoc().getDoctorId() != null
-					&& !prescription.getPrescribedDoc().getDoctorId().isEmpty()) {
-				Doctors procedureDoctor = providerDao.searchDoctorById(procedure.getDoctor().getDoctorId());
+	    prescriptions.removeIf(p -> p.getPrescriptionId().equals(prescription.getPrescriptionId()));
+	    FacesContext context = FacesContext.getCurrentInstance();
+	    boolean isValid = true;
 
-				Doctors prescriptionDoctor = providerDao
-						.searchDoctorById(prescription.getPrescribedDoc().getDoctorId());
+	    prescription.setProcedure(procedure);
+	    prescription.setProvider(procedure.getProvider());
+	    prescription.setDoctor(procedure.getDoctor());
+	    prescription.setRecipient(procedure.getRecipient());
 
-				if (!procedureDoctor.getSpecialization().equals(prescriptionDoctor.getSpecialization())) {
-					context.addMessage("prescribedBy", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-							"Doctor spetialization does not match with " + procedureDoctor.getSpecialization(), null));
-					context.validationFailed();
-					isValid = false;
-				}
-			}
-		}
+	    if (procedure.getType() != ProcedureType.SINGLE_DAY) {
+	        if (prescription.getWrittenOn() == null) {
+	            context.addMessage("writtenOn", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Please enter the Prescription Written On date.", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
 
-		if (prescription.getStartDate() == null) {
-			context.addMessage("startDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter the Prescription Start date.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (prescription.getEndDate() == null) {
-			context.addMessage("endDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter the Prescription End date.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
-		// Fetch procedure details
-		ProcedureType procedureType = procedure.getType();
-		ProcedureStatus procedureStatus = procedure.getProcedureStatus();
+	        if (prescription.getPrescribedDoc().getDoctorId() == null
+	                || prescription.getPrescribedDoc().getDoctorId().isEmpty()) {
+	            context.addMessage("prescribedBy", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Please enter the Doctor who prescribed", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
 
-		Date procedureDate = procedure.getProcedureDate(); // for SINGLE_DAY
-		Date fromDate = procedure.getFromDate(); // for LONG_TERM + IN_PROGRESS
+	        if (prescription.getPrescribedDoc().getDoctorId() != null
+	                && !prescription.getPrescribedDoc().getDoctorId().isEmpty()) {
+	            Doctors procedureDoctor = providerDao.searchDoctorById(procedure.getDoctor().getDoctorId());
+	            Doctors prescriptionDoctor = providerDao.searchDoctorById(prescription.getPrescribedDoc().getDoctorId());
 
-		if (procedureType == null) {
-			context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Missing Procedure Type for Procedure ID: " + procedureId, null));
-			context.validationFailed();
-			isValid = false;
-		}
+	            if (!procedureDoctor.getSpecialization().equals(prescriptionDoctor.getSpecialization())) {
+	                context.addMessage("prescribedBy", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                        "Doctor specialization does not match with " + procedureDoctor.getSpecialization(), null));
+	                context.validationFailed();
+	                isValid = false;
+	            } else {
+	                prescription.setPrescribedDoc(prescriptionDoctor);
+	            }
+	        }
+	    }
 
-		// SINGLE_DAY: writtenOn must be equal to procedureDate
-		if (procedureType == ProcedureType.SINGLE_DAY) {
-			prescription.setWrittenOn(procedureDate);
-			prescription.getPrescribedDoc().setDoctorId(prescription.getDoctor().getDoctorId());
-			// Validate prescription start and end dates
-			Date truncatedStartDate = Converter.truncateTime(prescription.getStartDate());
-			Date truncatedEndDate = Converter.truncateTime(prescription.getEndDate());
-			Date truncatedpProcedureDate = Converter.truncateTime(procedureDate);
-			if (truncatedStartDate.before(truncatedpProcedureDate)) {
-				context.addMessage("startDate",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Prescription start date (" + truncatedStartDate
-										+ ") cannot be before the procedure date (" + truncatedpProcedureDate + ").",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
+	    if (prescription.getStartDate() == null) {
+	        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Please enter the Prescription Start date.", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-			if (truncatedEndDate.before(truncatedStartDate)) {
-				context.addMessage("endDate",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Prescription end date (" + truncatedEndDate
-								+ ") cannot be before the prescription start date (" + truncatedStartDate + ").",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
+	    if (prescription.getEndDate() == null) {
+	        context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Please enter the Prescription End date.", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		}
-		if (procedureType == ProcedureType.LONG_TERM && procedureStatus == ProcedureStatus.IN_PROGRESS
-				&& providerEjb.generateNewProcedureId().equalsIgnoreCase(procedure.getProcedureId())) {
-			if (!prescription.getPrescribedDoc().getDoctorId()
-					.equalsIgnoreCase(prescription.getDoctor().getDoctorId())) {
-				context.addMessage("prescribedBy", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Prescribed by doctor for same day must be same as procedure doctor as it is same day", null));
-				context.validationFailed();
-				isValid = false;
-			}
-			Date truncatedWrittenOn = Converter.truncateTime(prescription.getWrittenOn());
-			Date truncatedFromdate = Converter.truncateTime(procedure.getFromDate());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String writtenOn = sdf.format(truncatedWrittenOn);
-			String procedureFromDate = sdf.format(truncatedFromdate);
+	    if (!isValid) return null;
 
-			if (!writtenOn.equalsIgnoreCase(procedureFromDate)) {
-				context.addMessage("writtenOn", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Written on must be same as procedure start date as it is same day", null));
-				context.validationFailed();
-				isValid = false;
-			}
-		}
+	    ProcedureType procedureType = procedure.getType();
+	    ProcedureStatus procedureStatus = procedure.getProcedureStatus();
+	    Date procedureDate = procedure.getProcedureDate();
+	    Date fromDate = procedure.getFromDate();
 
-		System.out.println(fromDate);
-		System.out.println(prescription.getWrittenOn());
-		System.out.println("reached for validation of longterm in progress");
+	    if (procedureType == null) {
+	        context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Missing Procedure Type for Procedure ID: " + procedureId, null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		// ✅ LONG_TERM + IN_PROGRESS: writtenOn must be after fromDate
-		if (procedureType == ProcedureType.LONG_TERM && procedureStatus == ProcedureStatus.IN_PROGRESS) {
-			// Normalize writtenOn date
-			Date writtenOn = Converter.truncateTime(prescription.getWrittenOn());
-			if (fromDate == null) {
-				context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Missing From Date for LONG_TERM procedure ID: " + procedureId, null));
-				context.validationFailed();
-				isValid = false;
-			}
+	    if (procedureType == ProcedureType.SINGLE_DAY) {
+	        prescription.setWrittenOn(procedureDate);
+	        prescription.getPrescribedDoc().setDoctorId(prescription.getDoctor().getDoctorId());
+	        prescription.getPrescribedDoc().setDoctorName(prescription.getDoctor().getDoctorName());
 
-			Date truncatedFromDate = Converter.truncateTime(fromDate);
-			if (writtenOn.before(truncatedFromDate)) {
-				context.addMessage("writtenOn",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Written On date (" + writtenOn + ") must be after the Procedure From Date ("
-										+ truncatedFromDate + ") for long-term in-progress procedures.",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
-			// Validate prescription start and end dates
-			Date startDate = Converter.truncateTime(prescription.getStartDate());
-			Date endDate = Converter.truncateTime(prescription.getEndDate());
+	        Date truncatedStartDate = Converter.truncateTime(prescription.getStartDate());
+	        Date truncatedEndDate = Converter.truncateTime(prescription.getEndDate());
+	        Date truncatedProcedureDate = Converter.truncateTime(procedureDate);
 
-			if (startDate.before(writtenOn)) {
-				context.addMessage("startDate",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Prescription start date (" + startDate
-										+ ") cannot be before the prescription written date (" + writtenOn + ").",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
+	        if (truncatedStartDate.before(truncatedProcedureDate)) {
+	            context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription start date (" + formatDate(truncatedStartDate)
+	                            + ") cannot be before the procedure date (" + formatDate(truncatedProcedureDate) + ").",
+	                    null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
 
-			if (endDate.before(startDate)) {
-				context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Prescription end date ("
-						+ endDate + ") cannot be before the prescription start date (" + startDate + ").", null));
-				context.validationFailed();
-				isValid = false;
-			}
-		}
+	        if (truncatedEndDate.before(truncatedStartDate)) {
+	            context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription end date (" + formatDate(truncatedEndDate)
+	                            + ") cannot be before the prescription start date (" + formatDate(truncatedStartDate) + ").",
+	                    null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+	    }
 
-		if (prescribedMedicines != null && !prescribedMedicines.isEmpty()) {
-			for (PrescribedMedicines pm : prescribedMedicines) {
-				if (pm.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())) {
-					if (pm.getStartDate().before(prescription.getStartDate())) {
-						context.addMessage("startDate",
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Prescription start date" + prescription.getStartDate()
-												+ " is after medicine start date " + pm.getStartDate() + " for "
-												+ pm.getMedicineName(),
-										null));
-						context.validationFailed();
-						isValid = false;
-						break;
-					}
-					if (pm.getEndDate().after(prescription.getEndDate())) {
-						context.addMessage("endDate",
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Prescription end date " + prescription.getEndDate()
-												+ " is before Medicine end date " + pm.getEndDate() + " for "
-												+ pm.getMedicineName(),
-										null));
-						context.validationFailed();
-						isValid = false;
-						break;
-					}
-				}
-			}
-		}
+	    if (procedureType == ProcedureType.LONG_TERM && procedureStatus == ProcedureStatus.IN_PROGRESS
+	            && providerEjb.generateNewProcedureId().equalsIgnoreCase(procedure.getProcedureId())) {
 
-		if (!isValid)
-			return null;
-		// Save the actual validated values back (optional but good for consistency)
-		System.out.println(prescriptions);
-		System.out.println(prescription);
-		prescriptions.add(prescription);
-		return "PrescriptionDashboard?faces-redirect=true";
+	        if (!prescription.getPrescribedDoc().getDoctorId()
+	                .equalsIgnoreCase(prescription.getDoctor().getDoctorId())) {
+	            context.addMessage("prescribedBy", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescribed by doctor for same day must be same as procedure doctor as it is same day", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
 
+	        Date truncatedWrittenOn = Converter.truncateTime(prescription.getWrittenOn());
+	        Date truncatedFromDate = Converter.truncateTime(fromDate);
+
+	        if (!formatDate(truncatedWrittenOn).equals(formatDate(truncatedFromDate))) {
+	            context.addMessage("writtenOn", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Written on date (" + formatDate(truncatedWrittenOn)
+	                            + ") must be same as procedure start date (" + formatDate(truncatedFromDate) + ").",
+	                    null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+	    }
+
+	    if (procedureType == ProcedureType.LONG_TERM && procedureStatus == ProcedureStatus.IN_PROGRESS) {
+	        Date writtenOn = Converter.truncateTime(prescription.getWrittenOn());
+
+	        if (fromDate == null) {
+	            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Missing From Date for LONG_TERM procedure ID: " + procedureId, null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+
+	        Date truncatedFromDate = Converter.truncateTime(fromDate);
+	        if (writtenOn.before(truncatedFromDate)) {
+	            context.addMessage("writtenOn", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Written On date (" + formatDate(writtenOn)
+	                            + ") must be after the Procedure From Date (" + formatDate(truncatedFromDate)
+	                            + ") for long-term in-progress procedures.",
+	                    null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+
+	        Date startDate = Converter.truncateTime(prescription.getStartDate());
+	        Date endDate = Converter.truncateTime(prescription.getEndDate());
+
+	        if (startDate.before(writtenOn)) {
+	            context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription start date (" + formatDate(startDate)
+	                            + ") cannot be before the prescription written date (" + formatDate(writtenOn) + ").",
+	                    null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+
+	        if (endDate.before(startDate)) {
+	            context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription end date (" + formatDate(endDate)
+	                            + ") cannot be before the prescription start date (" + formatDate(startDate) + ").",
+	                    null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+	    }
+
+	    if (prescribedMedicines != null && !prescribedMedicines.isEmpty()) {
+	        for (PrescribedMedicines pm : prescribedMedicines) {
+	            if (pm.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())) {
+	                if (pm.getStartDate().before(prescription.getStartDate())) {
+	                    context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                            "Prescription start date (" + formatDate(prescription.getStartDate())
+	                                    + ") is after medicine start date (" + formatDate(pm.getStartDate())
+	                                    + ") for " + pm.getMedicineName(),
+	                            null));
+	                    context.validationFailed();
+	                    isValid = false;
+	                    break;
+	                }
+	                if (pm.getEndDate().after(prescription.getEndDate())) {
+	                    context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                            "Prescription end date (" + formatDate(prescription.getEndDate())
+	                                    + ") is before medicine end date (" + formatDate(pm.getEndDate())
+	                                    + ") for " + pm.getMedicineName(),
+	                            null));
+	                    context.validationFailed();
+	                    isValid = false;
+	                    break;
+	                }
+	            }
+	        }
+	    }
+
+	    if (!isValid)
+	        return null;
+
+	    prescriptions.add(prescription);
+	    return "PrescriptionDashboard?faces-redirect=true";
 	}
 
 	public String addProcedureLogController(ProcedureDailyLog procedureLog)
@@ -1750,6 +1758,9 @@ public class ProcedureController {
 		providerDao = new ProviderDaoImpl();
 
 		procedureLog.setMedicalProcedure(procedure);
+
+		// Date formatter
+		SimpleDateFormat sdf = new SimpleDateFormat("dd MMM yyyy");
 
 		// 1. Validate Log Date
 		Date logDate = procedureLog.getLogDate();
@@ -1774,17 +1785,16 @@ public class ProcedureController {
 				&& !procedureLog.getloggedDoctor().getDoctorId().isEmpty()) {
 			Doctors procedureDoctor = providerDao.searchDoctorById(procedure.getDoctor().getDoctorId());
 			Doctors logDoctor = providerDao.searchDoctorById(procedureLog.getloggedDoctor().getDoctorId());
-			System.out.println("procedureDoctor" + procedureDoctor);
-			System.out.println("logDoctor" + logDoctor);
 			if (!procedureDoctor.getSpecialization().equals(logDoctor.getSpecialization())) {
 				context.addMessage("loggedBy", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Doctor Spetialization dont match with " + procedureDoctor.getSpecialization(), null));
+						"Doctor specialization doesn't match with " + procedureDoctor.getSpecialization(), null));
 				context.validationFailed();
 				isValid = false;
 			}
 		}
 		if (!isValid)
 			return null;
+
 		// Get procedure fromDate
 		Date fromDate = procedure.getFromDate();
 		if (fromDate == null) {
@@ -1794,7 +1804,7 @@ public class ProcedureController {
 			isValid = false;
 		}
 
-		// Truncate time parts of both dates before comparing
+		// Truncate time parts before comparison
 		Calendar logCal = Calendar.getInstance();
 		logCal.setTime(logDate);
 		logCal.set(Calendar.HOUR_OF_DAY, 0);
@@ -1811,12 +1821,12 @@ public class ProcedureController {
 
 		if (logCal.getTime().before(fromCal.getTime())) {
 			context.addMessage("logDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Log date (" + logDate + ") cannot be before procedure start date (" + fromDate + ").", null));
+					"Log date (" + sdf.format(logDate) + ") cannot be before procedure start date (" + sdf.format(fromDate) + ").", null));
 			context.validationFailed();
 			isValid = false;
 		}
 
-		// 2. Validate (optional) vitals
+		// 2. Validate vitals
 		String vitals = procedureLog.getVitals();
 		if (vitals != null && !vitals.trim().isEmpty()) {
 			vitals = vitals.trim().replaceAll("\\s+", " ");
@@ -1828,13 +1838,10 @@ public class ProcedureController {
 			}
 			if (!vitals.matches("[a-zA-Z0-9:/.,\\s]+")) {
 				context.addMessage("vitals", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Vitals can only contain letters, numbers, spaces, colon (:), slash (/), comma (,), and dot (.)",
-						null));
+						"Vitals can only contain letters, numbers, spaces, colon (:), slash (/), comma (,), and dot (.)", null));
 				context.validationFailed();
 				isValid = false;
 			}
-
-			// Rule 3: Should not be numeric only
 			if (vitals.matches("\\d+")) {
 				context.addMessage("vitals", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 						"Vitals cannot be only numeric. Please include proper labels like 'BP: 120/80'.", null));
@@ -1843,29 +1850,28 @@ public class ProcedureController {
 			}
 			procedureLog.setVitals(vitals);
 		}
+
+		// Check same-day procedure constraint
 		if (providerEjb.generateNewProcedureId().equalsIgnoreCase(procedure.getProcedureId())) {
 			if (!procedureLog.getloggedDoctor().getDoctorId().equalsIgnoreCase(procedure.getDoctor().getDoctorId())) {
 				context.addMessage("loggedBy", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Logged by doctor for same day must be same as procedure doctor as it is same day", null));
+						"Logged by doctor must be same as procedure doctor as it is a same-day procedure.", null));
 				context.validationFailed();
 				isValid = false;
 			}
-			Date truncatedlogDate = Converter.truncateTime(procedureLog.getLogDate());
-			Date truncatedFromdate = Converter.truncateTime(procedure.getFromDate());
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-			String logDateTemp = sdf.format(truncatedlogDate);
-			String procedureFromDate = sdf.format(truncatedFromdate);
-
-			if (!logDateTemp.equalsIgnoreCase(procedureFromDate)) {
+			Date truncatedLogDate = Converter.truncateTime(procedureLog.getLogDate());
+			Date truncatedFromDate = Converter.truncateTime(procedure.getFromDate());
+			if (!sdf.format(truncatedLogDate).equalsIgnoreCase(sdf.format(truncatedFromDate))) {
 				context.addMessage("logDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"logDate must be same as procedure start date as it is same day", null));
+						"Log date must be same as procedure start date (" + sdf.format(truncatedFromDate) + ") for same-day procedures.", null));
 				context.validationFailed();
 				isValid = false;
 			}
 		}
+
 		if (!isValid)
 			return null;
-		// 4. Set createdAt
+
 		procedureLog.setCreatedAt(new Date());
 		procedureLogs.add(procedureLog);
 		return "LongTermProcedureDashboard?faces-redirect=true";
@@ -2872,6 +2878,23 @@ public class ProcedureController {
 		MedicalProcedure fullProc = providerEjb.getProcedureById(p.getProcedureId());
 		System.out.println("obtained procedure is " + fullProc);
 		this.procedure = fullProc;
+		tempProcedure = new MedicalProcedure();
+
+		tempProcedure.setProcedureId(procedure.getProcedureId());
+		tempProcedure.setAppointment(procedure.getAppointment());
+		tempProcedure.setRecipient(procedure.getRecipient());
+		tempProcedure.setProvider(procedure.getProvider());
+		tempProcedure.setDoctor(procedure.getDoctor());
+
+		tempProcedure.setScheduledDate(procedure.getScheduledDate());
+		tempProcedure.setProcedureDate(procedure.getProcedureDate());
+		tempProcedure.setFromDate(procedure.getFromDate());
+		tempProcedure.setToDate(procedure.getToDate());
+
+		tempProcedure.setDiagnosis(procedure.getDiagnosis());
+		tempProcedure.setRecommendations(procedure.getRecommendations());
+		tempProcedure.setType(procedure.getType());
+
 		this.procedureAppointment = fullProc.getAppointment();
 		// 4. Redirect to the appropriate dashboard
 		return "LongTermProcedureDashboard?faces-redirect=true"; // Change path if needed
@@ -2911,7 +2934,7 @@ public class ProcedureController {
 		tempProcedure.setType(procedure.getType());
 
 		tempProcedure.setProcedureStatus(procedure.getProcedureStatus()); // Assuming you have this field
-
+		System.out.println("tempprocedure set "+tempProcedure);
 		if (procedure.getType() == ProcedureType.SINGLE_DAY
 				&& procedure.getProcedureStatus() == ProcedureStatus.COMPLETED) {
 			res = "EditSingleDayProcedure?faces-redirect=true";
@@ -2944,6 +2967,7 @@ public class ProcedureController {
 	public String loadViewMedicines(Prescription p) {
 		System.out.println("loadViewMedicines called");
 		this.viewMedicines.clear();
+		this.medicineFirst=0;
 		this.prescription = p;
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (prescribedMedicines != null && !prescribedMedicines.isEmpty()) {
@@ -2954,20 +2978,13 @@ public class ProcedureController {
 			}
 		}
 		this.viewMedicines.addAll(providerEjb.fetchMedicines(p.getPrescriptionId()));
-		if (this.viewMedicines == null || this.viewMedicines.isEmpty()) {
-			System.out.println("returned");
-			context.addMessage(null,
-			        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-			            "No medicines found for this prescription.", null));
-			context.validationFailed();
-			return null;
-		}
 		System.out.println("returned");
 		return "ViewMedicines?faces-redirect=true";
 	}
 
 	public String loadViewTests(Prescription p) {
 		this.viewTests.clear();
+		this.testFirst=0;
 		this.prescription = p;
 		FacesContext context = FacesContext.getCurrentInstance();
 		if (procedureTests != null && !procedureTests.isEmpty()) {
@@ -2978,13 +2995,6 @@ public class ProcedureController {
 			}
 		}
 		this.viewTests.addAll(providerEjb.fetchTests(p.getPrescriptionId()));
-		if (this.viewTests == null || this.viewTests.isEmpty()) {
-			context.addMessage(null,
-			        new FacesMessage(FacesMessage.SEVERITY_ERROR,
-			            "No tests found for this prescription.", null));
-			context.validationFailed();
-			return null;
-		}
 		return "ViewTests?faces-redirect=true";
 	}
 
@@ -3005,140 +3015,157 @@ public class ProcedureController {
 	}
 
 	public String updatePrescription(Prescription p) throws ClassNotFoundException, SQLException {
-		Boolean isValid = true;
-		FacesContext context = FacesContext.getCurrentInstance();
-		if (p.getStartDate() == null) {
-			context.addMessage("startDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter the Prescription Start date.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (p.getEndDate() == null) {
-			context.addMessage("endDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter the Prescription End date.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid) {
-			return null;
-		}
-		if (procedure.getType() == ProcedureType.SINGLE_DAY) {
-			Date procedureDate = procedure.getProcedureDate();
-			Date startDate = p.getStartDate();
-			Date endDate = p.getEndDate();
-			Date truncatedStartDate = Converter.truncateTime(startDate);
-			Date truncatedEndDate = Converter.truncateTime(endDate);
-			Date truncatedProcedureDate = Converter.truncateTime(procedureDate);
-			if (truncatedStartDate.before(truncatedProcedureDate)) {
-				context.addMessage("startDate",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Prescription start date (" + truncatedStartDate
-										+ ") cannot be before the procedure date (" + truncatedProcedureDate + ").",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
+	    Boolean isValid = true;
+	    FacesContext context = FacesContext.getCurrentInstance();
 
-			if (truncatedEndDate.before(truncatedStartDate)) {
-				context.addMessage("endDate",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Prescription end date (" + truncatedEndDate
-								+ ") cannot be before the prescription start date (" + truncatedStartDate + ").",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
-		}
-		if (!isValid) {
-			return null;
-		}
-		if (procedure.getType() == ProcedureType.LONG_TERM
-				&& procedure.getProcedureStatus() == ProcedureStatus.IN_PROGRESS) {
-			Date fromDate = procedure.getFromDate();
-			Date startDate = p.getStartDate();
-			Date endDate = p.getEndDate();
-			Date truncatedStartDate = Converter.truncateTime(startDate);
-			Date truncatedEndDate = Converter.truncateTime(endDate);
-			Date truncatedFromDate = Converter.truncateTime(fromDate);
-			System.out.println("prescription start date " + truncatedStartDate);
-			System.out.println("prescription end date " + truncatedEndDate);
-			System.out.println("procedure from date " + truncatedFromDate);
-			if (truncatedStartDate.before(truncatedFromDate)) {
-				context.addMessage("startDate",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR,
-								"Prescription start date (" + truncatedStartDate
-										+ ") cannot be before the procedure start date (" + truncatedFromDate + ").",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
+	    if (p.getStartDate() == null) {
+	        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Please enter the Prescription Start date.", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-			if (truncatedEndDate.before(truncatedStartDate)) {
-				context.addMessage("endDate",
-						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Prescription end date (" + truncatedEndDate
-								+ ") cannot be before the prescription start date (" + truncatedStartDate + ").",
-								null));
-				context.validationFailed();
-				isValid = false;
-			}
-		}
-//same i have to do for the tests		
-		loadViewMedicines(p);
-		if (viewMedicines != null && !viewMedicines.isEmpty()) {
-			for (PrescribedMedicines pm : viewMedicines) {
-				if (pm.getPrescription().getPrescriptionId().equals(p.getPrescriptionId())) {
-					if (pm.getStartDate().before(p.getStartDate())) {
-						context.addMessage("startDate",
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Prescription start date (" + p.getStartDate()
-												+ ") is after medicine start date (" + pm.getStartDate() + ") for "
-												+ pm.getMedicineName(),
-										null));
-						context.validationFailed();
-						isValid = false;
-						break;
-					}
-					if (pm.getEndDate().after(p.getEndDate())) {
-						context.addMessage("endDate",
-								new FacesMessage(FacesMessage.SEVERITY_ERROR,
-										"Prescription end date (" + p.getEndDate() + ") is before medicine end date ("
-												+ pm.getEndDate() + ") for " + pm.getMedicineName(),
-										null));
-						context.validationFailed();
-						isValid = false;
-						break;
-					}
-				}
-			}
-		}
-		if (!isValid) {
-			return null;
-		}
-		if (prescriptions != null && !prescriptions.isEmpty()) {
-			System.out.println("in local");
-			for (int i = 0; i < prescriptions.size(); i++) {
-				Prescription pr = prescriptions.get(i);
-				if (pr.getPrescriptionId().equals(p.getPrescriptionId())) {
-					prescriptions.set(i, p); // Replace the old prescription with the new one
-					loadViewPrescriptions();
-					System.out.println("list updated");
-					return "ViewPrescriptions?faces-redirect=True"; // Optional status message
-				}
-			}
-		} else {
-			System.out.println("calling remote from controller");
-			providerEjb.updatePrescription(p);
-			loadViewPrescriptions();
-			System.out.println("db updated");
-			return "ViewPrescriptions?faces-redirect=True";
-		}
-		System.out.println("null returned");
-		return null;
+	    if (p.getEndDate() == null) {
+	        context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Please enter the Prescription End date.", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    if (!isValid) {
+	        return null;
+	    }
+
+	    // SINGLE_DAY validation
+	    if (procedure.getType() == ProcedureType.SINGLE_DAY) {
+	        Date procedureDate = procedure.getProcedureDate();
+	        Date startDate = p.getStartDate();
+	        Date endDate = p.getEndDate();
+	        Date truncatedStartDate = Converter.truncateTime(startDate);
+	        Date truncatedEndDate = Converter.truncateTime(endDate);
+	        Date truncatedProcedureDate = Converter.truncateTime(procedureDate);
+
+	        if (truncatedStartDate.before(truncatedProcedureDate)) {
+	            context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription start date (" + formatDate(truncatedStartDate)
+	                            + ") cannot be before the procedure date (" + formatDate(truncatedProcedureDate) + ").", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+
+	        if (truncatedEndDate.before(truncatedStartDate)) {
+	            context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription end date (" + formatDate(truncatedEndDate)
+	                            + ") cannot be before the prescription start date (" + formatDate(truncatedStartDate) + ").", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+	    }
+
+	    // LONG_TERM validation
+	    if (procedure.getType() == ProcedureType.LONG_TERM &&
+	        procedure.getProcedureStatus() == ProcedureStatus.IN_PROGRESS) {
+
+	        Date fromDate = procedure.getFromDate();
+	        Date startDate = p.getStartDate();
+	        Date endDate = p.getEndDate();
+	        Date truncatedStartDate = Converter.truncateTime(startDate);
+	        Date truncatedEndDate = Converter.truncateTime(endDate);
+	        Date truncatedFromDate = Converter.truncateTime(fromDate);
+
+	        if (truncatedStartDate.before(truncatedFromDate)) {
+	            context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription start date (" + formatDate(truncatedStartDate)
+	                            + ") cannot be before the procedure start date (" + formatDate(truncatedFromDate) + ").", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+
+	        if (truncatedEndDate.before(truncatedStartDate)) {
+	            context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                    "Prescription end date (" + formatDate(truncatedEndDate)
+	                            + ") cannot be before the prescription start date (" + formatDate(truncatedStartDate) + ").", null));
+	            context.validationFailed();
+	            isValid = false;
+	        }
+	    }
+
+	    // Validate against prescribed medicines
+	    loadViewMedicines(p);
+	    if (viewMedicines != null && !viewMedicines.isEmpty()) {
+	        for (PrescribedMedicines pm : viewMedicines) {
+	            if (pm.getPrescription().getPrescriptionId().equals(p.getPrescriptionId())) {
+	                if (pm.getStartDate().before(p.getStartDate())) {
+	                    context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                            "Prescription start date (" + formatDate(p.getStartDate())
+	                                    + ") is after medicine start date (" + formatDate(pm.getStartDate()) + ") for "
+	                                    + pm.getMedicineName(), null));
+	                    context.validationFailed();
+	                    isValid = false;
+	                    break;
+	                }
+	                if (pm.getEndDate().after(p.getEndDate())) {
+	                    context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                            "Prescription end date (" + formatDate(p.getEndDate())
+	                                    + ") is before medicine end date (" + formatDate(pm.getEndDate()) + ") for "
+	                                    + pm.getMedicineName(), null));
+	                    context.validationFailed();
+	                    isValid = false;
+	                    break;
+	                }
+	            }
+	        }
+	    }
+
+	    // Validate against prescribed tests
+	    loadViewTests(p);
+	    if (viewTests != null && !viewTests.isEmpty()) {
+	        for (ProcedureTest pt : viewTests) {
+	            if (pt.getPrescription().getPrescriptionId().equals(p.getPrescriptionId())) {
+	                if (pt.getTestDate().before(p.getStartDate())) {
+	                    context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                            "Prescription start date (" + formatDate(p.getStartDate())
+	                                    + ") is after test start date (" + formatDate(pt.getTestDate()) + ") for "
+	                                    + pt.getTestName(), null));
+	                    context.validationFailed();
+	                    isValid = false;
+	                    break;
+	                }
+	               
+	            }
+	        }
+	    }
+
+	    if (!isValid) {
+	        return null;
+	    }
+
+	    // Update in local list or DB
+	    if (prescriptions != null && !prescriptions.isEmpty()) {
+	        for (int i = 0; i < prescriptions.size(); i++) {
+	            Prescription pr = prescriptions.get(i);
+	            if (pr.getPrescriptionId().equals(p.getPrescriptionId())) {
+	                prescriptions.set(i, p);
+	                loadViewPrescriptions();
+	                return "ViewPrescriptions?faces-redirect=True";
+	            }
+	        }
+	    } else {
+	        providerEjb.updatePrescription(p);
+	        loadViewPrescriptions();
+	        return "ViewPrescriptions?faces-redirect=True";
+	    }
+
+	    return null;
 	}
+
 
 	public String updateMedicine(PrescribedMedicines pm) throws ClassNotFoundException, SQLException {
 		Boolean isValid = true;
 		FacesContext context = FacesContext.getCurrentInstance();
-		prescribedMedicine.setPrescription(this.prescription);
+		pm.setPrescription(this.prescription);
+
+		// Basic field validations
 		if (pm.getDosage() == null || pm.getDosage().trim().isEmpty()) {
 			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter dosage", null));
 			context.validationFailed();
@@ -3150,73 +3177,60 @@ public class ProcedureController {
 			context.validationFailed();
 			isValid = false;
 		}
-		if (pm.getEndDate() == null) {
-			context.addMessage("endDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter till which date to take the medicines", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (pm.getDuration().isEmpty()) {
+		if (pm.getDuration() == null || pm.getDuration().trim().isEmpty()) {
 			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
 			context.validationFailed();
 			isValid = false;
 		}
-		if (!isValid) {
-			return null;
-		}
-		String dosage = pm.getDosage();
 
+		if (!isValid) return null;
+
+		// Dosage format validation
+		String dosage = pm.getDosage();
 		MedicineType type = pm.getType();
 		String pattern = "";
 		String format = "";
+
 		switch (type) {
-		case TABLET:
-			pattern = "^\\d+\\s*tablet(s)?$";
-			format = "tablets";
-			break;
-		case SYRUP:
-			pattern = "^\\d+(\\.\\d+)?\\s*ml$";
-			format = "ml";
-			break;
-		case INJECTION:
-			pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
-			format = "ml/dose";
-			break;
-		case DROP:
-			pattern = "^\\d+\\s*drop(s)?$";
-			format = "drops";
-			break;
-		default:
-			context.addMessage("type",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
-			context.validationFailed();
-			isValid = false;
+			case TABLET:
+				pattern = "^\\d+\\s*tablet(s)?$";
+				format = "tablets";
+				break;
+			case SYRUP:
+				pattern = "^\\d+(\\.\\d+)?\\s*ml$";
+				format = "ml";
+				break;
+			case INJECTION:
+				pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
+				format = "ml/dose";
+				break;
+			case DROP:
+				pattern = "^\\d+\\s*drop(s)?$";
+				format = "drops";
+				break;
+			default:
+				context.addMessage("type",
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
+				context.validationFailed();
+				isValid = false;
 		}
+
 		if (!dosage.trim().toLowerCase().matches(pattern)) {
 			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Dosage format is invalid for " + type + " type:" + format, null));
+					"Dosage format is invalid for " + type + " type: " + format, null));
 			context.validationFailed();
 			isValid = false;
 		}
 
-		// 4. Fetch Prescription Dates
+		// Prescription dates
 		Date prescriptionStart = this.prescription.getStartDate();
 		Date prescriptionEnd = this.prescription.getEndDate();
 		Date medStart = pm.getStartDate();
-		Date medEnd = pm.getEndDate();
-
-		// 5. Validate Medicine Date Range
-
-		if (medEnd.before(medStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before start date (" + medStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
 
 		if (medStart.before(prescriptionStart)) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date (" + medStart
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
+			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Start date (" + medStart + ") cannot be before prescription start date (" + prescriptionStart + ").",
+					null));
 			context.validationFailed();
 			isValid = false;
 		}
@@ -3229,121 +3243,135 @@ public class ProcedureController {
 			isValid = false;
 		}
 
-		if (medEnd.before(prescriptionStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before prescription start date (" + prescriptionStart + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
+		// Duration validation and end date calculation
+		int durationDays = 0;
+		Date medEnd = null;
 
-		if (medEnd.after(prescriptionEnd)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-		// 6. Duration Validation
-		long dayDiff = (medEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
-		if ((prescribedMedicine.getDuration().isEmpty())) {
-			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		try {
-			int durationDays = Integer.parseInt(prescribedMedicine.getDuration().trim());
+		if (pm.getDuration() != null && !pm.getDuration().trim().isEmpty()) {
+			try {
+				durationDays = Integer.parseInt(pm.getDuration().trim());
+				long medEndTime = medStart.getTime() + (durationDays - 1L) * 24 * 60 * 60 * 1000;
+				medEnd = new Date(medEndTime);
+				pm.setEndDate(medEnd); // Set the calculated end date
 
-			if (durationDays != dayDiff) {
+				// Check if end date falls within prescription
+				if (medEnd != null && medEnd.after(prescriptionEnd)) {
+				    // Calculate the maximum valid duration from start date to prescription end date
+				    long maxAllowedDuration = (prescriptionEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
+
+				    // Format the dates
+				    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+				    String formattedMedStart = sdf.format(medStart);
+				    String formattedPrescriptionEnd = sdf.format(prescriptionEnd);
+
+				    context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+				            "The given duration falls outside the prescription period. Maximum allowed duration from "
+				                    + formattedMedStart + " to " + formattedPrescriptionEnd + " is " + maxAllowedDuration + " days.",
+				            null));
+				    context.validationFailed();
+				    isValid = false;
+				}
+			} catch (NumberFormatException e) {
 				context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Duration (" + durationDays + " days) does not match actual period (" + dayDiff + " days).",
-						null));
+						"Duration must be a valid integer number.", null));
 				context.validationFailed();
 				isValid = false;
 			}
-		} catch (NumberFormatException e) {
-			context.addMessage("duration",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Duration must be a valid integer number.", null));
-			context.validationFailed();
-			isValid = false;
 		}
-		if (!isValid)
-			return null;
 
+		if (!isValid) return null;
+
+		// Replace in list or update via EJB
 		if (prescribedMedicines != null && !prescribedMedicines.isEmpty()) {
 			for (int i = 0; i < prescribedMedicines.size(); i++) {
 				PrescribedMedicines md = prescribedMedicines.get(i);
 				if (md.getPrescribedId().equals(pm.getPrescribedId())) {
-					prescribedMedicines.set(i, pm); // Replace the old medicine with the new one
+					prescribedMedicines.set(i, pm);
 					loadViewMedicines(this.prescription);
-					return "ViewMedicines?faces-redirect=True"; // Optional status message
+					return "ViewMedicines?faces-redirect=true";
 				}
 			}
 		} else {
 			providerEjb.updateMedicine(pm);
 			loadViewMedicines(this.prescription);
-			return "ViewMedicines?faces-redirect=True";
+			return "ViewMedicines?faces-redirect=true";
 		}
+
 		return null;
 	}
 
 	public String updateTest(ProcedureTest test) throws ClassNotFoundException, SQLException {
-		Boolean isValid = true;
-		test.setPrescription(prescription);
-		FacesContext context = FacesContext.getCurrentInstance();
-		if (test.getResultSummary().isEmpty()) {
-			context.addMessage("resultSummary",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Result summary", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (test.getTestDate() == null) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Test Date", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
-		// 2. Validate Test Date
-		Date testDate = test.getTestDate();
+	    Boolean isValid = true;
+	    test.setPrescription(prescription);
+	    FacesContext context = FacesContext.getCurrentInstance();
 
-		Date prescriptionStart = this.prescription.getStartDate();
-		Date prescriptionEnd = this.prescription.getEndDate();
+	    // Validation: Result Summary
+	    if (test.getResultSummary() == null || test.getResultSummary().isEmpty()) {
+	        context.addMessage("resultSummary",
+	                new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Result summary", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		if (testDate.before(prescriptionStart)) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Test date (" + testDate
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
+	    // Validation: Test Date
+	    if (test.getTestDate() == null) {
+	        context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter Test Date", null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
 
-		if (testDate.after(prescriptionEnd)) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Test date (" + testDate + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
-		if (procedureTests != null && !procedureTests.isEmpty()) {
-			for (int i = 0; i < procedureTests.size(); i++) {
-				ProcedureTest t = procedureTests.get(i);
-				if (test.getTestId().equals(t.getTestId())) {
-					procedureTests.set(i, test); // Replace the old medicine with the new one
-					loadViewTests(this.prescription);
-					return "ViewTests?faces-redirect=True"; // Optional status message
-				}
-			}
-		} else {
-			providerEjb.updateTest(test);
-			loadViewTests(this.prescription);
-			return "ViewTests?faces-redirect=True";
-		}
-		return null;
+	    if (!isValid)
+	        return null;
+
+	    // Prescription dates
+	    Date testDate = test.getTestDate();
+	    Date prescriptionStart = this.prescription.getStartDate();
+	    Date prescriptionEnd = this.prescription.getEndDate();
+
+	    // Check if test date is before prescription start
+	    if (testDate.before(prescriptionStart)) {
+	        context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Test date (" + formatDate(testDate) + ") cannot be before prescription start date ("
+	                        + formatDate(prescriptionStart) + ").",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    // Check if test date is after prescription end
+	    if (testDate.after(prescriptionEnd)) {
+	        context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+	                "Test date (" + formatDate(testDate) + ") cannot be after prescription end date ("
+	                        + formatDate(prescriptionEnd) + ").",
+	                null));
+	        context.validationFailed();
+	        isValid = false;
+	    }
+
+	    if (!isValid)
+	        return null;
+
+	    // Update in list or persist
+	    if (procedureTests != null && !procedureTests.isEmpty()) {
+	        for (int i = 0; i < procedureTests.size(); i++) {
+	            ProcedureTest t = procedureTests.get(i);
+	            if (test.getTestId().equals(t.getTestId())) {
+	                procedureTests.set(i, test); // Replace existing test
+	                loadViewTests(this.prescription);
+	                return "ViewTests?faces-redirect=True";
+	            }
+	        }
+	    } else {
+	        providerEjb.updateTest(test);
+	        loadViewTests(this.prescription);
+	        return "ViewTests?faces-redirect=True";
+	    }
+
+	    return null;
 	}
 
 	public String updateLog(ProcedureDailyLog log) throws ClassNotFoundException, SQLException {
+		
 		if (procedureLogs != null && !procedureLogs.isEmpty()) {
 			for (int i = 0; i < procedureLogs.size(); i++) {
 				ProcedureDailyLog pLog = procedureLogs.get(i);
@@ -3370,7 +3398,7 @@ public class ProcedureController {
 	public String editMedicine(PrescribedMedicines pm) {
 		this.prescribedMedicine = pm;
 		tempMedicine = new PrescribedMedicines();
-		tempMedicine.setStartDate(pm.getEndDate());
+		tempMedicine.setStartDate(pm.getStartDate());
 		tempMedicine.setEndDate(pm.getEndDate());
 		tempMedicine.setDuration(pm.getDuration());
 		tempMedicine.setDosage(pm.getDosage());
@@ -3381,6 +3409,7 @@ public class ProcedureController {
 	public String editTest(ProcedureTest t) {
 		this.procedureTest = t;
 		tempTest = new ProcedureTest();
+		tempTest.setTestDate(t.getTestDate());
 		tempTest.setResultSummary(t.getResultSummary());
 		return "EditTest?faces-redirect=true";
 	}
@@ -3410,6 +3439,7 @@ public class ProcedureController {
 
 	public String restEditTest() throws ClassNotFoundException, SQLException {
 		this.procedureTest.setResultSummary(tempTest.getResultSummary());
+		this.procedureTest.setTestDate(tempTest.getTestDate());
 		return "EditTest?faces-redirect=true";
 	}
 
@@ -3449,6 +3479,7 @@ public class ProcedureController {
 		}
 		if (!isValid)
 			return null;
+		this.tempProcedure=p;
 		return "LongTermProcedureDashboard?faces-redirect=true";
 	}
 
@@ -3472,146 +3503,120 @@ public class ProcedureController {
 		}
 		if (!isValid)
 			return null;
+		this.tempProcedure=p;
 		return "ProcedureDashboard?faces-redirect=true";
 	}
 
 	public String updateLastMedicine(PrescribedMedicines pm) {
-		Boolean isValid = true;
-		FacesContext context = FacesContext.getCurrentInstance();
-		pm.setPrescription(this.prescription);
+		 boolean isValid = true;
+		    FacesContext context = FacesContext.getCurrentInstance();
+		    pm.setPrescription(this.prescription);
+
+		    if (pm.getDosage() == null || pm.getDosage().trim().isEmpty()) {
+		        context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter dosage", null));
+		        context.validationFailed();
+		        isValid = false;
+		    }
+
+		    if (pm.getStartDate() == null) {
+		        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+		                "Enter from which date to start taking medicine", null));
+		        context.validationFailed();
+		        isValid = false;
+		    }
+
+		    if (pm.getDuration() == null || pm.getDuration().trim().isEmpty()) {
+		        context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
+		        context.validationFailed();
+		        isValid = false;
+		    }
+
+		    if (!isValid) return null;
+
+		    // Dosage format validation
+		    String dosage = pm.getDosage().trim().toLowerCase();
+		    MedicineType type = pm.getType();
+		    String pattern = "", format = "";
+
+		    switch (type) {
+		        case TABLET:
+		            pattern = "^\\d+\\s*tablet(s)?$";
+		            format = "tablets";
+		            break;
+		        case SYRUP:
+		            pattern = "^\\d+(\\.\\d+)?\\s*ml$";
+		            format = "ml";
+		            break;
+		        case INJECTION:
+		            pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
+		            format = "ml/dose";
+		            break;
+		        case DROP:
+		            pattern = "^\\d+\\s*drop(s)?$";
+		            format = "drops";
+		            break;
+		        default:
+		            context.addMessage("type", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
+		            context.validationFailed();
+		            isValid = false;
+		    }
+
+		    if (!dosage.matches(pattern)) {
+		        context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+		                "Dosage format is invalid for " + type + " type: " + format, null));
+		        context.validationFailed();
+		        isValid = false;
+		    }
+
+		    // Prescription date range
+		    Date prescriptionStart = this.prescription.getStartDate();
+		    Date prescriptionEnd = this.prescription.getEndDate();
+		    Date medStart = pm.getStartDate();
+
+		    if (medStart.before(prescriptionStart)) {
+		        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+		                "Start date (" + formatDate(medStart) + ") cannot be before prescription start date (" + formatDate(prescriptionStart) + ").", null));
+		        context.validationFailed();
+		        isValid = false;
+		    }
+
+		    if (medStart.after(prescriptionEnd)) {
+		        context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+		                "Start date (" + formatDate(medStart) + ") cannot be after prescription end date (" + formatDate(prescriptionEnd) + ").", null));
+		        context.validationFailed();
+		        isValid = false;
+		    }
+
+		    // Duration validation and end date calculation
+		    try {
+		        int durationDays = Integer.parseInt(pm.getDuration().trim());
+		        long medEndTime = medStart.getTime() + (durationDays - 1L) * 24 * 60 * 60 * 1000;
+		        Date medEnd = new Date(medEndTime);
+		        pm.setEndDate(medEnd); // calculated end date
+
+		        if (medEnd.after(prescriptionEnd)) {
+		            long maxAllowedDuration = (prescriptionEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
+
+		            context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+		                    "The given duration falls outside the prescription period. "
+		                            + "Maximum allowed duration from " + formatDate(medStart)
+		                            + " to " + formatDate(prescriptionEnd) + " is " + maxAllowedDuration + " days.", null));
+		            context.validationFailed();
+		            isValid = false;
+		        }
+
+		    } catch (NumberFormatException e) {
+		        context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+		                "Duration must be a valid integer number.", null));
+		        context.validationFailed();
+		        isValid = false;
+		    }
+
+		    if (!isValid) return null;
+
 		if (prescribedMedicines != null && !prescribedMedicines.isEmpty()) {
 			prescribedMedicines.removeIf(p -> p.getPrescribedId().equals(pm.getPrescribedId()));
 		}
-		if (pm.getDosage() == null || pm.getDosage().trim().isEmpty()) {
-			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter dosage", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (pm.getStartDate() == null) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Enter from which date to start taking medicine", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (pm.getEndDate() == null) {
-			context.addMessage("endDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter till which date to take the medicines", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (pm.getDuration().isEmpty()) {
-			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid) {
-			return null;
-		}
-		String dosage = pm.getDosage();
-
-		MedicineType type = pm.getType();
-		String pattern = "";
-		String format = "";
-		switch (type) {
-		case TABLET:
-			pattern = "^\\d+\\s*tablet(s)?$";
-			format = "tablets";
-			break;
-		case SYRUP:
-			pattern = "^\\d+(\\.\\d+)?\\s*ml$";
-			format = "ml";
-			break;
-		case INJECTION:
-			pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
-			format = "ml/dose";
-			break;
-		case DROP:
-			pattern = "^\\d+\\s*drop(s)?$";
-			format = "drops";
-			break;
-		default:
-			context.addMessage("type",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!dosage.trim().toLowerCase().matches(pattern)) {
-			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Dosage format is invalid for " + type + " type:" + format, null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		// 4. Fetch Prescription Dates
-		Date prescriptionStart = this.prescription.getStartDate();
-		Date prescriptionEnd = this.prescription.getEndDate();
-		Date medStart = pm.getStartDate();
-		Date medEnd = pm.getEndDate();
-
-		// 5. Validate Medicine Date Range
-
-		if (medEnd.before(medStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before start date (" + medStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medStart.before(prescriptionStart)) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date (" + medStart
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medStart.after(prescriptionEnd)) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Start date (" + medStart + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medEnd.before(prescriptionStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before prescription start date (" + prescriptionStart + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medEnd.after(prescriptionEnd)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-		// 6. Duration Validation
-		long dayDiff = (medEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
-		if ((prescribedMedicine.getDuration().isEmpty())) {
-			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		try {
-			int durationDays = Integer.parseInt(prescribedMedicine.getDuration().trim());
-
-			if (durationDays != dayDiff) {
-				context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Duration (" + durationDays + " days) does not match actual period (" + dayDiff + " days).",
-						null));
-				context.validationFailed();
-				isValid = false;
-			}
-		} catch (NumberFormatException e) {
-			context.addMessage("duration",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Duration must be a valid integer number.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
 		if (prescribedMedicines != null) {
 		    prescribedMedicines.add(pm);
 		}
@@ -3642,15 +3647,15 @@ public class ProcedureController {
 		Date prescriptionEnd = this.prescription.getEndDate();
 
 		if (testDate.before(prescriptionStart)) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Test date (" + testDate
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
+			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Test date (" + formatDate(testDate)
+					+ ") cannot be before prescription start date (" + formatDate(prescriptionStart) + ").", null));
 			context.validationFailed();
 			isValid = false;
 		}
 
 		if (testDate.after(prescriptionEnd)) {
 			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Test date (" + testDate + ") cannot be after prescription end date (" + prescriptionEnd + ").",
+					"Test date (" + formatDate(testDate) + ") cannot be after prescription end date (" + formatDate(prescriptionEnd) + ").",
 					null));
 			context.validationFailed();
 			isValid = false;
@@ -3690,8 +3695,7 @@ public class ProcedureController {
 		tempTest.setResultSummary(this.procedureTest.getResultSummary());
 		return "EditLastTest?faces-redirect=true";
 	}
-	public String addExistingPrescMedicine(PrescribedMedicines pm)
-	{
+	public String addExistingPrescMedicine(PrescribedMedicines pm) {
 		prescribedMedicines.removeIf(p -> p.getPrescribedId().equals(prescribedMedicine.getPrescribedId()));
 		FacesContext context = FacesContext.getCurrentInstance();
 		Map<String, Object> sessionMap = context.getExternalContext().getSessionMap();
@@ -3701,12 +3705,13 @@ public class ProcedureController {
 
 		// 1. Medicine Name Validation
 		String medicineName = prescribedMedicine.getMedicineName();
-		if (medicineName.isEmpty()) {
-			context.addMessage("medicineName",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter medicine name", null));
+		if (medicineName == null || medicineName.trim().isEmpty()) {
+			context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter medicine name", null));
 			context.validationFailed();
 			isValid = false;
 		}
+
+		// 2. Basic Field Validations
 		if (prescribedMedicine.getDosage() == null || prescribedMedicine.getDosage().trim().isEmpty()) {
 			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter dosage", null));
 			context.validationFailed();
@@ -3718,13 +3723,7 @@ public class ProcedureController {
 			context.validationFailed();
 			isValid = false;
 		}
-		if (prescribedMedicine.getEndDate() == null) {
-			context.addMessage("endDate",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter till which date to take the medicines", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (prescribedMedicine.getDuration().isEmpty()) {
+		if (prescribedMedicine.getDuration() == null || prescribedMedicine.getDuration().trim().isEmpty()) {
 			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
 			context.validationFailed();
 			isValid = false;
@@ -3734,46 +3733,121 @@ public class ProcedureController {
 			context.validationFailed();
 			isValid = false;
 		}
-		if (!isValid)
-			return null;
-		if (medicineName == null || !medicineName.matches("^[a-zA-Z0-9()\\-+/'. ]{2,50}$")) {
+
+		if (!isValid) return null;
+
+		// 3. Format and Validate Medicine Name
+		if (!medicineName.matches("^[a-zA-Z0-9()\\-+/'. ]{2,50}$")) {
 			context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 					"Medicine name must be 2–50 characters and can include letters, digits, -, /, +, (), '.', and spaces.",
 					null));
 			context.validationFailed();
 			isValid = false;
 		}
-
-		// Normalize medicine name
 		medicineName = medicineName.trim().replaceAll("\\s+", " ");
 		prescribedMedicine.setMedicineName(medicineName);
-		// 3. Check for duplicate medicine in same prescription
-//		for (PrescribedMedicines existingMed : prescribedMedicines) {
-//			if (existingMed.getPrescription() != null
-//					&& existingMed.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())
-//					&& existingMed.getMedicineName() != null
-//					&& existingMed.getMedicineName().equalsIgnoreCase(medicineName)) {
-//
-//				context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-//						"This medicine is already prescribed in this prescription.", null));
-//				context.validationFailed();
-//				isValid = false;
-//			}
-//		}
-		loadViewMedicines(this.prescription);
+
+		// 4. Dosage Format Validation
+		String dosage = prescribedMedicine.getDosage();
+		MedicineType type = prescribedMedicine.getType();
+		String pattern = "";
+		String format = "";
+
+		switch (type) {
+			case TABLET:
+				pattern = "^\\d+\\s*tablet(s)?$";
+				format = "tablets";
+				break;
+			case SYRUP:
+				pattern = "^\\d+(\\.\\d+)?\\s*ml$";
+				format = "ml";
+				break;
+			case INJECTION:
+				pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
+				format = "ml/dose";
+				break;
+			case DROP:
+				pattern = "^\\d+\\s*drop(s)?$";
+				format = "drops";
+				break;
+			default:
+				context.addMessage("type",
+						new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
+				context.validationFailed();
+				isValid = false;
+		}
+
+		if (!dosage.trim().toLowerCase().matches(pattern)) {
+			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Dosage format is invalid for " + type + " type: " + format, null));
+			context.validationFailed();
+			isValid = false;
+		}
+
+		// 5. Calculate End Date and Validate Duration Against Prescription
+		Date prescriptionStart = prescription.getStartDate();
+		Date prescriptionEnd = prescription.getEndDate();
+		Date medStart = prescribedMedicine.getStartDate();
+		int durationDays = 0;
+
+		try {
+			durationDays = Integer.parseInt(prescribedMedicine.getDuration().trim());
+			if (durationDays <= 0) throw new NumberFormatException();
+		} catch (NumberFormatException e) {
+			context.addMessage("duration",
+					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Duration must be a valid positive integer.", null));
+			context.validationFailed();
+			isValid = false;
+			return null;
+		}
+
+		// Calculate end date
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(medStart);
+		cal.add(Calendar.DAY_OF_MONTH, durationDays - 1);
+		Date medEnd = cal.getTime();
+		prescribedMedicine.setEndDate(medEnd);
+
+		// Validate date boundaries
+		if (medStart.before(prescriptionStart)) {
+			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+					"Start date (" + formatDate(medStart) + ") cannot be before prescription start date (" + formatDate(prescriptionStart) + ").",
+					null));
+			context.validationFailed();
+			isValid = false;
+		}
+
+		if (medEnd != null && medEnd.after(prescriptionEnd)) {
+		    // Calculate the maximum valid duration from start date to prescription end date
+		    long maxAllowedDuration = (prescriptionEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
+
+		    // Format the dates
+		    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+		    String formattedMedStart = sdf.format(medStart);
+		    String formattedPrescriptionEnd = sdf.format(prescriptionEnd);
+
+		    context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
+		            "The given duration falls outside the prescription period. Maximum allowed duration from "
+		                    + formattedMedStart + " to " + formattedPrescriptionEnd + " is " + maxAllowedDuration + " days.",
+		            null));
+		    context.validationFailed();
+		    isValid = false;
+		}
+
+		// 6. Duplicate check for same medicine & date range
+		loadViewMedicines(prescription);
 		for (PrescribedMedicines existingMed : viewMedicines) {
 			if (existingMed.getPrescription() != null
 					&& existingMed.getPrescription().getPrescriptionId().equals(prescription.getPrescriptionId())
 					&& existingMed.getMedicineName() != null
 					&& existingMed.getMedicineName().equalsIgnoreCase(medicineName)) {
-				// Check for overlapping date ranges
 				SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-				String currentStart = sdf.format(Converter.truncateTime(this.prescribedMedicine.getStartDate()));
+				String currentStart = sdf.format(Converter.truncateTime(medStart));
 				String existingStart = sdf.format(Converter.truncateTime(existingMed.getStartDate()));
-				String currentEnd = sdf.format(Converter.truncateTime(this.prescribedMedicine.getEndDate()));
+				String currentEnd = sdf.format(Converter.truncateTime(medEnd));
 				String existingEnd = sdf.format(Converter.truncateTime(existingMed.getEndDate()));
 				if (currentStart.equals(existingStart) && currentEnd.equals(existingEnd)
-						&& existingMed.getType().equals(this.prescribedMedicine.getType())) {
+						&& existingMed.getType().equals(type)) {
 					context.addMessage("medicineName", new FacesMessage(FacesMessage.SEVERITY_ERROR,
 							"This medicine is already prescribed in this prescription for the same date range and type",
 							null));
@@ -3783,117 +3857,13 @@ public class ProcedureController {
 			}
 		}
 
-		// 3. Dosage Validation
-		String dosage = prescribedMedicine.getDosage();
+		if (!isValid) return null;
 
-		MedicineType type = prescribedMedicine.getType();
-		String pattern = "";
-		String format = "";
-		switch (type) {
-		case TABLET:
-			pattern = "^\\d+\\s*tablet(s)?$";
-			format = "tablets";
-			break;
-		case SYRUP:
-			pattern = "^\\d+(\\.\\d+)?\\s*ml$";
-			format = "ml";
-			break;
-		case INJECTION:
-			pattern = "^(\\d+(\\.\\d+)?\\s*ml|\\d+\\s*dose(s)?)$";
-			format = "ml/dose";
-			break;
-		case DROP:
-			pattern = "^\\d+\\s*drop(s)?$";
-			format = "drops";
-			break;
-		default:
-			context.addMessage("type",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Invalid or missing medicine type.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (!dosage.trim().toLowerCase().matches(pattern)) {
-			context.addMessage("dosage", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Dosage format is invalid for " + type + " type:" + format, null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		// 4. Fetch Prescription Dates
-		Date prescriptionStart = prescription.getStartDate();
-		Date prescriptionEnd = prescription.getEndDate();
-		Date medStart = prescribedMedicine.getStartDate();
-		Date medEnd = prescribedMedicine.getEndDate();
-
-		// 5. Validate Medicine Date Range
-
-		if (medEnd.before(medStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before start date (" + medStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medStart.before(prescriptionStart)) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Start date (" + medStart
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medStart.after(prescriptionEnd)) {
-			context.addMessage("startDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Start date (" + medStart + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medEnd.before(prescriptionStart)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be before prescription start date (" + prescriptionStart + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-
-		if (medEnd.after(prescriptionEnd)) {
-			context.addMessage("endDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"End date (" + medEnd + ") cannot be after prescription end date (" + prescriptionEnd + ").",
-					null));
-			context.validationFailed();
-			isValid = false;
-		}
-		// 6. Duration Validation
-		long dayDiff = (medEnd.getTime() - medStart.getTime()) / (1000 * 60 * 60 * 24) + 1;
-		if ((prescribedMedicine.getDuration().isEmpty())) {
-			context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Enter duration", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		try {
-			int durationDays = Integer.parseInt(prescribedMedicine.getDuration().trim());
-
-			if (durationDays != dayDiff) {
-				context.addMessage("duration", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-						"Duration (" + durationDays + " days) does not match actual period (" + dayDiff + " days).",
-						null));
-				context.validationFailed();
-				isValid = false;
-			}
-		} catch (NumberFormatException e) {
-			context.addMessage("duration",
-					new FacesMessage(FacesMessage.SEVERITY_ERROR, "Duration must be a valid integer number.", null));
-			context.validationFailed();
-			isValid = false;
-		}
-		if (!isValid)
-			return null;
 		prescribedMedicines.add(prescribedMedicine);
 		loadViewMedicines(prescription);
 		return "ViewMedicines?faces-redirect=true";
 	}
+
 	public String addExistingPrescTest(ProcedureTest t)
 	{
 		procedureTests.removeIf(p -> p.getTestId().equals(procedureTest.getTestId()));
@@ -3952,15 +3922,15 @@ public class ProcedureController {
 		Date prescriptionEnd = prescription.getEndDate();
 
 		if (testDate.before(prescriptionStart)) {
-			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Test date (" + testDate
-					+ ") cannot be before prescription start date (" + prescriptionStart + ").", null));
+			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR, "Test date (" + formatDate(testDate)
+					+ ") cannot be before prescription start date (" + formatDate(prescriptionStart) + ").", null));
 			context.validationFailed();
 			isValid = false;
 		}
 
 		if (testDate.after(prescriptionEnd)) {
 			context.addMessage("testDate", new FacesMessage(FacesMessage.SEVERITY_ERROR,
-					"Test date (" + testDate + ") cannot be after prescription end date (" + prescriptionEnd + ").",
+					"Test date (" + formatDate(testDate) + ") cannot be after prescription end date (" + formatDate(prescriptionEnd) + ").",
 					null));
 			context.validationFailed();
 			isValid = false;
@@ -3979,5 +3949,40 @@ public class ProcedureController {
 		procedureTests.add(procedureTest);
 		loadViewTests(prescription);
 		return "ViewTests?faces-redirect=true";
+	}
+	public String backFromEditTest() throws ClassNotFoundException, SQLException
+	{
+		restEditTest();
+		return "ViewTests?faces-redirect=true";
+	}
+	public String backFromEditPrescription() throws ClassNotFoundException, SQLException
+	{
+		resetEditPrescription();
+		return "ViewPrescriptions?faces-redirect=true";
+	}
+	public String backFromEditMedicine() throws ClassNotFoundException, SQLException
+	{
+		restEditMedicine();
+		return "ViewMedicines?faces-redirect=true";
+	}
+	public String backFromEditLogs() throws ClassNotFoundException, SQLException
+	{
+		restEditLog();
+		return "ViewLogs?faces-redirect=true";
+	}
+	public String backFromLastMedicine() throws ClassNotFoundException, SQLException
+	{
+		restEditMedicine();	
+		return "PrescriptionDashboard?faces-redirect=true";
+	}
+	public String backFromLastTest() throws ClassNotFoundException, SQLException
+	{
+		restEditTest();	
+		return "PrescriptionDashboard?faces-redirect=true";
+	}
+	private String formatDate(Date date) {
+	    if (date == null) return "";
+	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+	    return sdf.format(date);
 	}
 }

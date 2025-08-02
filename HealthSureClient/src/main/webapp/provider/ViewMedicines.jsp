@@ -122,11 +122,80 @@
     <center>
         <h2><h:outputText value="Medicine Details" /></h2>
     </center>
-    
+   
     <h:form prependId="false">
         <h:commandButton value="Add Medicine" styleClass="btn btn-primary" 
             action="#{procedureController.createNewexistingPrescPrescribedMedicine()}" />
             
+           <h:dataTable value="#{empty procedureController.viewMedicines ? ['dummy'] : procedureController.getPaginatedMedicines()}"
+             var="m"
+             rendered="#{empty procedureController.viewMedicines}"
+             styleClass="med-table"
+             border="1">
+
+    <!-- Table Header -->
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Prescription ID" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Medicine Name" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Type" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Dosage" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Duration" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Start Date" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="End Date" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+
+    <h:column>
+        <f:facet name="header">
+            <h:outputText value="Action" />
+        </f:facet>
+        <h:outputText value="N/A" />
+    </h:column>
+</h:dataTable>
+<!-- Message below the table -->
+<h:outputText value="No medicines added."
+              style="font-weight: bold; color: red; display: block; margin-top: 10px; text-align: center; width: 100%;"
+              rendered="#{empty procedureController.viewMedicines}" />
+            
+            <h:panelGroup rendered="#{not empty procedureController.viewMedicines}">
         <h:outputText value="Total medicines: #{procedureController.viewMedicines.size()}"
                       style="font-weight: bold; display: block; margin: 10px 0;" />
         
@@ -300,10 +369,11 @@
                      disabled="#{!procedureController.isMedicineHasNextPage()}"
                      styleClass="btn btn-tertiary" />
 </div>
-        
+         </h:panelGroup>
         <h:commandButton value="Back" styleClass="btn btn-primary" 
             action="ViewPrescriptions?faces-redirect=true"/>
     </h:form>
+   
 </body>
 </html>
 </f:view>

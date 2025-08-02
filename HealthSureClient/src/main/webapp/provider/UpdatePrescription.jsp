@@ -193,7 +193,7 @@
                             <label for="prescribedBy">Prescribed BY</label>
                             <h:inputText id="prescribedBy"
                                          value="#{procedureController.prescription.prescribedDoc.doctorId}"
-                                         styleClass="form-control" />
+                                         styleClass="form-control" readonly="true"/>
                             <h:message for="prescribedBy" styleClass="error" />
                         </div>
                         </h:panelGroup>
