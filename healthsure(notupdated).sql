@@ -137,14 +137,13 @@ CREATE TABLE medical_procedure (
     h_id VARCHAR(20) NOT NULL,
     provider_id VARCHAR(20) NOT NULL,
     doctor_id VARCHAR(20) NOT NULL,
-    scheduled_date DATE,                           -- NEW: for scheduled/planned procedures
     procedure_date DATE,                           -- Actual date of procedure (if single-day)
     from_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP, -- Start of long-term procedure
     to_date TIMESTAMP,                             -- End of long-term procedure
     diagnosis TEXT NOT NULL,
     recommendations TEXT,
     procedure_type ENUM('SINGLE_DAY','LONG_TERM'),
-    procedure_status ENUM('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'),
+    procedure_status ENUM('IN_PROGRESS', 'COMPLETED', 'CANCELLED'),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (appointment_id) REFERENCES Appointment(appointment_id),
     FOREIGN KEY (h_id) REFERENCES Recipient(h_id),
@@ -161,6 +160,7 @@ CREATE TABLE prescription (
     written_on TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     start_date TIMESTAMP,
     end_date TIMESTAMP,
+    notes TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (procedure_id) REFERENCES medical_procedure(procedure_id),
     FOREIGN KEY (h_id) REFERENCES Recipient(h_id),

@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@taglib prefix="f" uri="http://java.sun.com/jsf/core"%>
 <%@taglib prefix="h" uri="http://java.sun.com/jsf/html"%>
 
@@ -10,6 +9,7 @@
     <meta charset="UTF-8">
     <title>Review Medicines</title>
     <style>
+        @charset "UTF-8";
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #eef5f9;
@@ -19,24 +19,22 @@
 
         .dashboard-container {
             max-width: 1200px;
-            margin: 80px auto;
+            margin: 130px auto;
             padding: 2rem;
             background-color: #fff;
             border-radius: 0.75rem;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            margin-top: 130px;
         }
 
         .dashboard-title {
-            font-size: 2rem;
-            font-weight: 700;
+            font-size: 22px;
+            font-weight: bold;
             color: #2a3f54;
             margin-bottom: 1.5rem;
             text-align: center;
         }
 
         .summary-section {
-            text-align: left;
             margin-bottom: 1.5rem;
             padding: 1rem 1.5rem;
             background-color: #f8f9fa;
@@ -53,8 +51,7 @@
 
         .summary-item {
             flex: 1 1 45%;
-            font-size: 1rem;
-            margin-bottom: 0.5rem;
+            font-size: 15px;
             color: #34495e;
         }
 
@@ -62,47 +59,37 @@
             color: #2a3f54;
         }
 
-        .med-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
+        .message-container {
+            margin-bottom: 1rem;
         }
 
-        .med-table th, .med-table td {
-            padding: 12px;
-            text-align: left;
-            border: 1px solid #ddd;
+        .message-container li {
+            background-color: #ffe6e6;
+            color: #c62828;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+            list-style-type: none;
         }
 
-        .med-table th {
-            background-color: #3f51b5;
-            color: white;
-        }
-
-        .med-table td {
-            background-color: #fff;
-            color: #333;
-        }
-
-        .med-table tr:nth-child(even) td {
-            background-color: #f2f2f2;
-        }
-
-        .med-table tr:hover td {
-            background-color: #e9e9e9;
+        .button-row {
+            display: flex;
+            justify-content: flex-end;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
         }
 
         .action-button {
-            display: inline-block;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.95rem;
+            padding: 6px 12px;
+            font-size: 14px;
             font-weight: 600;
             border: none;
-            border-radius: 0.375rem;
+            border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+            transition: background-color 0.2s;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            text-decoration: none;
             margin: 2px;
         }
 
@@ -134,24 +121,35 @@
             color: #1f2937;
         }
 
-        .pagination-controls {
-            margin-top: 15px;
-            text-align: center;
+        .med-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
         }
 
-        .message-container {
-            margin-bottom: 1rem;
+        .med-table th, .med-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-size: 15px;
         }
 
-        .message-container li {
-            background-color: #ffe6e6;
-            color: #c62828;
-            padding: 0.5rem 1rem;
-            margin-bottom: 0.5rem;
-            border-radius: 0.5rem;
-            font-weight: 500;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-            list-style-type: none;
+        .med-table th {
+            background-color: #3f51b5;
+            color: white;
+        }
+
+        .med-table td {
+            background-color: #fff;
+            color: #333;
+        }
+
+        .med-table tr:nth-child(even) td {
+            background-color: #f2f2f2;
+        }
+
+        .med-table tr:hover td {
+            background-color: #e9e9e9;
         }
 
         .sort-icons {
@@ -163,26 +161,25 @@
         .sort-icon {
             color: white;
             font-size: 0.7em;
-            padding: 0;
-            margin: 0;
             line-height: 1;
-            display: inline-block;
         }
 
         .sort-icon:hover {
             color: #c5cae9;
         }
 
-        .sort-header-group {
-            display: flex;
-            align-items: center;
+        .pagination-controls {
+            margin-top: 15px;
+            text-align: center;
         }
 
-        .button-row {
-            display: flex;
-            justify-content: flex-end;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+        input.action-button.secondary:disabled,
+        input.action-button.secondary[disabled] {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background-color: #f0f0f0;
+            border-color: #b0bec5;
+            color: #90a4ae;
         }
 
         @media (max-width: 768px) {
@@ -190,22 +187,21 @@
                 padding: 1rem;
                 margin-top: 100px;
             }
-            
+
             .summary-item {
                 flex: 1 1 100%;
             }
-            
-            .med-table th, 
-            .med-table td {
+
+            .med-table th, .med-table td {
                 padding: 8px;
                 font-size: 14px;
             }
-            
+
             .action-button {
-                padding: 0.3rem 0.6rem;
-                font-size: 0.85rem;
+                padding: 5px 10px;
+                font-size: 13px;
             }
-            
+
             .button-row {
                 justify-content: center;
                 flex-wrap: wrap;
@@ -218,30 +214,15 @@
     <div class="dashboard-container">
         <div class="dashboard-title">Medicine Details</div>
 
-        <!-- Prescription Summary Section -->
         <h:panelGroup rendered="#{not empty procedureController.prescription}">
             <div class="summary-section">
                 <div class="summary-grid">
-                    <div class="summary-item">
-                        <strong>Prescription ID:</strong>
-                        <h:outputText value="#{procedureController.prescription.prescriptionId}" />
-                    </div>
-                    <div class="summary-item">
-                        <strong>Prescribed Doctor:</strong>
-                        <h:outputText value="#{procedureController.prescription.prescribedDoc.doctorName}" />
-                    </div>
-                    <div class="summary-item">
-                        <strong>Start Date:</strong>
-                        <h:outputText value="#{procedureController.prescription.startDate}">
-                            <f:convertDateTime pattern="yyyy-MM-dd" />
-                        </h:outputText>
-                    </div>
-                    <div class="summary-item">
-                        <strong>End Date:</strong>
-                        <h:outputText value="#{procedureController.prescription.endDate}">
-                            <f:convertDateTime pattern="yyyy-MM-dd" />
-                        </h:outputText>
-                    </div>
+                    <div class="summary-item"><strong>Prescription ID:</strong> <h:outputText value="#{procedureController.prescription.prescriptionId}" /></div>
+                    <div class="summary-item"><strong>Recipient Name:</strong> <h:outputText value="#{procedureController.procedure.recipient.firstName}" /></div>
+                    <div class="summary-item"><strong>Diagnosis:</strong> <h:outputText value="#{procedureController.procedure.diagnosis}" /></div>
+                    <div class="summary-item"><strong>Prescribed Doctor:</strong> <h:outputText value="#{procedureController.prescription.prescribedDoc.doctorName}" /></div>
+                    <div class="summary-item"><strong>Prescription Start Date:</strong> <h:outputText value="#{procedureController.prescription.startDate}"><f:convertDateTime pattern="yyyy-MM-dd" /></h:outputText></div>
+                    <div class="summary-item"><strong>Prescription End Date:</strong> <h:outputText value="#{procedureController.prescription.endDate}"><f:convertDateTime pattern="yyyy-MM-dd" /></h:outputText></div>
                 </div>
             </div>
         </h:panelGroup>
@@ -251,50 +232,19 @@
                 <h:messages globalOnly="true" layout="list" />
             </div>
 
-            <!-- Top Right Buttons -->
             <div class="button-row">
-                <h:commandButton value="Add Medicine" styleClass="action-button add-row" 
-                    action="#{procedureController.createNewexistingPrescPrescribedMedicine()}" />
-                <h:commandButton value="Back" styleClass="action-button secondary" 
-                    action="ViewPrescriptions?faces-redirect=true"/>
+                <h:commandButton value="Add Medicine" styleClass="action-button add-row" action="#{procedureController.createNewexistingPrescPrescribedMedicine()}" />
+                <h:commandButton value="Back" styleClass="action-button secondary" action="ViewPrescriptions?faces-redirect=true" />
             </div>
 
-            <!-- Empty State Table -->
+            <!-- Empty State -->
             <h:dataTable value="#{empty procedureController.viewMedicines ? ['dummy'] : procedureController.getPaginatedMedicines()}"
-                var="m"
-                rendered="#{empty procedureController.viewMedicines}"
-                styleClass="med-table"
-                border="1">
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Prescription ID" />
-                    </f:facet>
-                    <h:outputText value="N/A" />
-                </h:column>
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Medicine Name" />
-                    </f:facet>
-                    <h:outputText value="N/A" />
-                </h:column>
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Type" />
-                    </f:facet>
-                    <h:outputText value="N/A" />
-                </h:column>
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Dosage" />
-                    </f:facet>
-                    <h:outputText value="N/A" />
-                </h:column>
-                <h:column>
-                    <f:facet name="header">
-                        <h:outputText value="Duration" />
-                    </f:facet>
-                    <h:outputText value="N/A" />
-                </h:column>
+                         var="m" rendered="#{empty procedureController.viewMedicines}" styleClass="med-table" border="1">
+                <h:column><f:facet name="header"><h:outputText value="Prescription ID" /></f:facet><h:outputText value="N/A" /></h:column>
+                <h:column><f:facet name="header"><h:outputText value="Medicine Name" /></f:facet><h:outputText value="N/A" /></h:column>
+                <h:column><f:facet name="header"><h:outputText value="Type" /></f:facet><h:outputText value="N/A" /></h:column>
+                <h:column><f:facet name="header"><h:outputText value="Dosage" /></f:facet><h:outputText value="N/A" /></h:column>
+                <h:column><f:facet name="header"><h:outputText value="Duration" /></f:facet><h:outputText value="N/A" /></h:column>
                 <h:column>
                     <f:facet name="header">
                         <h:outputText value="Start Date" />
@@ -331,20 +281,20 @@
                     <h:column>
                         <f:facet name="header">
                             <h:panelGroup layout="block" style="display: flex; align-items: center;">
-                                <h:outputText value="Prescription ID" />
+                                <h:outputText value="Medicine ID" />
                                 <h:panelGroup styleClass="sort-icons">
                                     <h:commandLink
-                                        action="#{procedureController.sortByAsc('medicines','prescriptionId')}"
-                                        rendered="#{!(procedureController.sortField eq 'prescriptionId' and procedureController.isAscending())}"
+                                        action="#{procedureController.sortByAsc('medicines','prescribedId')}"
+                                        rendered="#{!(procedureController.sortField eq 'prescribedId' and procedureController.isAscending())}"
                                         styleClass="sort-icon">▲</h:commandLink>
                                     <h:commandLink
-                                        action="#{procedureController.sortByDesc('medicines','prescriptionId')}"
-                                        rendered="#{!(procedureController.sortField eq 'prescriptionId' and not procedureController.isAscending())}"
+                                        action="#{procedureController.sortByDesc('medicines','prescribedId')}"
+                                        rendered="#{!(procedureController.sortField eq 'prescribedId' and not procedureController.isAscending())}"
                                         styleClass="sort-icon">▼</h:commandLink>
                                 </h:panelGroup>
                             </h:panelGroup>
                         </f:facet>
-                        <h:outputText value="#{m.prescription.prescriptionId}" />
+                        <h:outputText value="#{m.prescribedId}" />
                     </h:column>
 
                     <h:column>
@@ -439,7 +389,9 @@
                                 </h:panelGroup>
                             </h:panelGroup>
                         </f:facet>
-                        <h:outputText value="#{m.startDate}" />
+                        <h:outputText value="#{m.startDate}">
+                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
                     </h:column>
 
                     <h:column>
@@ -458,7 +410,9 @@
                                 </h:panelGroup>
                             </h:panelGroup>
                         </f:facet>
-                        <h:outputText value="#{m.endDate}" />
+                        <h:outputText value="#{m.endDate}">
+                        <f:convertDateTime pattern="yyyy-MM-dd" />
+                        </h:outputText>
                     </h:column>
                     
                     <h:column>

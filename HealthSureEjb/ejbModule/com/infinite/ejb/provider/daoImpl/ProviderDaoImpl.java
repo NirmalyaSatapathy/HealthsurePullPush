@@ -28,9 +28,9 @@ public class ProviderDaoImpl implements ProviderDao {
 	public String addMedicalProcedure(MedicalProcedure medicalProcedure) throws ClassNotFoundException, SQLException {
 		Connection con = ConnectionHelper.getConnection();
 		String sql = "INSERT INTO medical_procedure (" + "procedure_id, appointment_id, h_id, provider_id, doctor_id, "
-				+ "scheduled_date, procedure_date, from_date, to_date, "
+				+ "procedure_date, from_date, to_date, "
 				+ "diagnosis, recommendations, procedure_status, procedure_type) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 		PreparedStatement pst = con.prepareStatement(sql);
 
@@ -42,40 +42,31 @@ public class ProviderDaoImpl implements ProviderDao {
 
 		// Handle different procedure statuses
 		switch (medicalProcedure.getProcedureStatus()) {
-		case SCHEDULED:
-			pst.setDate(6, new java.sql.Date(medicalProcedure.getScheduledDate().getTime())); // scheduled_date
-			pst.setDate(7, null); // procedure_date
-			pst.setTimestamp(8, null); // from_date
-			pst.setTimestamp(9, null); // to_date
-			break;
-
 		case COMPLETED:
-			pst.setDate(6, null); // scheduled_date
-			pst.setDate(7, new java.sql.Date(medicalProcedure.getProcedureDate().getTime())); // procedure_date
+			pst.setDate(6, new java.sql.Date(medicalProcedure.getProcedureDate().getTime())); // procedure_date
 
-			pst.setTimestamp(8, null); // from_date
-			pst.setTimestamp(9, null); // to_date
+			pst.setTimestamp(7, null); // from_date
+			pst.setTimestamp(8, null); // to_date
 			break;
 
 		case IN_PROGRESS:
-			pst.setDate(6, null); // scheduled_date
-			pst.setDate(7, null); // procedure_date
-			pst.setTimestamp(8, new java.sql.Timestamp(medicalProcedure.getFromDate().getTime())); // from_date = today
+			pst.setDate(6, null); // procedure_date
+			pst.setTimestamp(7, new java.sql.Timestamp(medicalProcedure.getFromDate().getTime())); // from_date = today
 			if (medicalProcedure.getToDate() != null) {
-				pst.setTimestamp(9, new java.sql.Timestamp(medicalProcedure.getToDate().getTime()));
+				pst.setTimestamp(8, new java.sql.Timestamp(medicalProcedure.getToDate().getTime()));
 			} else {
-				pst.setTimestamp(9, null);
+				pst.setTimestamp(8, null);
 			}
 			break;
 
 		default:
 			throw new IllegalArgumentException("Unsupported ProcedureStatus: " + medicalProcedure.getProcedureStatus());
 		}
-
-		pst.setString(10, medicalProcedure.getDiagnosis());
-		pst.setString(11, medicalProcedure.getRecommendations());
-		pst.setString(12, medicalProcedure.getProcedureStatus().name());
-		pst.setString(13, medicalProcedure.getType().name());
+		System.out.println("to be saved procedure "+medicalProcedure);
+		pst.setString(9, medicalProcedure.getDiagnosis());
+		pst.setString(10, medicalProcedure.getRecommendations());
+		pst.setString(11, medicalProcedure.getProcedureStatus().name());
+		pst.setString(12, medicalProcedure.getType().name());
 
 		pst.executeUpdate();
 		pst.close();
@@ -89,8 +80,8 @@ public class ProviderDaoImpl implements ProviderDao {
 		System.out.println("remote prescription called");
 		Connection con = ConnectionHelper.getConnection();
 		String sql = "INSERT INTO prescription (" + "prescription_id, procedure_id, h_id, provider_id, doctor_id, "
-				+ "written_on, start_date, end_date, created_at,prescribed_by) "
-				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+				+ "written_on, start_date, end_date, created_at,prescribed_by,notes) "
+				+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
 
 		PreparedStatement pst = con.prepareStatement(sql);
 
@@ -120,6 +111,7 @@ public class ProviderDaoImpl implements ProviderDao {
 		} else {
 			pst.setString(10, prescription.getPrescribedDoc().getDoctorId());
 		}
+		pst.setString(11, prescription.getNotes());
 		pst.executeUpdate();
 		pst.close();
 		con.close();
@@ -358,89 +350,6 @@ public class ProviderDaoImpl implements ProviderDao {
 	}
 
 	@Override
-	public List<MedicalProcedure> getScheduledProceduresByDoctor(String doctorId, String procedureId) {
-		List<MedicalProcedure> procedures = new ArrayList<>();
-		Connection con = null;
-		PreparedStatement pst = null;
-		ResultSet rs = null;
-
-		try {
-			con = ConnectionHelper.getConnection();
-			StringBuilder sql = new StringBuilder("SELECT mp.procedure_id, mp.h_id, mp.provider_id, mp.doctor_id, "
-					+ "mp.appointment_id, mp.scheduled_date, mp.procedure_status, "
-					+ "r.first_name, r.last_name, d.doctor_name, p.hospital_name " + "FROM medical_procedure mp "
-					+ "JOIN Recipient r ON mp.h_id = r.h_id " + "JOIN Doctors d ON mp.doctor_id = d.doctor_id "
-					+ "JOIN Providers p ON mp.provider_id = p.provider_id "
-					+ "WHERE mp.procedure_status = ? AND mp.doctor_id = ?");
-
-			if (procedureId != null && !procedureId.trim().isEmpty()) {
-				sql.append(" AND mp.procedure_id = ?");
-			}
-
-			pst = con.prepareStatement(sql.toString());
-			pst.setString(1, ProcedureStatus.SCHEDULED.name());
-			pst.setString(2, doctorId);
-
-			if (procedureId != null && !procedureId.trim().isEmpty()) {
-				pst.setString(3, procedureId);
-			}
-
-			rs = pst.executeQuery();
-
-			while (rs.next()) {
-				MedicalProcedure proc = new MedicalProcedure();
-
-				proc.setProcedureId(rs.getString("procedure_id"));
-				proc.setScheduledDate(rs.getDate("scheduled_date"));
-				proc.setProcedureStatus(ProcedureStatus.valueOf(rs.getString("procedure_status")));
-
-				Appointment appointment = new Appointment();
-				appointment.setAppointmentId(rs.getString("appointment_id"));
-				proc.setAppointment(appointment);
-
-				Recipient recipient = new Recipient();
-				recipient.sethId(rs.getString("h_id"));
-				recipient.setFirstName(rs.getString("first_name"));
-				recipient.setLastName(rs.getString("last_name"));
-				proc.setRecipient(recipient);
-
-				Doctors doctor = new Doctors();
-				doctor.setDoctorId(rs.getString("doctor_id"));
-				doctor.setDoctorName(rs.getString("doctor_name"));
-				proc.setDoctor(doctor);
-
-				Provider provider = new Provider();
-				provider.setProviderId(rs.getString("provider_id"));
-				provider.setHospitalName(rs.getString("hospital_name"));
-				proc.setProvider(provider);
-
-				procedures.add(proc);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (rs != null)
-					rs.close();
-			} catch (Exception e) {
-			}
-			try {
-				if (pst != null)
-					pst.close();
-			} catch (Exception e) {
-			}
-			try {
-				if (con != null)
-					con.close();
-			} catch (Exception e) {
-			}
-		}
-
-		return procedures;
-	}
-
-	@Override
 	public List<MedicalProcedure> getInProgressProceduresByDoctor(String doctorId, String procedureId) {
 		List<MedicalProcedure> procedures = new ArrayList<>();
 		Connection con = null;
@@ -539,15 +448,6 @@ public class ProviderDaoImpl implements ProviderDao {
 			ProcedureStatus status = procedure.getProcedureStatus();
 
 			switch (status) {
-			case IN_PROGRESS:
-				sql = "UPDATE medical_procedure SET procedure_status = ?, from_date = ?,recommendations=? WHERE procedure_id = ?";
-				ps = conn.prepareStatement(sql);
-				ps.setString(1, status.name());
-				ps.setDate(2, new java.sql.Date(procedure.getFromDate().getTime()));
-				ps.setString(3, procedure.getRecommendations());
-				ps.setString(4, procedure.getProcedureId());
-				break;
-
 			case COMPLETED:
 				sql = "UPDATE medical_procedure SET procedure_status = ?, to_date = ? WHERE procedure_id = ?";
 				ps = conn.prepareStatement(sql);
@@ -618,7 +518,6 @@ public class ProviderDaoImpl implements ProviderDao {
 					procedure.setRecommendations(rs.getString("recommendations"));
 					procedure.setFromDate(rs.getDate("from_date"));
 					procedure.setToDate(rs.getDate("to_date"));
-					procedure.setScheduledDate(rs.getDate("scheduled_date"));
 					procedure.setProcedureDate(rs.getDate("procedure_date"));
 					procedure.setCreatedAt(rs.getTimestamp("created_at"));
 
@@ -664,59 +563,65 @@ public class ProviderDaoImpl implements ProviderDao {
 
 		return procedure;
 	}
-
 	@Override
 	public List<Prescription> fetchPrescriptions(String procedureID) {
-		List<Prescription> prescriptions = new ArrayList<>();
+	    List<Prescription> prescriptions = new ArrayList<>();
 
-		String sql = "SELECT pr.prescription_id, pr.procedure_id, pr.h_id, pr.provider_id, pr.doctor_id, "
-				+ "       pr.prescribed_by, pr.written_on, pr.start_date, pr.end_date, pr.created_at "
-				+ "FROM prescription pr " + "WHERE pr.procedure_id = ?";
+	    String sql = "SELECT pr.prescription_id, pr.procedure_id, pr.h_id, pr.provider_id, pr.doctor_id, " +
+	                 "       pr.prescribed_by, pr.written_on, pr.start_date,pr.notes, pr.end_date, pr.created_at, " +
+	                 "       d1.doctor_name AS attending_doctor_name, " +
+	                 "       d2.doctor_name AS prescribed_doctor_name " +
+	                 "FROM prescription pr " +
+	                 "JOIN doctors d1 ON pr.doctor_id = d1.doctor_id " +
+	                 "JOIN doctors d2 ON pr.prescribed_by = d2.doctor_id " +
+	                 "WHERE pr.procedure_id = ?";
 
-		try (Connection conn = ConnectionHelper.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+	    try (Connection conn = ConnectionHelper.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-			ps.setString(1, procedureID);
+	        ps.setString(1, procedureID);
 
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					Prescription prescription = new Prescription();
-					prescription.setPrescriptionId(rs.getString("prescription_id"));
-					prescription.setWrittenOn(rs.getTimestamp("written_on"));
-					prescription.setStartDate(rs.getTimestamp("start_date"));
-					prescription.setEndDate(rs.getTimestamp("end_date"));
-					prescription.setCreatedAt(rs.getTimestamp("created_at"));
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                Prescription prescription = new Prescription();
+	                prescription.setPrescriptionId(rs.getString("prescription_id"));
+	                prescription.setWrittenOn(rs.getTimestamp("written_on"));
+	                prescription.setStartDate(rs.getTimestamp("start_date"));
+	                prescription.setEndDate(rs.getTimestamp("end_date"));
+	                prescription.setCreatedAt(rs.getTimestamp("created_at"));
+	                prescription.setNotes(rs.getString("notes"));
+	                // Foreign key mappings with only IDs
+	                MedicalProcedure procedure = new MedicalProcedure();
+	                procedure.setProcedureId(rs.getString("procedure_id"));
+	                prescription.setProcedure(procedure);
 
-					// Foreign key mappings with only IDs
-					MedicalProcedure procedure = new MedicalProcedure();
-					procedure.setProcedureId(rs.getString("procedure_id"));
-					prescription.setProcedure(procedure);
+	                Recipient recipient = new Recipient();
+	                recipient.sethId(rs.getString("h_id"));
+	                prescription.setRecipient(recipient);
 
-					Recipient recipient = new Recipient();
-					recipient.sethId(rs.getString("h_id"));
-					prescription.setRecipient(recipient);
+	                Provider provider = new Provider();
+	                provider.setProviderId(rs.getString("provider_id"));
+	                prescription.setProvider(provider);
 
-					Provider provider = new Provider();
-					provider.setProviderId(rs.getString("provider_id"));
-					prescription.setProvider(provider);
+	                Doctors doctor = new Doctors();
+	                doctor.setDoctorId(rs.getString("doctor_id"));
+	                doctor.setDoctorName(rs.getString("attending_doctor_name")); // ✅ added name
+	                prescription.setDoctor(doctor);
 
-					Doctors doctor = new Doctors();
-					doctor.setDoctorId(rs.getString("doctor_id"));
-					prescription.setDoctor(doctor);
+	                Doctors prescribedDoc = new Doctors();
+	                prescribedDoc.setDoctorId(rs.getString("prescribed_by"));
+	                prescribedDoc.setDoctorName(rs.getString("prescribed_doctor_name")); // ✅ added name
+	                prescription.setPrescribedDoc(prescribedDoc);
 
-					Doctors prescribedDoc = new Doctors();
-					prescribedDoc.setDoctorId(rs.getString("prescribed_by"));
-					prescription.setPrescribedDoc(prescribedDoc);
+	                prescriptions.add(prescription);
+	            }
+	        }
+	    } catch (SQLException | ClassNotFoundException e) {
+	        e.printStackTrace(); // Replace with robust logging
+	    }
 
-					prescriptions.add(prescription);
-				}
-			}
-		} catch (SQLException | ClassNotFoundException e) {
-			e.printStackTrace(); // Replace with robust logging
-		}
-
-		return prescriptions;
+	    return prescriptions;
 	}
-
 	@Override
 	public List<PrescribedMedicines> fetchMedicines(String prescriptionId) {
 		List<PrescribedMedicines> medicines = new ArrayList<>();
@@ -800,43 +705,49 @@ public class ProviderDaoImpl implements ProviderDao {
 
 	@Override
 	public List<ProcedureDailyLog> fetchLogs(String procedureID) {
-		List<ProcedureDailyLog> logs = new ArrayList<>();
+	    List<ProcedureDailyLog> logs = new ArrayList<>();
 
-		String sql = "SELECT log_id, procedure_id, logged_by, log_date, vitals, notes, created_at "
-				+ "FROM procedure_daily_log " + "WHERE procedure_id = ?";
+	    String sql = "SELECT log.log_id, log.procedure_id, log.logged_by, log.log_date, " +
+	                 "       log.vitals, log.notes, log.created_at, " +
+	                 "       d.doctor_name AS logged_doctor_name " +
+	                 "FROM procedure_daily_log log " +
+	                 "JOIN doctors d ON log.logged_by = d.doctor_id " +
+	                 "WHERE log.procedure_id = ?";
 
-		try (Connection conn = ConnectionHelper.getConnection(); PreparedStatement ps = conn.prepareStatement(sql)) {
+	    try (Connection conn = ConnectionHelper.getConnection();
+	         PreparedStatement ps = conn.prepareStatement(sql)) {
 
-			ps.setString(1, procedureID);
+	        ps.setString(1, procedureID);
 
-			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
-					ProcedureDailyLog log = new ProcedureDailyLog();
+	        try (ResultSet rs = ps.executeQuery()) {
+	            while (rs.next()) {
+	                ProcedureDailyLog log = new ProcedureDailyLog();
 
-					log.setLogId(rs.getString("log_id"));
-					log.setLogDate(rs.getTimestamp("log_date"));
-					log.setVitals(rs.getString("vitals"));
-					log.setNotes(rs.getString("notes"));
-					log.setCreatedAt(rs.getTimestamp("created_at"));
+	                log.setLogId(rs.getString("log_id"));
+	                log.setLogDate(rs.getTimestamp("log_date"));
+	                log.setVitals(rs.getString("vitals"));
+	                log.setNotes(rs.getString("notes"));
+	                log.setCreatedAt(rs.getTimestamp("created_at"));
 
-					// Set procedure reference by ID only
-					MedicalProcedure procedure = new MedicalProcedure();
-					procedure.setProcedureId(rs.getString("procedure_id"));
-					log.setMedicalProcedure(procedure);
+	                // Set procedure reference by ID only
+	                MedicalProcedure procedure = new MedicalProcedure();
+	                procedure.setProcedureId(rs.getString("procedure_id"));
+	                log.setMedicalProcedure(procedure);
 
-					// Set logged doctor using just ID
-					Doctors doctor = new Doctors();
-					doctor.setDoctorId(rs.getString("logged_by"));
-					log.setloggedDoctor(doctor);
+	                // Set logged doctor with ID and name
+	                Doctors doctor = new Doctors();
+	                doctor.setDoctorId(rs.getString("logged_by"));
+	                doctor.setDoctorName(rs.getString("logged_doctor_name")); // ✅ added name
+	                log.setloggedDoctor(doctor);
 
-					logs.add(log);
-				}
-			}
-		} catch (SQLException | ClassNotFoundException e) {
-			e.printStackTrace(); // Replace with proper logging
-		}
+	                logs.add(log);
+	            }
+	        }
+	    } catch (SQLException | ClassNotFoundException e) {
+	        e.printStackTrace(); // Replace with proper logging
+	    }
 
-		return logs;
+	    return logs;
 	}
 
 	@Override
@@ -845,7 +756,7 @@ public class ProviderDaoImpl implements ProviderDao {
 
 		Connection con = ConnectionHelper.getConnection();
 		String sql = "UPDATE prescription SET " + "procedure_id = ?, h_id = ?, provider_id = ?, doctor_id = ?, "
-				+ "written_on = ?, start_date = ?, end_date = ?, created_at = ?, prescribed_by = ? "
+				+ "written_on = ?, start_date = ?, end_date = ?, created_at = ?, prescribed_by = ?, notes=?"
 				+ "WHERE prescription_id = ?";
 
 		PreparedStatement pst = con.prepareStatement(sql);
@@ -876,8 +787,8 @@ public class ProviderDaoImpl implements ProviderDao {
 		} else {
 			pst.setString(9, prescription.getPrescribedDoc().getDoctorId());
 		}
-
-		pst.setString(10, prescription.getPrescriptionId());
+		pst.setString(10, prescription.getNotes());
+		pst.setString(11, prescription.getPrescriptionId());
 
 		int rowsUpdated = pst.executeUpdate();
 
@@ -996,6 +907,53 @@ public class ProviderDaoImpl implements ProviderDao {
 	    con.close();
 
 	    return "updated";
+	}
+	@Override
+	public String deletePrescription(String prescriptionId) throws SQLException, ClassNotFoundException {
+	    Connection con = ConnectionHelper.getConnection();
+	    String sql = "DELETE FROM prescription WHERE prescription_id = ?";
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setString(1, prescriptionId);
+	    int rowsAffected = pst.executeUpdate();
+	    pst.close();
+	    con.close();
+	    return rowsAffected > 0 ? "deleted" : "not found";
+	}
+
+	@Override
+	public String deletePrescribedMedicine(String prescribedId) throws SQLException, ClassNotFoundException {
+	    Connection con = ConnectionHelper.getConnection();
+	    String sql = "DELETE FROM prescribed_medicines WHERE prescribed_id = ?";
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setString(1, prescribedId);
+	    int rowsAffected = pst.executeUpdate();
+	    pst.close();
+	    con.close();
+	    return rowsAffected > 0 ? "deleted" : "not found";
+	}
+
+	@Override
+	public String deleteTest(String testId) throws SQLException, ClassNotFoundException {
+	    Connection con = ConnectionHelper.getConnection();
+	    String sql = "DELETE FROM prescribed_tests WHERE test_id = ?";
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setString(1, testId);
+	    int rowsAffected = pst.executeUpdate();
+	    pst.close();
+	    con.close();
+	    return rowsAffected > 0 ? "deleted" : "not found";
+	}
+
+	@Override
+	public String deleteProcedureDailyLog(String logId) throws SQLException, ClassNotFoundException {
+	    Connection con = ConnectionHelper.getConnection();
+	    String sql = "DELETE FROM procedure_daily_log WHERE log_id = ?";
+	    PreparedStatement pst = con.prepareStatement(sql);
+	    pst.setString(1, logId);
+	    int rowsAffected = pst.executeUpdate();
+	    pst.close();
+	    con.close();
+	    return rowsAffected > 0 ? "deleted" : "not found";
 	}
 
 }

@@ -1,0 +1,74 @@
+@charset "UTF-8";
+
+body {
+	font-family: 'Segoe UI', sans-serif;
+	background-color: #f0f8ff; /* Light blue background */
+	margin: 0;
+	padding: 0;
+}
+
+.container {
+	width: 500px;
+	margin: 100px auto;
+	background-color: white;
+	padding: 40px 50px;
+	border-radius: 16px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	text-align: center;
+}
+
+h2 {
+	color: #2e7d32; /* Green */
+	margin-bottom: 30px;
+	font-size: 24px;
+}
+
+.radio-group {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	margin-bottom: 30px;
+	font-size: 18px;
+	color: #333;
+}
+
+.radio-item {
+	display: flex;
+	align-items: center;
+}
+
+.radio-item input[type="radio"] {
+	margin-right: 10px;
+}
+
+.button-group {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	margin-top: 20px;
+}
+
+.submit-btn {
+	padding: 10px 20px;
+	background-color: #4CAF50; /* Green */
+	color: white;
+	border: none;
+	border-radius: 8px;
+	cursor: pointer;
+	font-size: 14px;
+	transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+	background-color: #388e3c;
+}
+
+.back-btn {
+	background-color: #2196F3; /* Blue */
+	color: white;
+}
+
+.back-btn:hover {
+	background-color: #1976D2;
+}

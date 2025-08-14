@@ -11,7 +11,7 @@ import com.infinite.ejb.provider.model.Doctors;
 public class Prescription implements Serializable{
 
     private String prescriptionId;
-
+    private String notes;
     // Foreign key object mappings
     private MedicalProcedure procedure;    // mapped from procedure_id
     private Recipient recipient;           // mapped from h_id
@@ -43,6 +43,14 @@ public class Prescription implements Serializable{
 
 	public void setStartDate(Date startDate) {
 		this.startDate = startDate;
+	}
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
 	}
 
 	public Date getEndDate() {

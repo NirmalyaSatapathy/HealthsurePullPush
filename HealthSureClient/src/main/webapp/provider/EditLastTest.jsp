@@ -6,7 +6,7 @@
 	<html>
 <head>
 <title>Edit Procedure Test</title>
-
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/EditLastTest.css" />
 <!-- Prevent caching -->
 <meta http-equiv="Cache-Control"
 	content="no-cache, no-store, must-revalidate" />
@@ -23,103 +23,6 @@
     });
   </script>
 
-<style>
-html, body {
-	margin: 0;
-	padding: 0;
-	height: 100%;
-	font-family: 'Segoe UI', sans-serif;
-	background-color: #f4f8fb;
-	overflow: hidden;
-}
-
-.page-wrapper {
-	display: flex;
-	flex-direction: column;
-	height: 100vh;
-}
-
-.main-content {
-	flex-grow: 1;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 10px;
-	margin-top: 90px;
-}
-
-.form-container {
-	max-width: 600px;
-	width: 100%;
-	padding: 15px;
-	background-color: #ffffff;
-	border-radius: 10px;
-	box-shadow: 0 0 10px #ccc;
-}
-
-.form-title {
-	text-align: center;
-	font-size: 22px;
-	margin-bottom: 12px;
-	color: #2a3f54;
-}
-
-.form-group {
-	display: flex;
-	flex-direction: column;
-	margin-bottom: 10px;
-}
-
-label, h\:outputLabel {
-	font-weight: bold;
-	margin-bottom: 4px;
-	font-size: 15px;
-	color: #2c3e50;
-}
-
-.form-control {
-	width: 100%;
-	padding: 6px;
-	border-radius: 4px;
-	border: 1px solid #ccc;
-	box-sizing: border-box;
-	font-size: 15px;
-}
-
-.error-message {
-	display: block;
-	color: #f44336 !important;
-	font-size: 14px;
-	font-weight: 600;
-	margin-top: 3px;
-}
-
-.button-row {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 10px;
-	justify-content: center;
-	margin-top: 15px;
-}
-
-.shared-button {
-	flex: 1;
-	min-width: 100px;
-	padding: 8px 14px;
-	font-size: 14px;
-	border: none;
-	border-radius: 5px;
-	color: white;
-	background-color: #00796b;
-	cursor: pointer;
-	text-align: center;
-	transition: background-color 0.3s ease;
-}
-
-.shared-button:hover {
-	background-color: #004d40;
-}
-</style>
 </head>
 
 <body>
@@ -148,8 +51,7 @@ label, h\:outputLabel {
 					</div>
 
 					<div class="form-group">
-						<h:outputLabel for="testName">Test Name <span
-								style="color: red">*</span>
+						<h:outputLabel for="testName">Test Name
 						</h:outputLabel>
 						<h:inputText id="testName"
 							value="#{procedureController.procedureTest.testName}"
@@ -158,8 +60,8 @@ label, h\:outputLabel {
 					</div>
 
 					<div class="form-group">
-						<h:outputLabel for="testDate">Test Date (yyyy-MM-dd) <span
-								style="color: red">*</span>
+						<h:outputLabel for="testDate"><span
+								style="color: red">*</span>Test Date (yyyy-MM-dd)
 						</h:outputLabel>
 						<h:inputText id="testDate"
 							value="#{procedureController.procedureTest.testDate}"
@@ -174,8 +76,8 @@ label, h\:outputLabel {
 					</div>
 
 					<div class="form-group">
-						<h:outputLabel for="resultSummary">Result Summary <span
-								style="color: red">*</span>
+						<h:outputLabel for="resultSummary"><span
+								style="color: red">*</span>Result Summary
 						</h:outputLabel>
 						<h:inputTextarea id="resultSummary"
 							value="#{procedureController.procedureTest.resultSummary}"
@@ -185,10 +87,10 @@ label, h\:outputLabel {
 
 					<div class="button-row">
 						<h:commandButton value="Save Test"
-							action="#{procedureController.updateTest(procedureController.procedureTest)}"
+							action="#{procedureController.updateLastTest(procedureController.procedureTest)}"
 							styleClass="shared-button" />
 						<h:commandButton value="Reset Form"
-							action="#{procedureController.restEditTest()}"
+							action="#{procedureController.restEditLastTest()}"
 							immediate="true" styleClass="shared-button" />
 						 <h:commandButton value="back"
 							action="#{procedureController.backFromLastTest()}"

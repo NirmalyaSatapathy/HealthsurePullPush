@@ -90,7 +90,6 @@ public class Converter {
 
 	    // Basic fields
 	    ejbProcedure.setProcedureId(jsfProcedure.getProcedureId());
-	    ejbProcedure.setScheduledDate(jsfProcedure.getScheduledDate());
 	    ejbProcedure.setProcedureDate(jsfProcedure.getProcedureDate());
 	    ejbProcedure.setFromDate(jsfProcedure.getFromDate());
 	    ejbProcedure.setToDate(jsfProcedure.getToDate());

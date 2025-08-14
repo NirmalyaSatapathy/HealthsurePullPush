@@ -35,4 +35,8 @@ public String updatePrescription(Prescription p) throws SQLException, ClassNotFo
 public String updateMedicine(PrescribedMedicines m) throws ClassNotFoundException, SQLException;
 public String updateTest(ProcedureTest t) throws ClassNotFoundException, SQLException;
 public String updateLog(ProcedureDailyLog l)throws ClassNotFoundException, SQLException; 
+public String deletePrescription(String prescriptionId) throws SQLException, ClassNotFoundException;
+public String deletePrescribedMedicine(String prescribedId) throws SQLException, ClassNotFoundException;
+public String deleteTest(String testId) throws SQLException, ClassNotFoundException;
+public String deleteProcedureDailyLog(String logId) throws SQLException, ClassNotFoundException; 
 }

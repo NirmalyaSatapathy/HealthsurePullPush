@@ -1,0 +1,190 @@
+@charset "UTF-8";
+/* Base page styling */
+body {
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background-color: #f4f8fc;
+	color: #2e3e50;
+	margin: 0;
+	padding: 20px;
+}
+
+h2 {
+	color: #1E88E5;
+	font-size: 28px;
+	margin-bottom: 20px;
+	border-bottom: 2px solid #BBDEFB;
+	padding-bottom: 6px;
+}
+
+.sort-icon {
+	color: white;
+	font-size: 0.7em;
+	padding: 0;
+	margin: 0;
+	line-height: 1;
+	display: inline-block;
+}
+
+.sort-icons {
+	display: inline-flex;
+	flex-direction: column;
+	align-items: center;
+	margin-left: 4px;
+}
+/* Form controls */
+.form-group {
+	margin-bottom: 0px;
+}
+
+.form-group label {
+	display: inline-block;
+	width: 160px;
+	font-weight: bold;
+	color: #2E7D32;
+	margin-bottom: 5px;
+}
+
+.form-control {
+	padding: 8px 10px;
+	width: 260px;
+	font-size: 14px;
+	box-sizing: border-box;
+	transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+	outline: none;
+	border-color: #1E88E5;
+	box-shadow: 0 0 4px rgba(30, 136, 229, 0.3);
+}
+
+.error-message {
+	display: block;
+	color: #f44336;
+	font-size: 14px;
+	font-weight: 600;
+	margin-top: 6px;
+	margin-left: 165px;
+}
+
+/* Buttons */
+.btn {
+	border: none;
+	border-radius: 4px;
+	padding: 8px 16px;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin: 5px 8px 5px 0;
+}
+
+.btn-primary {
+	background-color: #1E88E5;
+	color: #ffffff;
+}
+
+.btn-primary:hover {
+	background-color: #1565C0;
+}
+
+.btn-secondary {
+	background-color: #43A047;
+	color: #ffffff;
+}
+
+.btn-secondary:hover {
+	background-color: #2E7D32;
+}
+
+.btn-tertiary {
+	background-color: #ffffff;
+	color: #1E88E5;
+	border: 2px solid #1E88E5;
+}
+
+.btn-tertiary:hover {
+	background-color: #e3f2fd;
+}
+
+/* Data table */
+.data-table {
+	width: 100%;
+	margin-top: 30px;
+	border-collapse: collapse;
+	background-color: #ffffff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.data-table th {
+	background-color: #1E88E5;
+	color: #ffffff;
+	font-weight: 600;
+	padding: 12px;
+	text-align: center;
+	border: 1px solid #90CAF9;
+}
+
+.data-table td {
+	border: 1px solid #cfd8dc;
+	padding: 10px;
+	font-size: 15px;
+	text-align: center;
+	color: #2e3e50;
+}
+
+.data-table tr:nth-child(even) {
+	background-color: #e8f5e9;
+}
+
+.data-table tr:hover {
+	background-color: #BBDEFB;
+}
+
+/* Pagination groups */
+.pagination-group {
+	margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+@media ( max-width : 600px) {
+	h2 {
+		font-size: 24px;
+	}
+	.form-control {
+		width: 100%;
+	}
+	.data-table th, .data-table td {
+		font-size: 13px;
+		padding: 6px;
+	}
+	.btn {
+		width: 100%;
+		margin: 6px 0;
+	}
+	.pagination-group {
+		flex-direction: column;
+		gap: 8px;
+	}
+}
+/* remove input‐box styling for this radio group */
+/* remove any focus outline or glow on all radios */
+input[type="radio"], input[type="radio"]:focus {
+	outline: none !important;
+	box-shadow: none !important;
+}
+
+/* Firefox inner focus border */
+input[type="radio"]::-moz-focus-inner {
+	border: 0;
+}
+/* Disabled state for tertiary buttons */
+.btn-tertiary:disabled,
+.btn-tertiary[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f0f0f0; /* Optional: slightly gray background */
+  border-color: #b0bec5;     /* Optional: lighter border */
+  color: #90a4ae;            /* Optional: muted text color */
+}

@@ -3,124 +3,131 @@
 <%@ taglib uri="http://java.sun.com/jsf/html" prefix="h"%>
 <%@ taglib uri="http://java.sun.com/jsf/core" prefix="f"%>
 <f:view>
-<html>
+	<html>
 <head>
-	<meta charset="UTF-8">
-	<title>Procedure Action Panel</title>
-	<link rel="stylesheet" href="css/healthsure-style.css" />
-	<style>
-		body {
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-			background-color: #f2f7fb;
-			margin: 0;
-			padding: 0;
-		}
+<meta charset="UTF-8">
+<title>Procedure Action Panel</title>
+<link rel="stylesheet" href="css/healthsure-style.css" />
+<style>
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f2f7fb;
+	margin: 0;
+	padding: 0;
+}
 
-		.nav-container {
-			max-width: 720px;
-			margin: 60px auto;
-			padding: 2rem;
-			background-color: #ffffff;
-			border-radius: 0.75rem;
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-			text-align: center;
-			margin-top: 130px;
-		}
+.nav-container {
+	max-width: 720px;
+	margin: 60px auto;
+	padding: 2rem;
+	background-color: #ffffff;
+	border-radius: 0.75rem;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+	text-align: center;
+	margin-top: 130px;
+}
 
-		.nav-title {
-			font-size: 2rem;
-			font-weight: 700;
-			color: #2c3e50;
-			margin-bottom: 1.5rem;
-			line-height: 1.2;
-		}
+.error-message {
+	margin-top: 5px;
+	color: red;
+	font-size: 12px;
+}
 
-		.summary-section {
-			text-align: left;
-			margin-bottom: 1.5rem;
-			padding: 1rem 1.5rem;
-			background-color: #f8f9fa;
-			border-left: 4px solid #17a2b8;
-			border-radius: 0.5rem;
-			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-		}
+.nav-title {
+	font-size: 2rem;
+	font-weight: 700;
+	color: #2c3e50;
+	margin-bottom: 1.5rem;
+	line-height: 1.2;
+}
 
-		.summary-item {
-			font-size: 1rem;
-			margin-bottom: 0.5rem;
-			color: #34495e;
-		}
+.summary-section {
+	text-align: left;
+	margin-bottom: 1.5rem;
+	padding: 1rem 1.5rem;
+	background-color: #f8f9fa;
+	border-left: 4px solid #17a2b8;
+	border-radius: 0.5rem;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
 
-		.button-row {
-			display: flex;
-			flex-wrap: wrap;
-			justify-content: center;
-			gap: 0.5rem;
-			margin-top: 1rem;
-		}
+.summary-item {
+	font-size: 1rem;
+	margin-bottom: 0.5rem;
+	color: #34495e;
+}
 
-		.button-group {
-			flex: 0 1 140px;
-		}
+.button-row {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.5rem;
+	margin-top: 1rem;
+}
 
-		/* Base Button Styling */
-		.action-button {
-			display: inline-block;
-			width: 100%;
-			padding: 0.4rem 0.4rem;
-			font-size: 0.95rem;
-			font-weight: 600;
-			border: none;
-			border-radius: 0.375rem;
-			cursor: pointer;
-			transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-			text-decoration: none;
-		}
+.button-group {
+	flex: 0 1 140px;
+}
 
-		/* 🔵 First Row Buttons */
-		.action-button.first-row {
-			background-color: mediumturquoise;
-			color: white;
-		}
+/* Base Button Styling */
+.action-button {
+	display: inline-block;
+	width: 100%;
+	padding: 0.4rem 0.4rem;
+	font-size: 0.95rem;
+	font-weight: 600;
+	border: none;
+	border-radius: 0.375rem;
+	cursor: pointer;
+	transition: background-color 0.2s, transform 0.1s, box-shadow 0.2s;
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	text-decoration: none;
+}
 
-		.action-button.first-row:hover {
-			background-color: lightgray;
-			color: #1f2937;
-		}
+/* 🔵 First Row Buttons */
+.action-button.first-row {
+	background-color: mediumturquoise;
+	color: white;
+}
 
-		/* 🟢 Second Row Buttons */
-		.action-button.second-row {
-			background-color: grey;
-			color: #1f2937;
-		}
+.action-button.first-row:hover {
+	background-color: lightgray;
+	color: #1f2937;
+}
 
-		.action-button.second-row:hover {
-			background-color: darkseagreen;
-			color: white;
-		}
+/* 🟢 Second Row Buttons */
+.action-button.second-row {
+	background-color: grey;
+	color: #1f2937;
+}
 
-		.action-button:focus {
-			outline: 2px solid #31b0d5;
-			outline-offset: 2px;
-		}
+.action-button.second-row:hover {
+	background-color: darkseagreen;
+	color: white;
+}
 
-		.message-container ul {
-			list-style: none;
-			padding-left: 0;
-			margin: 0 0 1rem 0;
-		}
+.action-button:focus {
+	outline: 2px solid #31b0d5;
+	outline-offset: 2px;
+}
 
-		.message-container li {
-			background-color: #ffe6e6;
-			color: #c62828;
-			padding: 0.5rem 1rem;
-			margin-bottom: 0.5rem;
-			border-radius: 0.5rem;
-			font-weight: 500;
-			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
-		}
-	</style>
+.message-container ul {
+	list-style: none;
+	padding-left: 0;
+	margin: 0 0 1rem 0;
+}
+
+.message-container li {
+	background-color: #ffe6e6;
+	color: #c62828;
+	padding: 0.5rem 1rem;
+	margin-bottom: 0.5rem;
+	border-radius: 0.5rem;
+	font-weight: 500;
+	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+</style>
+
 </head>
 <body>
 	<jsp:include page="/navbar/NavProvider.jsp" />
@@ -138,7 +145,8 @@
 				<div class="summary-section">
 					<div class="summary-item">
 						<strong>Recipient Name:</strong>
-						<h:outputText value="#{procedureController.procedure.recipient.firstName}" />
+						<h:outputText
+							value="#{procedureController.procedure.recipient.firstName}" />
 					</div>
 					<div class="summary-item">
 						<strong>Diagnosis:</strong>
@@ -152,28 +160,35 @@
 					</div>
 					<div class="summary-item">
 						<strong>Procedure Doctor:</strong>
-						<h:outputText value="#{procedureController.procedure.doctor.doctorName}" />
+						<h:outputText
+							value="#{procedureController.procedure.doctor.doctorName}" />
 					</div>
 				</div>
 			</h:panelGroup>
 
 			<!-- Button Row 1: Prescription & Logs -->
 			<div class="button-row">
-				<div class="button-group">
-					<h:commandButton value="Add Prescription"
-						action="#{procedureController.createNewPrescription()}"
-						styleClass="action-button first-row" />
-				</div>
+				<h:panelGroup
+					rendered="#{not procedureController.firstLongterm or empty procedureController.prescriptions}">
+					<div class="button-group">
+						<h:commandButton value="Add Prescription"
+							action="#{procedureController.createNewPrescription()}"
+							styleClass="action-button first-row" />
+					</div>
+				</h:panelGroup>
 				<div class="button-group">
 					<h:commandButton value="Review Prescriptions"
 						action="#{procedureController.loadViewPrescriptions()}"
 						styleClass="action-button first-row" />
 				</div>
+				<h:panelGroup
+					rendered="#{not procedureController.firstLongterm or empty procedureController.prescriptions}">
 				<div class="button-group">
 					<h:commandButton value="Add Procedure Logs"
 						action="#{procedureController.createNewProcedureLog()}"
 						styleClass="action-button first-row" />
 				</div>
+				</h:panelGroup>
 				<div class="button-group">
 					<h:commandButton value="Review Logs"
 						action="#{procedureController.loadViewLogs()}"
@@ -183,7 +198,8 @@
 
 			<!-- Button Row 2: Edit & Submit Procedure -->
 			<div class="button-row" style="justify-content: center;">
-				<h:panelGroup layout="block" rendered="#{procedureController.isFlag() ne false}">
+				<h:panelGroup layout="block"
+					rendered="#{procedureController.isFlag() ne false}">
 					<div class="button-group">
 						<h:commandButton value="Edit Procedure"
 							action="#{procedureController.gotoProcedureForm()}"
@@ -192,13 +208,23 @@
 				</h:panelGroup>
 
 				<div class="button-group">
-					<h:commandButton value="Submit Procedure"
+					<h:commandButton value="Submit Procedure" id="submit"
 						action="#{procedureController.procedureSubmit()}"
 						styleClass="action-button second-row" />
+					<h:message for="submit" styleClass="error-message" />
 				</div>
+				<h:panelGroup layout="block"
+					rendered="#{procedureController.isFirstLongterm() ne true}">
+					<div class="button-group">
+						<h:commandButton value="back" id="back"
+							action="#{procedureController.backFromProcedure()}"
+							styleClass="action-button second-row" />
+						<h:message for="back" styleClass="error-message" />
+					</div>
+				</h:panelGroup>
 			</div>
 		</h:form>
 	</div>
 </body>
-</html>
+	</html>
 </f:view>

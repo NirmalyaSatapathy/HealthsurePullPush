@@ -5,7 +5,7 @@
 <html>
 <head>
     <title>Add Prescribed Medicine</title>
-
+<link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}/resources/css/AddPrescribedMedicine.css" />
     <!-- Prevent HTML caching -->
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
     <meta http-equiv="Pragma" content="no-cache" />
@@ -21,126 +21,6 @@
         });
     </script>
 
-    <style>
-        html, body {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Segoe UI', sans-serif;
-            background-color: #f4f8fb;
-            overflow: hidden;
-        }
-
-        .page-wrapper {
-            display: flex;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        .main-content {
-            flex-grow: 1;
-            padding: 10px;
-            overflow-y: auto;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            margin-top: 90px;
-        }
-
-        .form-container {
-            max-width: 600px;
-            width: 100%;
-            padding: 15px;
-            background-color: #ffffff;
-            border-radius: 10px;
-            box-shadow: 0 0 10px #ccc;
-        }
-
-        .form-title {
-            text-align: center;
-            font-size: 22px;
-            margin-bottom: 12px;
-            color: #2a3f54;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .form-group.full-width {
-            grid-column: 1 / -1;
-        }
-
-        label {
-            font-weight: bold;
-            margin-bottom: 4px;
-            font-size: 15px;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 6px;
-            border-radius: 4px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            font-size: 15px;
-        }
-
-        .error {
-            display: block;
-            color: #f44336 !important;
-            font-size: 14px;
-            font-weight: 600;
-            margin-top: 3px;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-        }
-
-        .btn-add, .btn-reset, .action-button {
-            padding: 8px 14px;
-            font-size: 14px;
-            border: none;
-            border-radius: 5px;
-            color: white;
-            cursor: pointer;
-        }
-
-        .btn-add {
-            background-color: #28a745;
-        }
-
-        .btn-add:hover {
-            background-color: #218838;
-        }
-
-        .btn-reset {
-            background-color: #007bff;
-        }
-
-        .btn-reset:hover {
-            background-color: #0056b3;
-        }
-
-        .action-button {
-            background-color: #6c757d;
-        }
-
-        .action-button:hover {
-            background-color: #5a6268;
-        }
-    </style>
 </head>
 <body>
 <div class="page-wrapper">
@@ -167,13 +47,13 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="medicineName">Medicine Name <span style="color:red">*</span></label>
+                        <label for="medicineName"><span style="color:red">*</span>Medicine Name</label>
                         <h:inputText id="medicineName" value="#{procedureController.prescribedMedicine.medicineName}" styleClass="form-control" />
                         <h:message for="medicineName" styleClass="error" />
                     </div>
 
                     <div class="form-group">
-                        <label for="type">Medicine Type <span style="color:red">*</span></label>
+                        <label for="type"><span style="color:red">*</span>Medicine Type</label>
                         <h:selectOneMenu id="type" value="#{procedureController.prescribedMedicine.type}" styleClass="form-control">
                             <f:selectItem itemLabel="-- Select Type --" itemValue="" />
                             <f:selectItem itemLabel="Tablet" itemValue="TABLET" />
@@ -185,19 +65,19 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="dosage">Dosage <span style="color:red">*</span></label>
+                        <label for="dosage"><span style="color:red">*</span>Dosage</label>
                         <h:inputText id="dosage" value="#{procedureController.prescribedMedicine.dosage}" styleClass="form-control" />
                         <h:message for="dosage" styleClass="error" />
                     </div>
 
                     <div class="form-group">
-                        <label for="duration">Duration (days) <span style="color:red">*</span></label>
+                        <label for="duration"><span style="color:red">*</span>Duration (days)</label>
                         <h:inputText id="duration" value="#{procedureController.prescribedMedicine.duration}" styleClass="form-control" />
                         <h:message for="duration" styleClass="error" />
                     </div>
 
                     <div class="form-group">
-                        <label for="startDate">Start Date <span style="color:red">*</span></label>
+                        <label for="startDate"><span style="color:red">*</span>Start Date</label>
                         <h:inputText id="startDate" value="#{procedureController.prescribedMedicine.startDate}" styleClass="form-control">
                             <f:convertDateTime pattern="yyyy-MM-dd" />
                         </h:inputText>
@@ -223,7 +103,7 @@
                 </div>
 
                <h:commandButton value="back"
-							action="PrescriptionDashboard?faces-redirect=true"
+							action="#{procedureController.backFromAddMedicine()}"
 							styleClass="shared-button" />
          
         </h:form>

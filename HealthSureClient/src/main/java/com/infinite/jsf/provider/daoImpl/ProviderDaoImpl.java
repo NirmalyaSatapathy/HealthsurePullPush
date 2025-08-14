@@ -349,8 +349,6 @@ public class ProviderDaoImpl {
 			tx.rollback();
 			session.close();
 			return "Appointment not found";
-		}
-
-		
+		}	
 	}
 }

@@ -30,10 +30,7 @@ public class ProviderEjbImpl {
 	}
 
 	public String addMedicalProcedure(MedicalProcedure medicalProcedure) throws ClassNotFoundException, SQLException {
-	    if (medicalProcedure.getType() == ProcedureType.LONG_TERM && medicalProcedure.getProcedureStatus()==ProcedureStatus.SCHEDULED) {
-		      remote.addMedicalProcedure(medicalProcedure);
-		      return "ProcedureOptions";
-	    } else if (medicalProcedure.getType() == ProcedureType.SINGLE_DAY) {
+	     if (medicalProcedure.getType() == ProcedureType.SINGLE_DAY) {
 		    return remote.addMedicalProcedure(medicalProcedure);
 	    }
 	    else if(medicalProcedure.getType() == ProcedureType.LONG_TERM && medicalProcedure.getProcedureStatus() == ProcedureStatus.IN_PROGRESS)
@@ -149,5 +146,21 @@ public class ProviderEjbImpl {
 	public String updateLog(ProcedureDailyLog l) throws ClassNotFoundException, SQLException {
 		// TODO Auto-generated method stub
 		return remote.updateLog(l);
+	}
+	public String deletePrescription(String id) throws ClassNotFoundException, SQLException
+	{
+		return remote.deletePrescription(id);
+	}
+	public String deletePrescribedMedicine(String id) throws ClassNotFoundException, SQLException
+	{
+		return remote.deletePrescribedMedicine(id);
+	}
+	public String deleteTest(String id) throws ClassNotFoundException, SQLException
+	{
+		return remote.deleteTest(id);
+	}
+	public String deleteLog(String id) throws ClassNotFoundException, SQLException
+	{
+		return remote.deleteProcedureDailyLog(id);
 	}
 }

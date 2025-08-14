@@ -1,0 +1,140 @@
+@charset "UTF-8";
+/* Base page styling */
+body {
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	background-color: #f4f8fc;
+	color: #2e3e50;
+	margin: 0;
+	padding: 20px;
+}
+
+h2 {
+	text-align: center;
+	color: #1E88E5;
+	font-size: 28px;
+	margin-bottom: 20px;
+	border-bottom: 2px solid #BBDEFB;
+	padding-bottom: 6px;
+}
+
+/* Table styling */
+.data-table {
+	width: 100%;
+	border-collapse: collapse;
+	background-color: #ffffff;
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+	margin-top: 10px;
+}
+
+.data-table th {
+	background-color: #1E88E5;
+	color: #ffffff;
+	font-weight: 600;
+	padding: 12px;
+	text-align: left;
+	border: 1px solid #90CAF9;
+}
+
+.data-table td {
+	border: 1px solid #cfd8dc;
+	padding: 10px;
+	font-size: 15px;
+	text-align: left;
+}
+
+.data-table tr:nth-child(even) {
+	background-color: #e8f5e9;
+}
+
+.data-table tr:hover {
+	background-color: #BBDEFB;
+}
+
+/* Button base */
+.btn {
+	border: none;
+	border-radius: 4px;
+	padding: 6px 12px;
+	font-size: 14px;
+	cursor: pointer;
+	transition: background-color 0.3s ease;
+	margin: 0 4px;
+}
+
+.btn-primary {
+	background-color: #1E88E5;
+	color: #ffffff;
+}
+
+.btn-primary:hover {
+	background-color: #1565C0;
+}
+
+.btn-tertiary {
+	background-color: #ffffff;
+	color: #1E88E5;
+	border: 2px solid #1E88E5;
+}
+
+.btn-tertiary:hover {
+	background-color: #e3f2fd;
+}
+
+/* Pagination controls */
+.pagination-controls {
+	margin-top: 15px;
+	text-align: center;
+}
+
+/* Back button container */
+.back-button {
+	margin-top: 20px;
+	text-align: center;
+}
+
+/* Sort icons */
+.sort-icons {
+	display: flex;
+	flex-direction: column;
+	margin-left: 6px;
+}
+
+.sort-icon {
+	color: white;
+	font-size: 0.7em;
+	padding: 0;
+	margin: 0;
+	line-height: 1;
+	display: inline-block;
+}
+
+.sort-icon:hover {
+	color: #BBDEFB;
+}
+
+.sort-header-group {
+	display: flex;
+	align-items: center;
+}
+/* Disabled state for tertiary buttons */
+.btn-tertiary:disabled,
+.btn-tertiary[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+  background-color: #f0f0f0; /* Optional: slightly gray background */
+  border-color: #b0bec5;     /* Optional: lighter border */
+  color: #90a4ae;            /* Optional: muted text color */
+}
+@media ( max-width : 600px) {
+	h2 {
+		font-size: 24px;
+	}
+	.data-table th, .data-table td {
+		font-size: 13px;
+		padding: 6px;
+	}
+	.btn {
+		width: 100%;
+		margin: 6px 0;
+	}
+}

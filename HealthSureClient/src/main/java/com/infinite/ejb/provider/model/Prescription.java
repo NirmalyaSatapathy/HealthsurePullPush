@@ -18,6 +18,7 @@ public class Prescription implements Serializable{
     private Provider provider;             // mapped from provider_id
     private Doctors doctor;                 // mapped from doctor_id
     private Doctors prescribedDoc;
+    private String notes;
     public Doctors getPrescribedDoc() {
 		return prescribedDoc;
 	}
@@ -27,7 +28,14 @@ public class Prescription implements Serializable{
 	}
 	// Other fields
     private Date writtenOn;
-    private Date startDate;
+    public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
+	private Date startDate;
     private Date endDate;
     private Date createdAt;
     private List<PrescribedMedicines> prescribedMedicines;

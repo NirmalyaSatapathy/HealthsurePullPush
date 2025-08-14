@@ -17,7 +17,6 @@
     <many-to-one name="doctor" class="com.infinite.jsf.provider.model.Doctors" column="doctor_id" not-null="true" fetch="join"/>
 
     <!-- Date and Enum Properties -->
-    <property name="scheduledDate" column="scheduled_date" type="date"/>
     <property name="procedureDate" column="procedure_date" type="date" not-null="true"/>
     <property name="fromDate" column="from_date" type="timestamp" not-null="true"/>
     <property name="toDate" column="to_date" type="timestamp"/>

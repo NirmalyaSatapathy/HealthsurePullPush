@@ -20,7 +20,7 @@ public class Prescription implements Serializable{
     private Recipient recipient;           // mapped from h_id
     private Provider provider;             // mapped from provider_id
     private Doctors doctor;                 // mapped from doctor_id
-    
+    private String notes;
     // Other fields
     private Date writtenOn;
     private Date createdAt;
@@ -51,6 +51,14 @@ public class Prescription implements Serializable{
                 "]";
     }
 
+
+	public String getNotes() {
+		return notes;
+	}
+
+	public void setNotes(String notes) {
+		this.notes = notes;
+	}
 
 	public Date getStartDate() {
 		return startDate;

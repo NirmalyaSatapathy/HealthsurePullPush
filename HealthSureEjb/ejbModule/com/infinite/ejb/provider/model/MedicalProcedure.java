@@ -18,8 +18,6 @@ public class MedicalProcedure implements Serializable {
     private Recipient recipient;
     private Provider provider;
     private Doctors doctor;
-
-    private Date scheduledDate;      // NEW: for procedures planned ahead
     private Date procedureDate;      // actual date
     private Date fromDate;           // long-term start
     private Date toDate;             // long-term end
@@ -96,13 +94,7 @@ public class MedicalProcedure implements Serializable {
     public void setDoctor(Doctors doctor) {
         this.doctor = doctor;
     }
-    public Date getScheduledDate() {
-        return scheduledDate;
-    }
-
-    public void setScheduledDate(Date scheduledDate) {
-        this.scheduledDate = scheduledDate;
-    }
+   
 
     public Date getProcedureDate() {
         return procedureDate;
@@ -181,7 +173,7 @@ public class MedicalProcedure implements Serializable {
     @Override
     public String toString() {
         return "MedicalProcedure [procedureId=" + procedureId + ", appointment=" + appointment + ", recipient="
-                + recipient + ", provider=" + provider + ", doctor=" + doctor + ", scheduledDate=" + scheduledDate
+                + recipient + ", provider=" + provider + ", doctor=" + doctor + ", scheduledDate="
                 + ", procedureDate=" + procedureDate + ", fromDate=" + fromDate + ", toDate=" + toDate
                 + ", diagnosis=" + diagnosis + ", recommendations=" + recommendations + ", procedureStatus="
                 + procedureStatus + ", createdAt=" + createdAt + ", claims=" + claims + ", prescriptions="
