@@ -1290,123 +1290,133 @@ public class ProcedureController {
 	}
 
 	private void sortPreviousPrescriptionList() {
-		if (previousPrescriptions == null || sortField == null)
-			return;
+	    if (previousPrescriptions == null || sortField == null)
+	        return;
 
-		Collections.sort(previousPrescriptions, (p1, p2) -> {
-			try {
-				Field f = p1.getClass().getDeclaredField(sortField);
-				f.setAccessible(true);
-				Object v1 = f.get(p1);
-				Object v2 = f.get(p2);
+	    Collections.sort(previousPrescriptions, (p1, p2) -> {
+	        try {
+	            Object v1 = getNestedFieldValue(p1, sortField);
+	            Object v2 = getNestedFieldValue(p2, sortField);
 
-				if (v1 == null || v2 == null)
-					return 0;
+	            if (v1 == null || v2 == null)
+	                return 0;
 
-				if (v1 instanceof Date && v2 instanceof Date) {
-					return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
-				} else if (v1 instanceof Comparable && v2 instanceof Comparable) {
-					return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
-				} else {
-					return 0;
-				}
-			} catch (Exception e) {
-				return 0;
-			}
-		});
+	            if (v1 instanceof Date && v2 instanceof Date) {
+	                return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
+	            } else if (v1 instanceof Comparable && v2 instanceof Comparable) {
+	                return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
+	            } else {
+	                return 0;
+	            }
+	        } catch (Exception e) {
+	            return 0;
+	        }
+	    });
 	}
 
+	
 	private void sortCurrentPrescriptionList() {
-		if (prescriptions == null || sortField == null)
-			return;
+	    if (prescriptions == null || sortField == null)
+	        return;
 
-		Collections.sort(prescriptions, (p1, p2) -> {
-			try {
-				Field f = p1.getClass().getDeclaredField(sortField);
-				f.setAccessible(true);
-				Object v1 = f.get(p1);
-				Object v2 = f.get(p2);
+	    Collections.sort(prescriptions, (p1, p2) -> {
+	        try {
+	            Object v1 = getNestedFieldValue(p1, sortField);
+	            Object v2 = getNestedFieldValue(p2, sortField);
 
-				if (v1 == null || v2 == null)
-					return 0;
+	            if (v1 == null || v2 == null)
+	                return 0;
 
-				if (v1 instanceof Date && v2 instanceof Date) {
-					return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
-				} else if (v1 instanceof Comparable && v2 instanceof Comparable) {
-					return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
-				} else {
-					return 0;
-				}
-			} catch (Exception e) {
-				return 0;
-			}
-		});
+	            if (v1 instanceof Date && v2 instanceof Date) {
+	                return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
+	            } else if (v1 instanceof Comparable && v2 instanceof Comparable) {
+	                return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
+	            } else {
+	                return 0;
+	            }
+	        } catch (Exception e) {
+	            return 0;
+	        }
+	    });
 	}
+
+	
+
 
 	private void sortLogList() {
-		if (viewLogs == null || sortField == null)
-			return;
+	    if (viewLogs == null || sortField == null) {
+	        return;
+	    }
 
-		Collections.sort(viewLogs, (l1, l2) -> {
-			try {
-				// 1) use your existing getter or reflection to fetch v1/v2
-				Field f1 = findField(l1.getClass(), sortField);
-				Field f2 = findField(l2.getClass(), sortField);
-				f1.setAccessible(true);
-				f2.setAccessible(true);
-				Object v1 = f1.get(l1);
-				Object v2 = f2.get(l2);
+	    Collections.sort(viewLogs, (l1, l2) -> {
+	        try {
+	            // 1) Get the values (supports nested fields via dot notation)
+	            Object v1 = getNestedFieldValue(l1, sortField);
+	            Object v2 = getNestedFieldValue(l2, sortField);
 
-				// 2) VITALS branch with in-branch null handling
-				if ("vitals".equals(sortField)) {
-					// push nulls to end (or to front if descending)
-					if (v1 == null && v2 == null)
-						return 0;
-					if (v1 == null)
-						return ascending ? 1 : -1;
-					if (v2 == null)
-						return ascending ? -1 : 1;
+	            // 2) Special handling for "vitals"
+	            if ("vitals".equals(sortField)) {
+	                if (v1 == null && v2 == null) return 0;
+	                if (v1 == null) return ascending ? 1 : -1;
+	                if (v2 == null) return ascending ? -1 : 1;
 
-					Double num1 = extractNumericFromVitals(v1.toString());
-					Double num2 = extractNumericFromVitals(v2.toString());
-					if (num1 != null && num2 != null) {
-						return ascending ? Double.compare(num1, num2) : Double.compare(num2, num1);
-					}
-					// fallback to lexicographic
-					return ascending ? v1.toString().compareTo(v2.toString()) : v2.toString().compareTo(v1.toString());
-				}
+	                Double num1 = extractNumericFromVitals(v1.toString());
+	                Double num2 = extractNumericFromVitals(v2.toString());
+	                if (num1 != null && num2 != null) {
+	                    return ascending ? Double.compare(num1, num2) : Double.compare(num2, num1);
+	                }
+	                return ascending ? v1.toString().compareTo(v2.toString()) 
+	                                 : v2.toString().compareTo(v1.toString());
+	            }
 
-				// 3) DATE branch
-				if (v1 instanceof Date || v2 instanceof Date) {
-					// also handle nulls here
-					if (v1 == null && v2 == null)
-						return 0;
-					if (v1 == null)
-						return ascending ? 1 : -1;
-					if (v2 == null)
-						return ascending ? -1 : 1;
-					return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
-				}
+	            // 3) Date handling
+	            if (v1 instanceof Date || v2 instanceof Date) {
+	                if (v1 == null && v2 == null) return 0;
+	                if (v1 == null) return ascending ? 1 : -1;
+	                if (v2 == null) return ascending ? -1 : 1;
+	                return ascending ? ((Date) v1).compareTo((Date) v2)
+	                                 : ((Date) v2).compareTo((Date) v1);
+	            }
 
-				// 4) GENERIC Comparable branch
-				if (v1 == null && v2 == null)
-					return 0;
-				if (v1 == null)
-					return ascending ? 1 : -1;
-				if (v2 == null)
-					return ascending ? -1 : 1;
-				if (v1 instanceof Comparable && v2 instanceof Comparable) {
-					return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
-				}
-				return 0;
+	            // 4) Generic Comparable
+	            if (v1 == null && v2 == null) return 0;
+	            if (v1 == null) return ascending ? 1 : -1;
+	            if (v2 == null) return ascending ? -1 : 1;
+	            if (v1 instanceof Comparable && v2 instanceof Comparable) {
+	                return ascending ? ((Comparable) v1).compareTo(v2)
+	                                 : ((Comparable) v2).compareTo(v1);
+	            }
 
-			} catch (Exception e) {
-				System.out.println("exception occured for " + sortField);
-				e.printStackTrace();
-				return 0;
-			}
-		});
+	            return 0;
+
+	        } catch (Exception e) {
+	            System.out.println("Exception occurred for " + sortField);
+	            e.printStackTrace();
+	            return 0;
+	        }
+	    });
 	}
+
+	/**
+	 * Fetches a field value, supports nested fields using dot notation.
+	 */
+	private Object getNestedFieldValue(Object obj, String fieldPath) throws Exception {
+	    if (obj == null || fieldPath == null) {
+	        return null;
+	    }
+	    String[] fields = fieldPath.split("\\.");
+	    Object value = obj;  //1st iteration the main object,in iteration it becomes the subsequent values
+	    for (String fieldName : fields) {
+	        if (value == null) {
+	            return null;
+	        }
+	        Field field = value.getClass().getDeclaredField(fieldName);
+	        field.setAccessible(true);
+	        value = field.get(value);
+	    }
+	    return value;
+	}
+
 
 	// helper to walk up the class hierarchy
 	private Field findField(Class<?> cls, String name) {
@@ -1421,132 +1431,114 @@ public class ProcedureController {
 	}
 
 	private void sortPreviousLogsList() {
-		if (previousLogs == null || sortField == null)
-			return;
+	    if (previousLogs == null || sortField == null) {
+	        return;
+	    }
 
-		Collections.sort(previousLogs, (l1, l2) -> {
-			try {
-				// 1) use your existing getter or reflection to fetch v1/v2
-				Field f1 = findField(l1.getClass(), sortField);
-				Field f2 = findField(l2.getClass(), sortField);
-				f1.setAccessible(true);
-				f2.setAccessible(true);
-				Object v1 = f1.get(l1);
-				Object v2 = f2.get(l2);
+	    Collections.sort(previousLogs, (l1, l2) -> {
+	        try {
+	            // 1) Get the values (supports nested fields via dot notation)
+	            Object v1 = getNestedFieldValue(l1, sortField);
+	            Object v2 = getNestedFieldValue(l2, sortField);
 
-				// 2) VITALS branch with in-branch null handling
-				if ("vitals".equals(sortField)) {
-					// push nulls to end (or to front if descending)
-					if (v1 == null && v2 == null)
-						return 0;
-					if (v1 == null)
-						return ascending ? 1 : -1;
-					if (v2 == null)
-						return ascending ? -1 : 1;
+	            // 2) Special handling for "vitals"
+	            if ("vitals".equals(sortField)) {
+	                if (v1 == null && v2 == null) return 0;
+	                if (v1 == null) return ascending ? 1 : -1;
+	                if (v2 == null) return ascending ? -1 : 1;
 
-					Double num1 = extractNumericFromVitals(v1.toString());
-					Double num2 = extractNumericFromVitals(v2.toString());
-					if (num1 != null && num2 != null) {
-						return ascending ? Double.compare(num1, num2) : Double.compare(num2, num1);
-					}
-					// fallback to lexicographic
-					return ascending ? v1.toString().compareTo(v2.toString()) : v2.toString().compareTo(v1.toString());
-				}
+	                Double num1 = extractNumericFromVitals(v1.toString());
+	                Double num2 = extractNumericFromVitals(v2.toString());
+	                if (num1 != null && num2 != null) {
+	                    return ascending ? Double.compare(num1, num2) : Double.compare(num2, num1);
+	                }
+	                return ascending ? v1.toString().compareTo(v2.toString()) 
+	                                 : v2.toString().compareTo(v1.toString());
+	            }
 
-				// 3) DATE branch
-				if (v1 instanceof Date || v2 instanceof Date) {
-					// also handle nulls here
-					if (v1 == null && v2 == null)
-						return 0;
-					if (v1 == null)
-						return ascending ? 1 : -1;
-					if (v2 == null)
-						return ascending ? -1 : 1;
-					return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
-				}
+	            // 3) Date handling
+	            if (v1 instanceof Date || v2 instanceof Date) {
+	                if (v1 == null && v2 == null) return 0;
+	                if (v1 == null) return ascending ? 1 : -1;
+	                if (v2 == null) return ascending ? -1 : 1;
+	                return ascending ? ((Date) v1).compareTo((Date) v2)
+	                                 : ((Date) v2).compareTo((Date) v1);
+	            }
 
-				// 4) GENERIC Comparable branch
-				if (v1 == null && v2 == null)
-					return 0;
-				if (v1 == null)
-					return ascending ? 1 : -1;
-				if (v2 == null)
-					return ascending ? -1 : 1;
-				if (v1 instanceof Comparable && v2 instanceof Comparable) {
-					return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
-				}
-				return 0;
+	            // 4) Generic Comparable
+	            if (v1 == null && v2 == null) return 0;
+	            if (v1 == null) return ascending ? 1 : -1;
+	            if (v2 == null) return ascending ? -1 : 1;
+	            if (v1 instanceof Comparable && v2 instanceof Comparable) {
+	                return ascending ? ((Comparable) v1).compareTo(v2)
+	                                 : ((Comparable) v2).compareTo(v1);
+	            }
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				return 0;
-			}
-		});
+	            return 0;
+
+	        } catch (Exception e) {
+	            System.out.println("Exception occurred for " + sortField);
+	            e.printStackTrace();
+	            return 0;
+	        }
+	    });
 	}
 
 	private void sortCurrentLogsList() {
-		if (procedureLogs == null || sortField == null)
-			return;
+	    if (procedureLogs == null || sortField == null) {
+	        return;
+	    }
 
-		Collections.sort(procedureLogs, (l1, l2) -> {
-			try {
-				// 1) use your existing getter or reflection to fetch v1/v2
-				Field f1 = findField(l1.getClass(), sortField);
-				Field f2 = findField(l2.getClass(), sortField);
-				f1.setAccessible(true);
-				f2.setAccessible(true);
-				Object v1 = f1.get(l1);
-				Object v2 = f2.get(l2);
+	    Collections.sort(procedureLogs, (l1, l2) -> {
+	        try {
+	            // 1) Get the values (supports nested fields via dot notation)
+	            Object v1 = getNestedFieldValue(l1, sortField);
+	            Object v2 = getNestedFieldValue(l2, sortField);
 
-				// 2) VITALS branch with in-branch null handling
-				if ("vitals".equals(sortField)) {
-					// push nulls to end (or to front if descending)
-					if (v1 == null && v2 == null)
-						return 0;
-					if (v1 == null)
-						return ascending ? 1 : -1;
-					if (v2 == null)
-						return ascending ? -1 : 1;
+	            // 2) Special handling for "vitals"
+	            if ("vitals".equals(sortField)) {
+	                if (v1 == null && v2 == null) return 0;
+	                if (v1 == null) return ascending ? 1 : -1;
+	                if (v2 == null) return ascending ? -1 : 1;
 
-					Double num1 = extractNumericFromVitals(v1.toString());
-					Double num2 = extractNumericFromVitals(v2.toString());
-					if (num1 != null && num2 != null) {
-						return ascending ? Double.compare(num1, num2) : Double.compare(num2, num1);
-					}
-					// fallback to lexicographic
-					return ascending ? v1.toString().compareTo(v2.toString()) : v2.toString().compareTo(v1.toString());
-				}
+	                Double num1 = extractNumericFromVitals(v1.toString());
+	                Double num2 = extractNumericFromVitals(v2.toString());
+	                if (num1 != null && num2 != null) {
+	                    return ascending ? Double.compare(num1, num2) : Double.compare(num2, num1);
+	                }
+	                return ascending ? v1.toString().compareTo(v2.toString())
+	                                 : v2.toString().compareTo(v1.toString());
+	            }
 
-				// 3) DATE branch
-				if (v1 instanceof Date || v2 instanceof Date) {
-					// also handle nulls here
-					if (v1 == null && v2 == null)
-						return 0;
-					if (v1 == null)
-						return ascending ? 1 : -1;
-					if (v2 == null)
-						return ascending ? -1 : 1;
-					return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
-				}
+	            // 3) Date handling
+	            if (v1 instanceof Date || v2 instanceof Date) {
+	                if (v1 == null && v2 == null) return 0;
+	                if (v1 == null) return ascending ? 1 : -1;
+	                if (v2 == null) return ascending ? -1 : 1;
+	                return ascending ? ((Date) v1).compareTo((Date) v2)
+	                                 : ((Date) v2).compareTo((Date) v1);
+	            }
 
-				// 4) GENERIC Comparable branch
-				if (v1 == null && v2 == null)
-					return 0;
-				if (v1 == null)
-					return ascending ? 1 : -1;
-				if (v2 == null)
-					return ascending ? -1 : 1;
-				if (v1 instanceof Comparable && v2 instanceof Comparable) {
-					return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
-				}
-				return 0;
+	            // 4) Generic Comparable
+	            if (v1 == null && v2 == null) return 0;
+	            if (v1 == null) return ascending ? 1 : -1;
+	            if (v2 == null) return ascending ? -1 : 1;
+	            if (v1 instanceof Comparable && v2 instanceof Comparable) {
+	                return ascending ? ((Comparable) v1).compareTo(v2)
+	                                 : ((Comparable) v2).compareTo(v1);
+	            }
 
-			} catch (Exception e) {
-				e.printStackTrace();
-				return 0;
-			}
-		});
+	            return 0;
+
+	        } catch (Exception e) {
+	            System.out.println("Exception occurred for " + sortField);
+	            e.printStackTrace();
+	            return 0;
+	        }
+	    });
 	}
+
+
 
 	// Helper method to extract numeric values from vitals strings
 	private Double extractNumericFromVitals(String vitals) {
@@ -1698,31 +1690,31 @@ public class ProcedureController {
 	}
 
 	private void sortPrescriptionList() {
-		if (viewPrescriptions == null || sortField == null)
-			return;
+	    if (viewPrescriptions == null || sortField == null)
+	        return;
 
-		Collections.sort(viewPrescriptions, (p1, p2) -> {
-			try {
-				Field f = p1.getClass().getDeclaredField(sortField);
-				f.setAccessible(true);
-				Object v1 = f.get(p1);
-				Object v2 = f.get(p2);
+	    Collections.sort(viewPrescriptions, (p1, p2) -> {
+	        try {
+	            // Use the nested field getter
+	            Object v1 = getNestedFieldValue(p1, sortField);
+	            Object v2 = getNestedFieldValue(p2, sortField);
 
-				if (v1 == null || v2 == null)
-					return 0;
+	            if (v1 == null || v2 == null)
+	                return 0;
 
-				if (v1 instanceof Date && v2 instanceof Date) {
-					return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
-				} else if (v1 instanceof Comparable && v2 instanceof Comparable) {
-					return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
-				} else {
-					return 0;
-				}
-			} catch (Exception e) {
-				return 0;
-			}
-		});
+	            if (v1 instanceof Date && v2 instanceof Date) {
+	                return ascending ? ((Date) v1).compareTo((Date) v2) : ((Date) v2).compareTo((Date) v1);
+	            } else if (v1 instanceof Comparable && v2 instanceof Comparable) {
+	                return ascending ? ((Comparable) v1).compareTo(v2) : ((Comparable) v2).compareTo(v1);
+	            } else {
+	                return 0;
+	            }
+	        } catch (Exception e) {
+	            return 0;
+	        }
+	    });
 	}
+
 
 //add single_day medical procedure	
 	public String addSingleDayMedicalProcedureController(MedicalProcedure medicalProcedure)

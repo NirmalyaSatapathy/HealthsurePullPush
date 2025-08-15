@@ -312,27 +312,6 @@ input.action-button.secondary:disabled, input.action-button.secondary[disabled]
 						</f:facet>
 						<h:outputText value="#{log.logId}" />
 					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:panelGroup layout="block"
-								style="display: flex; align-items: center;">
-								<h:outputText value="Procedure ID" />
-								<h:panelGroup styleClass="sort-icons">
-									<h:commandLink
-										action="#{procedureController.sortByAsc('logs','procedureId')}"
-										rendered="#{!(procedureController.sortField eq 'procedureId' and procedureController.isAscending())}"
-										styleClass="sort-icon">▲</h:commandLink>
-									<h:commandLink
-										action="#{procedureController.sortByDesc('logs','procedureId')}"
-										rendered="#{!(procedureController.sortField eq 'procedureId' and not procedureController.isAscending())}"
-										styleClass="sort-icon">▼</h:commandLink>
-								</h:panelGroup>
-							</h:panelGroup>
-						</f:facet>
-						<h:outputText value="#{log.medicalProcedure.procedureId}" />
-					</h:column>
-
 					<h:column>
 						<f:facet name="header">
 							<h:panelGroup layout="block"
@@ -340,12 +319,12 @@ input.action-button.secondary:disabled, input.action-button.secondary[disabled]
 								<h:outputText value="Logged By" />
 								<h:panelGroup styleClass="sort-icons">
 									<h:commandLink
-										action="#{procedureController.sortByAsc('logs','loggedDoctor')}"
-										rendered="#{!(procedureController.sortField eq 'loggedDoctor' and procedureController.isAscending())}"
+										action="#{procedureController.sortByAsc('logs','loggedDoctor.doctorName')}"
+										rendered="#{!(procedureController.sortField eq 'loggedDoctor.doctorName' and procedureController.isAscending())}"
 										styleClass="sort-icon">▲</h:commandLink>
 									<h:commandLink
-										action="#{procedureController.sortByDesc('logs','loggedDoctor')}"
-										rendered="#{!(procedureController.sortField eq 'loggedDoctor' and not procedureController.isAscending())}"
+										action="#{procedureController.sortByDesc('logs','loggedDoctor.doctorName')}"
+										rendered="#{!(procedureController.sortField eq 'loggedDoctor.doctorName' and not procedureController.isAscending())}"
 										styleClass="sort-icon">▼</h:commandLink>
 								</h:panelGroup>
 							</h:panelGroup>
@@ -482,35 +461,15 @@ input.action-button.secondary:disabled, input.action-button.secondary[disabled]
 						<f:facet name="header">
 							<h:panelGroup layout="block"
 								style="display: flex; align-items: center;">
-								<h:outputText value="Procedure ID" />
-								<h:panelGroup styleClass="sort-icons">
-									<h:commandLink
-										action="#{procedureController.sortByAsc('currentLogs','procedureId')}"
-										rendered="#{!(procedureController.sortField eq 'procedureId' and procedureController.isAscending())}"
-										styleClass="sort-icon">▲</h:commandLink>
-									<h:commandLink
-										action="#{procedureController.sortByDesc('currentLogs','procedureId')}"
-										rendered="#{!(procedureController.sortField eq 'procedureId' and not procedureController.isAscending())}"
-										styleClass="sort-icon">▼</h:commandLink>
-								</h:panelGroup>
-							</h:panelGroup>
-						</f:facet>
-						<h:outputText value="#{log.medicalProcedure.procedureId}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:panelGroup layout="block"
-								style="display: flex; align-items: center;">
 								<h:outputText value="Logged By" />
 								<h:panelGroup styleClass="sort-icons">
 									<h:commandLink
-										action="#{procedureController.sortByAsc('currentLogs','loggedDoctor')}"
-										rendered="#{!(procedureController.sortField eq 'loggedDoctor' and procedureController.isAscending())}"
+										action="#{procedureController.sortByAsc('currentLogs','loggedDoctor.doctorName')}"
+										rendered="#{!(procedureController.sortField eq 'loggedDoctor.doctorName' and procedureController.isAscending())}"
 										styleClass="sort-icon">▲</h:commandLink>
 									<h:commandLink
-										action="#{procedureController.sortByDesc('currentLogs','loggedDoctor')}"
-										rendered="#{!(procedureController.sortField eq 'loggedDoctor' and not procedureController.isAscending())}"
+										action="#{procedureController.sortByDesc('currentLogs','loggedDoctor.doctorName')}"
+										rendered="#{!(procedureController.sortField eq 'loggedDoctor.doctorName' and not procedureController.isAscending())}"
 										styleClass="sort-icon">▼</h:commandLink>
 								</h:panelGroup>
 							</h:panelGroup>
@@ -646,35 +605,15 @@ input.action-button.secondary:disabled, input.action-button.secondary[disabled]
 						<f:facet name="header">
 							<h:panelGroup layout="block"
 								style="display: flex; align-items: center;">
-								<h:outputText value="Procedure ID" />
-								<h:panelGroup styleClass="sort-icons">
-									<h:commandLink
-										action="#{procedureController.sortByAsc('previousLogs','procedureId')}"
-										rendered="#{!(procedureController.sortField eq 'procedureId' and procedureController.isAscending())}"
-										styleClass="sort-icon">▲</h:commandLink>
-									<h:commandLink
-										action="#{procedureController.sortByDesc('previousLogs','procedureId')}"
-										rendered="#{!(procedureController.sortField eq 'procedureId' and not procedureController.isAscending())}"
-										styleClass="sort-icon">▼</h:commandLink>
-								</h:panelGroup>
-							</h:panelGroup>
-						</f:facet>
-						<h:outputText value="#{log.medicalProcedure.procedureId}" />
-					</h:column>
-
-					<h:column>
-						<f:facet name="header">
-							<h:panelGroup layout="block"
-								style="display: flex; align-items: center;">
 								<h:outputText value="Logged By" />
 								<h:panelGroup styleClass="sort-icons">
 									<h:commandLink
-										action="#{procedureController.sortByAsc('previousLogs','loggedDoctor')}"
-										rendered="#{!(procedureController.sortField eq 'loggedDoctor' and procedureController.isAscending())}"
+										action="#{procedureController.sortByAsc('previousLogs','loggedDoctor.doctorName')}"
+										rendered="#{!(procedureController.sortField eq 'loggedDoctor.doctorName' and procedureController.isAscending())}"
 										styleClass="sort-icon">▲</h:commandLink>
 									<h:commandLink
-										action="#{procedureController.sortByDesc('previousLogs','loggedDoctor')}"
-										rendered="#{!(procedureController.sortField eq 'loggedDoctor' and not procedureController.isAscending())}"
+										action="#{procedureController.sortByDesc('previousLogs','loggedDoctor.doctorName')}"
+										rendered="#{!(procedureController.sortField eq 'loggedDoctor.doctorName' and not procedureController.isAscending())}"
 										styleClass="sort-icon">▼</h:commandLink>
 								</h:panelGroup>
 							</h:panelGroup>
